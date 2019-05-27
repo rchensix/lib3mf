@@ -30,11 +30,13 @@ Abstract: This is a stub class definition of CToolpath
 
 #include "lib3mf_toolpath.hpp"
 #include "lib3mf_toolpathprofile.hpp"
+#include "lib3mf_toolpathlayerdata.hpp"
 #include "lib3mf_attachment.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-
+#include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
+#include "Model/Classes/NMR_ModelConstants.h"
 
 using namespace Lib3MF::Impl;
 
@@ -99,8 +101,17 @@ IToolpathProfile * CToolpath::GetProfileUUID(const std::string & sProfileUUID)
 }
 
 
-IAttachment * CToolpath::AddLayer(const Lib3MF_uint32 nZMax, IToolpathLayerData* pLayerData)
+IAttachment * CToolpath::AddLayer(const Lib3MF_uint32 nZMax, IToolpathLayerData* pLayerData, const std::string & sPath)
 {
-	return nullptr;
+	NMR::CModel * pModel = m_pToolpath->getModel();
+
+	CToolpathLayerData * pInternalLayerData = dynamic_cast<CToolpathLayerData *> (pLayerData);
+	if (pInternalLayerData == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	NMR::PImportStream pStream = pInternalLayerData->createStream ();
+
+	auto pAttachment = pModel->addAttachment (sPath, PACKAGE_TOOLPATH_RELATIONSHIP_TYPE, pStream);
+	return new CAttachment (pAttachment);
 }
 

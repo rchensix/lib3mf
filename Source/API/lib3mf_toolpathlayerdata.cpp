@@ -32,7 +32,11 @@ Abstract: This is a stub class definition of CToolpathLayerData
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-
+#include "Common/Platform/NMR_ExportStream_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
+#include "Common/Platform/NMR_XmlWriter_Native.h"
+#include "Model/Classes/NMR_ModelConstants.h"
 
 using namespace Lib3MF::Impl;
 
@@ -42,26 +46,43 @@ using namespace Lib3MF::Impl;
 
 Lib3MF_uint32 CToolpathLayerData::RegisterProfile(IToolpathProfile* pProfile)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return 0;
 }
 
 Lib3MF_uint32 CToolpathLayerData::RegisterPart(IObject* pProfile)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return 0;
 }
 
 void CToolpathLayerData::WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CToolpathLayerData::WriteLoop(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CToolpathLayerData::WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+NMR::PImportStream CToolpathLayerData::createStream()
+{
+	NMR::PExportStreamMemory pExportStream;
+
+	{
+		NMR::PXmlWriter_Native pXmlWriter = std::make_shared<NMR::CXmlWriter_Native>(pExportStream);
+		pXmlWriter->WriteStartDocument();
+		pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_LAYER, XML_3MF_NAMESPACE_TOOLPATHLAYER);
+
+		pXmlWriter->WriteEndDocument();
+		pXmlWriter->Flush();
+	}
+	
+	// TODO: Do not copy but use Pipe-based importexportstream!
+	NMR::CImportStream_Shared_Memory pImportStream (pExportStream->getData(), pExportStream->getDataSize());	
+	return pImportStream.copyToMemory();
+
+
 }
 

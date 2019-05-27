@@ -66,6 +66,7 @@ These are given by the 3MF Standard
 #define PACKAGE_TEXTURE_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2013/01/3dtexture"
 #define PACKAGE_CORE_PROPERTIES_RELATIONSHIP_TYPE "http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties"
 #define PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE "http://schemas.openxmlformats.org/package/2006/relationships/metadata/thumbnail"
+#define PACKAGE_TOOLPATH_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/05/toolpath"
 
 #define XML_3MF_NAMESPACE_XML "http://www.w3.org/XML/1998/namespace"
 #define XML_3MF_NAMESPACE_XMLNS "http://www.w3.org/2000/xmlns/"
@@ -75,6 +76,7 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACE_PRODUCTIONSPEC "http://schemas.microsoft.com/3dmanufacturing/production/2015/06"
 #define XML_3MF_NAMESPACE_BEAMLATTICESPEC "http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02"
 #define XML_3MF_NAMESPACE_SLICESPEC "http://schemas.microsoft.com/3dmanufacturing/slice/2015/07"
+#define XML_3MF_NAMESPACE_TOOLPATHLAYER "http://schemas.microsoft.com/3dmanufacturing/toolpathlayer/2019/05/"
 
 #define XML_3MF_NAMESPACEPREFIX_MATERIAL "m"
 #define XML_3MF_NAMESPACEPREFIX_PRODUCTION "p"
@@ -297,6 +299,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_TOOLPATHLAYER_ZTOP "ztop"
 #define XML_3MF_ATTRIBUTE_TOOLPATHLAYER_PATH "path"
 
+#define XML_3MF_TOOLPATHELEMENT_LAYER "layer"
 
 // Texture element.
 #define XML_3MF_ELEMENT_TEXTURE                     "texture"

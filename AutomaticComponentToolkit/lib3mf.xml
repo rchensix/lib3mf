@@ -1146,6 +1146,7 @@
 		<method name="AddLayer" description = "Adds a new toolpath layer">
 			<param name="ZMax" type="uint32" pass="in" description="ZMax value" />
 			<param name="LayerData" type="handle" class="ToolpathLayerData" pass="in" description="layer data that holds the layer information." />
+			<param name="Path" type="string" pass="in" description="Package Path" />
 			<param name="Attachment" type="handle" class="Attachment" pass="return" description="attachment that holds the layer information." />
 		</method>
 
@@ -1177,6 +1178,11 @@
 			<param name="ProfileUUID" type="string" pass="in" description="UUID string." />
 			<param name="Profile" type="handle" class="ToolpathProfile" pass="return" description="Returns the profile." />
 		</method>
+		
+		<method name="CreateEmptyLayerData" description="Returns an empty layerdata object that can be used to write out a new layer.">
+			<param name="LayerData" type="handle" class="ToolpathLayerData" pass="return" description="Returns the layerdata object." />
+		</method>
+
 
 	</class>	
 
@@ -1374,7 +1380,8 @@
 		<method name="AddToolpath" description = "adds an empty Toolpath resource to the model.">
 			<param name="UnitFactor" type="double" pass="in" description="The toolpath instance of the created Toolpath." />
 			<param name="ToolpathInstance" type="handle" class="Toolpath" pass="return" description="The toolpath instance of the created Toolpath." />
-		</method>		
+		</method>				
+		
 		<method name="RemoveBuildItem" description = "removes a build item from the model">
 			<param name="BuildItemInstance" type="handle" class="BuildItem" pass="in" description="Build item to remove." />
 		</method>

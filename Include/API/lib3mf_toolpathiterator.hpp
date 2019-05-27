@@ -24,60 +24,57 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CToolpath
+Abstract: This is the class declaration of CToolpathIterator
 
 */
 
 
-#ifndef __LIB3MF_TOOLPATH
-#define __LIB3MF_TOOLPATH
+#ifndef __LIB3MF_TOOLPATHITERATOR
+#define __LIB3MF_TOOLPATHITERATOR
 
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_resource.hpp"
+#include "lib3mf_resourceiterator.hpp"
 #pragma warning( push)
 #pragma warning( disable : 4250)
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelToolpath.h"
+
 
 namespace Lib3MF {
 namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CToolpath 
+ Class declaration of CToolpathIterator 
 **************************************************************************************************************************/
 
-class CToolpath : public virtual IToolpath, public virtual CResource {
+class CToolpathIterator : public virtual IToolpathIterator, public virtual CResourceIterator {
 private:
+
+	/**
+	* Put private members here.
+	*/
 
 protected:
 
-	NMR::PModelToolpath m_pToolpath;
+	/**
+	* Put protected members here.
+	*/
 
 public:
 
-	CToolpath(NMR::PModelToolpath pToolpath);
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
 
-	Lib3MF_double GetUnits();
 
-	Lib3MF_uint32 GetLayerCount();
+	/**
+	* Public member functions to implement.
+	*/
 
-	Lib3MF_uint32 GetProfileCount();
-
-	IAttachment * AddLayer(const Lib3MF_uint32 nZMax, IToolpathLayerData* pLayerData, const std::string & sPath);
-
-	IAttachment * GetLayerAttachment(const Lib3MF_uint32 nLayerIndex);
-
-	Lib3MF_uint32 GetLayerZ(const Lib3MF_uint32 nLayerIndex);
-
-	IToolpathProfile * AddProfile(const std::string & sName, const Lib3MF_double dLaserPower, const Lib3MF_double dLaserSpeed, const Lib3MF_double dLaserFocus, const Lib3MF_uint32 nLaserIndex);
-
-	IToolpathProfile * GetProfile(const Lib3MF_uint32 nProfileIndex);
-
-	IToolpathProfile * GetProfileUUID(const std::string & sProfileUUID);
+	IToolpath * GetCurrentToolpath();
 
 };
 
@@ -85,4 +82,4 @@ public:
 } // namespace Lib3MF
 
 #pragma warning( pop )
-#endif // __LIB3MF_TOOLPATH
+#endif // __LIB3MF_TOOLPATHITERATOR

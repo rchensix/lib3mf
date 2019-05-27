@@ -53,26 +53,10 @@ namespace Impl {
 class CToolpathLayerData : public virtual IToolpathLayerData, public virtual CBase {
 private:
 
-	/**
-	* Put private members here.
-	*/
-
 protected:
 
-	/**
-	* Put protected members here.
-	*/
 
 public:
-
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
-
-
-	/**
-	* Public member functions to implement.
-	*/
 
 	Lib3MF_uint32 RegisterProfile(IToolpathProfile* pProfile);
 
@@ -83,6 +67,8 @@ public:
 	void WriteLoop(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
 
 	void WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
+
+	NMR::PImportStream createStream();
 
 };
 

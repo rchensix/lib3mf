@@ -46,6 +46,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_Model.h"
+#include "Model/Classes/NMR_ModelToolpath.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
@@ -70,6 +71,7 @@ namespace NMR {
 		m_bWriteSliceExtension = true;
 		m_bWriteBaseMaterials = true;
 		m_bWriteObjects = true;
+		m_bWriteToolpaths = true;
 
 		m_bIsRootModel = true;
 		m_bWriteCustomNamespaces = true;
@@ -756,6 +758,9 @@ namespace NMR {
 			}
 			if (m_bWriteObjects)
 				writeObjects();
+
+			if (m_bWriteToolpaths)
+				writeToolpaths();
 		}
 		else {
 			if (m_bWriteSliceExtension) {
@@ -848,6 +853,60 @@ namespace NMR {
 
 		return nResourceID;
 
+	}
+
+	void CModelWriterNode100_Model::writeToolpaths()
+	{
+		nfUint32 nCount = m_pModel->getResourceCount();
+
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+
+			auto pResource = m_pModel->getResource(nIndex);
+			auto pToolpathResource = dynamic_cast<CModelToolpath *> (pResource.get());
+
+			if (pToolpathResource != nullptr) {
+
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHRESOURCE, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_ID, pToolpathResource->getResourceID()->getUniqueID());
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_UNITFACTOR, (nfFloat)pToolpathResource->getUnitFactor());
+
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHPROFILES, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
+				nfUint32 nProfileCount = pToolpathResource->getProfileCount();
+				for (nfUint32 nProfileIndex = 0; nProfileIndex < nProfileCount; nProfileIndex++) {
+					auto pProfile = pToolpathResource->getProfile(nProfileIndex);
+
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHPROFILE, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
+					writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_UUID, pProfile->getUUID());
+					writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_NAME, pProfile->getName());
+					writeFloatAttribute(XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERPOWER, (nfFloat)pProfile->getLaserPower());
+					writeFloatAttribute(XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERSPEED, (nfFloat)pProfile->getLaserSpeed());
+					writeFloatAttribute(XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERFOCUS, (nfFloat)pProfile->getLaserFocus());
+					writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERINDEX, pProfile->getLaserIndex());
+					writeEndElement();
+
+				}
+
+				writeFullEndElement();
+
+
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHLAYERS, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
+				nfUint32 nLayerCount = pToolpathResource->getLayerCount();
+				for (nfUint32 nLayerIndex = 0; nLayerIndex < nLayerCount; nLayerIndex++) {
+					auto pLayer = pToolpathResource->getLayer(nLayerIndex);
+
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHLAYER, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLAYER_ZTOP, pLayer->getMaxZ());
+					writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLAYER_PATH, pLayer->getAttachment()->getPathURI());
+					writeEndElement();
+
+				}
+
+
+				writeFullEndElement();
+
+			}
+
+		}
 	}
 
 }
