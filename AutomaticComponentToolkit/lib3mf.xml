@@ -1045,6 +1045,146 @@
 			<param name="ZTop" type="double" pass="return" description="the upper Z-Coordinate of this slice" />
 		</method>
 	</class>
+	
+	
+ <class name="ToolpathProfile">
+
+		<method name="GetUUID" description="Retrieves the profile's uuid">
+			<param name="UUID" type="string" pass="return" description="Returns the uuid value." />
+		</method>
+
+		<method name="GetName" description="Retrieves the profile's name">
+			<param name="Name" type="string" pass="return" description="Returns the name." />
+		</method>
+
+		<method name="GetLaserPower" description="Retrieves the profile's laser power">
+			<param name="LaserPower" type="double" pass="return" description="Returns the laser power." />
+		</method>
+
+		<method name="GetLaserSpeed" description="Retrieves the profile's laser speed">
+			<param name="LaserSpeed" type="double" pass="return" description="Returns the laser speed." />
+		</method>
+
+		<method name="GetLaserFocus" description="Retrieves the profile's laser focus">
+			<param name="LaserFocus" type="double" pass="return" description="Returns the laser focus." />
+		</method>
+
+		<method name="GetLaserIndex" description="Retrieves the profile's laser index">
+			<param name="LaserIndex" type="uint32" pass="return" description="Returns the laser index." />
+		</method>
+
+		<method name="SetName" description="Sets the profile's name">
+			<param name="Name" type="string" pass="in" description="Returns the name." />
+		</method>
+
+		<method name="SetLaserPower" description="Sets the profile's laser power">
+			<param name="LaserPower" type="double" pass="in" description="Returns the laser power." />
+		</method>
+
+		<method name="SetLaserSpeed" description="Sets the profile's laser speed">
+			<param name="LaserSpeed" type="double" pass="in" description="Returns the laser speed." />
+		</method>
+
+		<method name="SetLaserFocus" description="Sets the profile's laser focus">
+			<param name="LaserFocus" type="double" pass="in" description="Returns the laser focus." />
+		</method>
+
+		<method name="SetLaserIndex" description="Sets the profile's laser index">
+			<param name="LaserIndex" type="uint32" pass="in" description="Returns the laser index." />
+		</method>
+
+	</class>
+
+
+  <class name="ToolpathLayerData">
+
+    <method name="RegisterProfile" description="Registers a toolpath profile">
+      <param name="Profile" class="ToolpathProfile" type="handle" pass="in" description="The toolpath profile to register." />
+      <param name="ProfileID" type="uint32" pass="return" description="returns the local profile ID for the layer." />
+    </method>
+
+    <method name="RegisterPart" description="Registers a Model Object">
+      <param name="Profile" class="Object" type="handle" pass="in" description="The model object to use." />
+      <param name="PartID" type="uint32" pass="return" description="returns the local part ID for the layer." />
+    </method>
+
+    <method name="WriteHatchData" description="writes hatch data to the layer.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data" />      
+    </method>
+
+    <method name="WriteLoop" description="writes loop data to the layer.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data" />
+    </method>
+
+    <method name="WritePolyline" description="writes polyline data to the layer.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data" />
+    </method>
+
+  </class>
+
+
+  <class name="Toolpath" parent="Resource">
+
+		<method name="GetUnits" description="Retrieves the unit factor">
+			<param name="Units" type="double" pass="return" description="Returns the unit factor." />
+		</method>
+
+		<method name="GetLayerCount" description="Retrieves the count of layers">
+			<param name="Count" type="uint32" pass="return" description="Returns the layer count" />
+		</method>
+
+		<method name="GetProfileCount" description="Retrieves the count of profiles">
+			<param name="Count" type="uint32" pass="return" description="Returns the profile count" />
+		</method>
+
+		<method name="AddLayer" description = "Adds a new toolpath layer">
+			<param name="ZMax" type="uint32" pass="in" description="ZMax value" />
+			<param name="LayerData" type="handle" class="ToolpathLayerData" pass="in" description="layer data that holds the layer information." />
+			<param name="Attachment" type="handle" class="Attachment" pass="return" description="attachment that holds the layer information." />
+		</method>
+
+		<method name="GetLayerAttachment" description = "Return a layer attachment">
+			<param name="LayerIndex" type="uint32" pass="in" description="Layer Index" />
+			<param name="Attachment" type="handle" class="Attachment" pass="return" description="attachment that holds the layer information." />
+		</method>
+
+		<method name="GetLayerZ" description = "Return the z value of a layer in units.">
+			<param name="LayerIndex" type="uint32" pass="in" description="Layer Index." />
+			<param name="ZValue" type="uint32" pass="return" description="Z Value in Units." />
+		</method>
+
+		<method name="AddProfile" description="Adds a new profile to the toolpath.">
+			<param name="Name" type="string" pass="in" description="the name." />
+			<param name="LaserPower" type="double" pass="in" description="the laser power." />
+			<param name="LaserSpeed" type="double" pass="in" description="the laser speed." />
+			<param name="LaserFocus" type="double" pass="in" description="the laser focus." />
+			<param name="LaserIndex" type="uint32" pass="in" description="the laser index." />
+			<param name="Profile" type="handle" class="ToolpathProfile" pass="return" description="Returns the profile." />
+		</method>
+
+		<method name="GetProfile" description="Returns a profile of the toolpath.">
+			<param name="ProfileIndex" type="uint32" pass="in" description="Layer Index." />
+			<param name="Profile" type="handle" class="ToolpathProfile" pass="return" description="Returns the profile." />
+		</method>
+
+		<method name="GetProfileUUID" description="Returns a profile of the toolpath by UUID.">
+			<param name="ProfileUUID" type="string" pass="in" description="UUID string." />
+			<param name="Profile" type="handle" class="ToolpathProfile" pass="return" description="Returns the profile." />
+		</method>
+
+	</class>	
+
+	<class name="ToolpathIterator" parent="ResourceIterator">
+		<method name="GetCurrentToolpath" description="Returns the Toolpath the iterator points at.">
+			<param name="Resource" type="handle" class="Toolpath" pass="return" description="returns the Toolpath instance." />
+		</method>
+	</class>	
 
 	<class name="SliceStack" parent="Resource">
 		<method name="GetBottomZ" description="Get the lower Z-Coordinate of the slice stack.">
@@ -1185,6 +1325,10 @@
 			<param name="ResourceIterator" type="handle" class="MultiPropertyGroupIterator" pass="return" description="returns the iterator instance." />
 		</method>
 		
+		<method name="GetToolpaths" description="creates a Toolpath instance with all toolpath resources.">
+			<param name="ResourceIterator" type="handle" class="ToolpathIterator" pass="return" description="returns the iterator instance." />
+		</method>		
+		
 		<method name="GetSliceStacks" description="creates a resource iterator instance with all slice stack resources.">
 			<param name="ResourceIterator" type="handle" class="SliceStackIterator" pass="return" description="returns the iterator instance." />
 		</method>
@@ -1227,6 +1371,10 @@
 			<param name="Transform" type="struct" class="Transform" pass="in" description="Transformation matrix." />
 			<param name="BuildItemInstance" type="handle" class="BuildItem" pass="return" description="returns the build item instance." />
 		</method>
+		<method name="AddToolpath" description = "adds an empty Toolpath resource to the model.">
+			<param name="UnitFactor" type="double" pass="in" description="The toolpath instance of the created Toolpath." />
+			<param name="ToolpathInstance" type="handle" class="Toolpath" pass="return" description="The toolpath instance of the created Toolpath." />
+		</method>		
 		<method name="RemoveBuildItem" description = "removes a build item from the model">
 			<param name="BuildItemInstance" type="handle" class="BuildItem" pass="in" description="Build item to remove." />
 		</method>

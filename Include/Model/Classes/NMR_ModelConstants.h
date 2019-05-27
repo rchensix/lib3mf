@@ -80,6 +80,7 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACEPREFIX_PRODUCTION "p"
 #define XML_3MF_NAMESPACEPREFIX_BEAMLATTICE "b"
 #define XML_3MF_NAMESPACEPREFIX_SLICE "s"
+#define XML_3MF_NAMESPACEPREFIX_TOOLPATH "t"
 
 #define XML_3MF_ATTRIBUTE_XMLNS                     "xmlns"
 #define XML_3MF_ATTRIBUTE_PREFIX_XML                "xml"
@@ -276,6 +277,26 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_ITEM_OBJECTID             "objectid"
 #define XML_3MF_ATTRIBUTE_ITEM_TRANSFORM            "transform"
 #define XML_3MF_ATTRIBUTE_ITEM_PARTNUMBER           "partnumber"
+
+// Toolpath
+#define XML_3MF_ELEMENT_TOOLPATHRESOURCE "toolpathresource"
+#define XML_3MF_ELEMENT_TOOLPATHPROFILES "toolpathprofiles"
+#define XML_3MF_ELEMENT_TOOLPATHPROFILE "toolpathprofile"
+#define XML_3MF_ELEMENT_TOOLPATHLAYERS "toolpathlayers"
+#define XML_3MF_ELEMENT_TOOLPATHLAYER "toolpathlayer"
+
+#define XML_3MF_ATTRIBUTE_TOOLPATH_ID                 "id"
+#define XML_3MF_ATTRIBUTE_TOOLPATH_UNITFACTOR         "unitfactor"
+
+#define XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_UUID        "uuid"
+#define XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_NAME        "name"
+#define XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERPOWER  "laserpower"
+#define XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERSPEED  "laserspeed"
+#define XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERFOCUS  "laserfocus"
+#define XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERINDEX  "laserindex"
+#define XML_3MF_ATTRIBUTE_TOOLPATHLAYER_ZTOP "ztop"
+#define XML_3MF_ATTRIBUTE_TOOLPATHLAYER_PATH "path"
+
 
 // Texture element.
 #define XML_3MF_ELEMENT_TEXTURE                     "texture"

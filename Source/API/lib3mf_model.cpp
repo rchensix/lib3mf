@@ -57,7 +57,8 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_compositematerialsiterator.hpp"
 #include "lib3mf_multipropertygroup.hpp"
 #include "lib3mf_multipropertygroupiterator.hpp"
-
+#include "lib3mf_toolpath.hpp"
+#include "lib3mf_toolpathiterator.hpp"
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
@@ -65,6 +66,7 @@ Abstract: This is a stub class definition of CModel
 #include "Model/Classes/NMR_ModelColorGroup.h"
 #include "Model/Classes/NMR_ModelTexture2DGroup.h"
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
+#include "Model/Classes/NMR_ModelToolpath.h"
 
 #include "lib3mf_utils.hpp"
 
@@ -620,3 +622,27 @@ void CModel::RemoveCustomContentType (const std::string & sExtension)
 	m_model->removeCustomContentType(sExtension);
 }
 
+IToolpath * CModel::AddToolpath(const Lib3MF_double dUnitFactor)
+{
+	if (dUnitFactor <= 0.0)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	auto pToolpath = NMR::CModelToolpath::make(model().generateResourceID(), &model(), dUnitFactor);
+	model().addResource(pToolpath);
+
+	return new CToolpath(pToolpath);
+}
+
+
+IToolpathIterator * CModel::GetToolpaths()
+{
+	auto pResult = std::unique_ptr<CToolpathIterator>(new CToolpathIterator());
+	Lib3MF_uint32 nCount = model().getResourceCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nCount; nIdx++) {
+		auto resource = model().getResource(nIdx);
+		if (dynamic_cast<NMR::CModelToolpath *>(resource.get()))
+			pResult->addResource(resource);
+	}
+	return pResult.release();
+}

@@ -185,6 +185,10 @@ public:
 
 	void RemoveCustomContentType (const std::string & sExtension);
 
+	virtual IToolpathIterator * GetToolpaths();
+
+	virtual IToolpath * AddToolpath(const Lib3MF_double dUnitFactor);
+
 };
 
 }

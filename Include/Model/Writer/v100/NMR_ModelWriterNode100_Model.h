@@ -58,6 +58,7 @@ namespace NMR {
 		nfBool m_bWriteSliceExtension;
 		nfBool m_bWriteBaseMaterials;
 		nfBool m_bWriteObjects;
+		nfBool m_bWriteToolpaths;
 		nfBool m_bIsRootModel;
 		nfBool m_bWriteCustomNamespaces;
 
@@ -70,6 +71,7 @@ namespace NMR {
 		void writeTextures2D();
 		void writeColors();
 		void writeTex2Coords();
+		void writeToolpaths();
 		void writeCompositeMaterials();
 		void writeMultiProperties();
 		void writeMultiPropertyAttributes(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup);
