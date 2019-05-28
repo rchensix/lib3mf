@@ -79,6 +79,8 @@ public:
 
 	IToolpathProfile * GetProfileUUID(const std::string & sProfileUUID);
 
+	IToolpathLayerData * CreateEmptyLayerData();
+
 };
 
 } // namespace Impl

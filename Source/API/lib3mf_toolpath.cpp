@@ -112,6 +112,14 @@ IAttachment * CToolpath::AddLayer(const Lib3MF_uint32 nZMax, IToolpathLayerData*
 	NMR::PImportStream pStream = pInternalLayerData->createStream ();
 
 	auto pAttachment = pModel->addAttachment (sPath, PACKAGE_TOOLPATH_RELATIONSHIP_TYPE, pStream);
+	m_pToolpath->addLayer(pAttachment, nZMax);
+
 	return new CAttachment (pAttachment);
+}
+
+
+IToolpathLayerData * CToolpath::CreateEmptyLayerData()
+{
+	return new CToolpathLayerData();
 }
 

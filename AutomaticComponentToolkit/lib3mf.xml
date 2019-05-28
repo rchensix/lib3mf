@@ -98,6 +98,10 @@
 
 
 		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices" />
+		
+		<error name="TOOLPATH_NOTWRITINGHEADER" code="3000" description="Not in toolpath header writing mode" />
+		<error name="TOOLPATH_NOTWRITINGDATA" code="3001" description="Not in toolpath data writing mode" />
+		<error name="TOOLPATH_DATAHASBEENWRITTEN" code="3002" description="Toolpath has already been written out" />
 	</errors>
 
 	<enum name="PropertyType">
@@ -1104,7 +1108,7 @@
     </method>
 
     <method name="RegisterPart" description="Registers a Model Object">
-      <param name="Profile" class="Object" type="handle" pass="in" description="The model object to use." />
+      <param name="Part" class="Object" type="handle" pass="in" description="The model object to use." />
       <param name="PartID" type="uint32" pass="return" description="returns the local part ID for the layer." />
     </method>
 

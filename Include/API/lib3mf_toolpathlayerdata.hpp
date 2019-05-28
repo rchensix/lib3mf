@@ -34,6 +34,10 @@ Abstract: This is the class declaration of CToolpathLayerData
 
 #include "lib3mf_interfaces.hpp"
 
+#include "Common/Platform/NMR_ExportStream.h"
+#include "Common/Platform/NMR_XmlWriter.h"
+#include "Common/Platform/NMR_ExportStream_Memory.h"
+
 // Parent classes
 #include "lib3mf_base.hpp"
 #pragma warning( push)
@@ -54,13 +58,24 @@ class CToolpathLayerData : public virtual IToolpathLayerData, public virtual CBa
 private:
 
 protected:
+	NMR::PXmlWriter m_pXmlWriter;
+	NMR::PExportStreamMemory m_pExportStream;
 
+	std::map <unsigned int, IToolpathProfile *> m_Profiles;
+	std::map <unsigned int, IObject *> m_Parts;
+
+	bool m_bWritingHeader;
+	bool m_bWritingData;
+	bool m_bWritingFinished;
+	unsigned int m_nIDCounter;
 
 public:
 
+	CToolpathLayerData();
+
 	Lib3MF_uint32 RegisterProfile(IToolpathProfile* pProfile);
 
-	Lib3MF_uint32 RegisterPart(IObject* pProfile);
+	Lib3MF_uint32 RegisterPart(IObject* pPart);
 
 	void WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
 
@@ -69,6 +84,8 @@ public:
 	void WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
 
 	NMR::PImportStream createStream();
+
+	void finishHeader();
 
 };
 
