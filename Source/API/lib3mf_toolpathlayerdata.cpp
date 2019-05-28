@@ -131,7 +131,7 @@ void CToolpathLayerData::finishHeader()
 void CToolpathLayerData::WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer)
 {
 	if (nPointDataBufferSize % 2 != 0)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT);
 
 	if (m_bWritingHeader)
 		finishHeader();
@@ -147,6 +147,7 @@ void CToolpathLayerData::WriteHatchData(const Lib3MF_uint32 nProfileID, const Li
 	m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARTID, nullptr, sPartID.c_str());
 
 
+	// TODO: make fast!
 	Lib3MF_uint64 nIndex;
 	const Lib3MF::sPosition2D * pPointData = pPointDataBuffer;
 	for (nIndex = 0; nIndex < nPointDataBufferSize / 2; nIndex++) {
@@ -184,6 +185,20 @@ void CToolpathLayerData::WriteLoop(const Lib3MF_uint32 nProfileID, const Lib3MF_
 	m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TYPE, nullptr, XML_3MF_TOOLPATHTYPE_LOOP);
 	m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PROFILEID, nullptr, sProfileID.c_str());
 	m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARTID, nullptr, sPartID.c_str());
+
+	Lib3MF_uint64 nIndex;
+	const Lib3MF::sPosition2D * pPointData = pPointDataBuffer;
+	for (nIndex = 0; nIndex < nPointDataBufferSize; nIndex++) {
+		std::string sX = std::to_string(pPointData->m_Coordinates[0]);
+		std::string sY = std::to_string(pPointData->m_Coordinates[1]);
+		pPointData++;
+
+		m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_POINT, nullptr);
+		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X, nullptr, sX.c_str());
+		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y, nullptr, sY.c_str());
+		m_pXmlWriter->WriteEndElement();
+	}
+
 	m_pXmlWriter->WriteFullEndElement();
 }
 
@@ -201,6 +216,20 @@ void CToolpathLayerData::WritePolyline(const Lib3MF_uint32 nProfileID, const Lib
 	m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TYPE, nullptr, XML_3MF_TOOLPATHTYPE_POLYLINE);
 	m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PROFILEID, nullptr, sProfileID.c_str());
 	m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARTID, nullptr, sPartID.c_str());
+
+	Lib3MF_uint64 nIndex;
+	const Lib3MF::sPosition2D * pPointData = pPointDataBuffer;
+	for (nIndex = 0; nIndex < nPointDataBufferSize; nIndex++) {
+		std::string sX = std::to_string(pPointData->m_Coordinates[0]);
+		std::string sY = std::to_string(pPointData->m_Coordinates[1]);
+		pPointData++;
+
+		m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_POINT, nullptr);
+		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X, nullptr, sX.c_str());
+		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y, nullptr, sY.c_str());
+		m_pXmlWriter->WriteEndElement();
+	}
+
 	m_pXmlWriter->WriteFullEndElement();
 }
 

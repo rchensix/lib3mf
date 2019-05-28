@@ -102,6 +102,9 @@
 		<error name="TOOLPATH_NOTWRITINGHEADER" code="3000" description="Not in toolpath header writing mode" />
 		<error name="TOOLPATH_NOTWRITINGDATA" code="3001" description="Not in toolpath data writing mode" />
 		<error name="TOOLPATH_DATAHASBEENWRITTEN" code="3002" description="Toolpath has already been written out" />
+		<error name="TOOLPATH_INVALIDPOINTCOUNT" code="3003" description="Toolpath has an invalid number of points" />
+		
+		
 	</errors>
 
 	<enum name="PropertyType">
