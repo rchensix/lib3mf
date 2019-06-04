@@ -128,7 +128,8 @@ namespace NMR {
 		case NMR_ERROR_ZIPCONTAINSINCONSISTENCIES: return "ZIP file contains inconsistencies. It might load with errors or incorrectly.";
 		case NMR_ERROR_XMLNAMESPACEALREADYREGISTERED: return "An XML namespace is already registered.";
 		case NMR_ERROR_XMLPREFIXALREADYREGISTERED: return "An XML prefix is already registered.";
-
+		case NMR_ERROR_STREAMCHUNKALREADYOPEN: return "Stream Chunk already open";
+		case NMR_ERROR_NOSTREAMCHUNKOPEN: return "No Stream Chunk open";
 
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;
@@ -432,6 +433,14 @@ namespace NMR {
 		case NMR_ERROR_INVALIDNAMELENGTH: return "Invalid name length";
 		case NMR_ERROR_COULDNOTCREATEMODEL: return "Could not create model";
 		case NMR_ERROR_INVALIDTEXTURETYPE: return "Invalid Texture type";
+
+		// Toolpath errors (0xBXXX)
+		case NMR_ERROR_TOOLPATH_NOTWRITINGHEADER: return "Not in toolpath header writing mode";
+		case NMR_ERROR_TOOLPATH_NOTWRITINGDATA: return "Not in toolpath data writing mode";
+		case NMR_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "Toolpath has already been written out";
+		case NMR_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
+		case NMR_ERROR_DUPLICATEBINARYSTREAM: return "Duplicate Binary Stream";
+		case NMR_ERROR_DUPLICATEBINARYSTREAMPATH: return "Duplicate Binary Stream Path";
 
 		default:
 			return "unknown error";

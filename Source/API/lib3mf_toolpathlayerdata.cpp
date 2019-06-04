@@ -30,6 +30,9 @@ Abstract: This is a stub class definition of CToolpathLayerData
 
 #include "lib3mf_toolpathlayerdata.hpp"
 #include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_binarystream.hpp"
+#include "lib3mf_toolpathprofile.hpp"
+#include "lib3mf_object.hpp"
 
 // Include custom headers here.
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
@@ -43,217 +46,157 @@ using namespace Lib3MF::Impl;
  Class definition of CToolpathLayerData 
 **************************************************************************************************************************/
 
-CToolpathLayerData::CToolpathLayerData()
+#define LIB3MF_MAXTOOLPATHHATCHCOUNT 1024*1024*1024
+#define LIB3MF_MAXTOOLPATHPOINTCOUNT 1024*1024*1024
+
+CToolpathLayerData::CToolpathLayerData(NMR::PModelToolpathLayerData pLayerData)
+	: m_pLayerData(pLayerData)
 {
-	m_pExportStream = std::make_shared<NMR::CExportStreamMemory>();
+	if (pLayerData.get() == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
-	m_pXmlWriter = std::make_shared<NMR::CXmlWriter_Native>(m_pExportStream);
-	m_pXmlWriter->WriteStartDocument();
-	m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_LAYER, XML_3MF_NAMESPACE_TOOLPATHLAYER);
-
-	m_bWritingHeader = true;
-	m_bWritingData = false;
-	m_bWritingFinished = false;
-
-	m_nIDCounter = 1;
 }
 
 
 Lib3MF_uint32 CToolpathLayerData::RegisterProfile(IToolpathProfile* pProfile)
 {
-	if (!m_bWritingHeader)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER);
+	if (pProfile == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
-	unsigned int nNewID = m_nIDCounter;
-	m_nIDCounter++;
-
-	m_Profiles.insert(std::make_pair(nNewID, pProfile));
-
-	return nNewID;
+	CToolpathProfile * pProfileClass = dynamic_cast<CToolpathProfile *> (pProfile);
+	if (pProfileClass == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+	
+	return m_pLayerData->RegisterProfile(pProfileClass->getProfileInstance());
 }
 
 Lib3MF_uint32 CToolpathLayerData::RegisterPart(IObject* pPart)
 {
-	if (!m_bWritingHeader)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER);
+	if (pPart == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
-	unsigned int nNewID = m_nIDCounter;
-	m_nIDCounter++;
+	CObject * pObjectClass = dynamic_cast<CObject *> (pPart);
+	if (pObjectClass == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 
-	m_Parts.insert(std::make_pair(nNewID, pPart));
-
-	return nNewID;
+	return m_pLayerData->RegisterPart (pObjectClass->getObjectInstance ());
 }
 
 void CToolpathLayerData::finishHeader()
 {
-	if (!m_bWritingHeader)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER);
-
-	m_bWritingHeader = false;
-
-	m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_PARTS, nullptr);
-	for (auto iPart : m_Parts) {
-		bool bHasUUID = false;
-
-		m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_PART, nullptr);
-		std::string sID = std::to_string(iPart.first);
-		std::string sUUID = iPart.second->GetUUID (bHasUUID);
-
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_ID, nullptr, sID.c_str());
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_UUID, nullptr, sUUID.c_str());
-		m_pXmlWriter->WriteEndElement();
-	}
-
-	m_pXmlWriter->WriteFullEndElement();
-
-	m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_PROFILES, nullptr);
-	for (auto iProfile : m_Profiles) {
-		m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_PROFILE, nullptr);
-		std::string sID = std::to_string(iProfile.first);
-		std::string sUUID = iProfile.second->GetUUID();
-
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_ID, nullptr, sID.c_str());
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_UUID, nullptr, sUUID.c_str());
-		m_pXmlWriter->WriteEndElement();
-	}
-
-	m_pXmlWriter->WriteFullEndElement();
-
-	m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_SEGMENTS, nullptr);
-
-	m_bWritingData = true;
-
-
+	m_pLayerData->finishHeader();
 }
 
 
 void CToolpathLayerData::WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer)
 {
+	if (nPointDataBufferSize == 0)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT);
 	if (nPointDataBufferSize % 2 != 0)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT);
+	if (nPointDataBufferSize / 2 > LIB3MF_MAXTOOLPATHHATCHCOUNT)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT);
 
-	if (m_bWritingHeader)
-		finishHeader();
-	if (!m_bWritingData)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA);
+	unsigned int nHatchCount = (unsigned int) nPointDataBufferSize / 2;
+	double dUnits = m_pLayerData->getUnits();
 
-	std::string sPartID = std::to_string(nPartID);
-	std::string sProfileID = std::to_string(nProfileID);
+	// If we have a streamwriter, write all points into a binary stream
+	std::vector<int> X1Values;
+	std::vector<int> Y1Values;
+	std::vector<int> X2Values;
+	std::vector<int> Y2Values;
 
-	m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_SEGMENT, nullptr);
-	m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TYPE, nullptr, XML_3MF_TOOLPATHTYPE_HATCH);
-	m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PROFILEID, nullptr, sProfileID.c_str());
-	m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARTID, nullptr, sPartID.c_str());
+	X1Values.resize(nHatchCount);
+	Y1Values.resize(nHatchCount);
+	X2Values.resize(nHatchCount);
+	Y2Values.resize(nHatchCount);
 
-
-	// TODO: make fast!
-	Lib3MF_uint64 nIndex;
+	unsigned nIndex;
 	const Lib3MF::sPosition2D * pPointData = pPointDataBuffer;
-	for (nIndex = 0; nIndex < nPointDataBufferSize / 2; nIndex++) {
-		std::string sX1 = std::to_string(pPointData->m_Coordinates[0]);
-		std::string sY1 = std::to_string(pPointData->m_Coordinates[1]);
+	for (nIndex = 0; nIndex < nHatchCount; nIndex++) {
+		X1Values[nIndex] = (int)(pPointData->m_Coordinates[0] / dUnits);
+		Y1Values[nIndex] = (int)(pPointData->m_Coordinates[1] / dUnits);
 		pPointData++;
-		std::string sX2 = std::to_string(pPointData->m_Coordinates[0]);
-		std::string sY2 = std::to_string(pPointData->m_Coordinates[1]);
+		X2Values[nIndex] = (int)(pPointData->m_Coordinates[0] / dUnits);
+		Y2Values[nIndex] = (int)(pPointData->m_Coordinates[1] / dUnits);
 		pPointData++;
-
-		m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_HATCH, nullptr);
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X1, nullptr, sX1.c_str());
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y1, nullptr, sY1.c_str());
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X2, nullptr, sX2.c_str());
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y2, nullptr, sY2.c_str());
-		m_pXmlWriter->WriteEndElement();
-
 	}
 
-	m_pXmlWriter->WriteFullEndElement();
+	m_pLayerData->WriteHatchData (nProfileID, nPartID, nHatchCount, X1Values.data(), Y1Values.data(), X2Values.data(), Y2Values.data());
 
 }
 
 void CToolpathLayerData::WriteLoop(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer)
 {
-	if (m_bWritingHeader)
-		finishHeader();
-	if (!m_bWritingData)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA);
+	if (nPointDataBufferSize == 0)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT);
+	if (nPointDataBufferSize > LIB3MF_MAXTOOLPATHPOINTCOUNT)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT);
 
-	std::string sPartID = std::to_string(nPartID);
-	std::string sProfileID = std::to_string(nProfileID);
+	unsigned int nPointCount = (unsigned int)nPointDataBufferSize;
+	double dUnits = m_pLayerData->getUnits();
 
-	m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_SEGMENT, nullptr);
-	m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TYPE, nullptr, XML_3MF_TOOLPATHTYPE_LOOP);
-	m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PROFILEID, nullptr, sProfileID.c_str());
-	m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARTID, nullptr, sPartID.c_str());
+	std::vector<int> XValues;
+	std::vector<int> YValues;
 
-	Lib3MF_uint64 nIndex;
+	XValues.resize(nPointCount);
+	YValues.resize(nPointCount);
+
+	unsigned nIndex;
 	const Lib3MF::sPosition2D * pPointData = pPointDataBuffer;
-	for (nIndex = 0; nIndex < nPointDataBufferSize; nIndex++) {
-		std::string sX = std::to_string(pPointData->m_Coordinates[0]);
-		std::string sY = std::to_string(pPointData->m_Coordinates[1]);
+	for (nIndex = 0; nIndex < nPointCount; nIndex++) {
+		XValues[nIndex] = (int)(pPointData->m_Coordinates[0] / dUnits);
+		YValues[nIndex] = (int)(pPointData->m_Coordinates[1] / dUnits);
 		pPointData++;
-
-		m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_POINT, nullptr);
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X, nullptr, sX.c_str());
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y, nullptr, sY.c_str());
-		m_pXmlWriter->WriteEndElement();
 	}
 
-	m_pXmlWriter->WriteFullEndElement();
+	m_pLayerData->WriteLoop(nProfileID, nPartID, nPointCount, XValues.data(), YValues.data());
+
 }
 
 void CToolpathLayerData::WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer)
 {
-	if (m_bWritingHeader)
-		finishHeader();
-	if (!m_bWritingData)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA);
 
-	std::string sPartID = std::to_string(nPartID);
-	std::string sProfileID = std::to_string(nProfileID);
+	if (nPointDataBufferSize == 0)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT);
+	if (nPointDataBufferSize > LIB3MF_MAXTOOLPATHPOINTCOUNT)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT);
 
-	m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_SEGMENT, nullptr);
-	m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TYPE, nullptr, XML_3MF_TOOLPATHTYPE_POLYLINE);
-	m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PROFILEID, nullptr, sProfileID.c_str());
-	m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARTID, nullptr, sPartID.c_str());
+	unsigned int nPointCount = (unsigned int)nPointDataBufferSize;
+	double dUnits = m_pLayerData->getUnits();
 
-	Lib3MF_uint64 nIndex;
+	std::vector<int> XValues;
+	std::vector<int> YValues;
+
+	XValues.resize(nPointCount);
+	YValues.resize(nPointCount);
+
+	unsigned nIndex;
 	const Lib3MF::sPosition2D * pPointData = pPointDataBuffer;
-	for (nIndex = 0; nIndex < nPointDataBufferSize; nIndex++) {
-		std::string sX = std::to_string(pPointData->m_Coordinates[0]);
-		std::string sY = std::to_string(pPointData->m_Coordinates[1]);
+	for (nIndex = 0; nIndex < nPointCount; nIndex++) {
+		XValues[nIndex] = (int)(pPointData->m_Coordinates[0] / dUnits);
+		YValues[nIndex] = (int)(pPointData->m_Coordinates[1] / dUnits);
 		pPointData++;
-
-		m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_POINT, nullptr);
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X, nullptr, sX.c_str());
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y, nullptr, sY.c_str());
-		m_pXmlWriter->WriteEndElement();
 	}
 
-	m_pXmlWriter->WriteFullEndElement();
+	m_pLayerData->WritePolyline(nProfileID, nPartID, nPointCount, XValues.data(), YValues.data());
 }
 
 NMR::PImportStream CToolpathLayerData::createStream()
 {
-	if (m_bWritingHeader)
-		finishHeader();
-	if (!m_bWritingData)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA);
-
-	m_bWritingData = false;
-	if (m_bWritingFinished)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN);
-
-	m_bWritingFinished = true;
-
-	m_pXmlWriter->WriteFullEndElement(); // segments
-
-	m_pXmlWriter->WriteFullEndElement(); // layer
-	m_pXmlWriter->WriteEndDocument();
-	m_pXmlWriter->Flush();
-	
-	// TODO: Do not copy but use Pipe-based importexportstream!
-	NMR::CImportStream_Shared_Memory pImportStream (m_pExportStream->getData(), m_pExportStream->getDataSize());	
-	return pImportStream.copyToMemory();
+	return m_pLayerData->createStream();
 }
+
+
+void CToolpathLayerData::SetBinaryStream(IBinaryStream* pBinaryStream)
+{
+
+	if (pBinaryStream != nullptr) {
+		m_pLayerData->SetBinaryStream(pBinaryStream->GetUUID(), pBinaryStream->GetPath());
+	}
+	else {
+		m_pLayerData->SetBinaryStream("", "");
+	}
+}
+
 

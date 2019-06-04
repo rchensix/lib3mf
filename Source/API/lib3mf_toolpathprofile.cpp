@@ -102,3 +102,9 @@ void CToolpathProfile::SetLaserIndex(const Lib3MF_uint32 nLaserIndex)
 {
 	m_pToolpathProfile->setLaserIndex(nLaserIndex);
 }
+
+NMR::PModelToolpathProfile CToolpathProfile::getProfileInstance()
+{
+	return m_pToolpathProfile;
+}
+

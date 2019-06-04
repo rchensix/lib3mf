@@ -77,12 +77,14 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACE_BEAMLATTICESPEC "http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02"
 #define XML_3MF_NAMESPACE_SLICESPEC "http://schemas.microsoft.com/3dmanufacturing/slice/2015/07"
 #define XML_3MF_NAMESPACE_TOOLPATHLAYER "http://schemas.microsoft.com/3dmanufacturing/toolpathlayer/2019/05/"
+#define XML_3MF_NAMESPACE_ZCOMPRESSION "http://schemas.microsoft.com/3dmanufacturing/zcompression/2019/05/"
 
 #define XML_3MF_NAMESPACEPREFIX_MATERIAL "m"
 #define XML_3MF_NAMESPACEPREFIX_PRODUCTION "p"
 #define XML_3MF_NAMESPACEPREFIX_BEAMLATTICE "b"
 #define XML_3MF_NAMESPACEPREFIX_SLICE "s"
 #define XML_3MF_NAMESPACEPREFIX_TOOLPATH "t"
+#define XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION "z"
 
 #define XML_3MF_ATTRIBUTE_XMLNS                     "xmlns"
 #define XML_3MF_ATTRIBUTE_PREFIX_XML                "xml"
@@ -311,6 +313,7 @@ These are given by the 3MF Standard
 #define XML_3MF_TOOLPATHATTRIBUTE_ID "id"
 #define XML_3MF_TOOLPATHATTRIBUTE_UUID "uuid"
 #define XML_3MF_TOOLPATHATTRIBUTE_TYPE "type"
+#define XML_3MF_TOOLPATHATTRIBUTE_BINARY "binary"
 #define XML_3MF_TOOLPATHATTRIBUTE_PARTID "partid"
 #define XML_3MF_TOOLPATHATTRIBUTE_PROFILEID "profileid"
 #define XML_3MF_TOOLPATHATTRIBUTE_X "x"

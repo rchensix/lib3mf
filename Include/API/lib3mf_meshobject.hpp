@@ -119,6 +119,8 @@ public:
 
 	void GetAllTriangleProperties(Lib3MF_uint64 nPropertiesArrayBufferSize, Lib3MF_uint64* pPropertiesArrayNeededCount, sLib3MFTriangleProperties * pPropertiesArrayBuffer);
 
+	void SetBinaryStream(IBinaryStream* pBinaryStream);
+
 };
 
 }

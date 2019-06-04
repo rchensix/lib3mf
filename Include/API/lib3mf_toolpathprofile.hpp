@@ -103,6 +103,8 @@ public:
 
 	void SetLaserIndex(const Lib3MF_uint32 nLaserIndex);
 
+	NMR::PModelToolpathProfile getProfileInstance();
+
 };
 
 } // namespace Impl

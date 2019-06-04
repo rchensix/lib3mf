@@ -33,6 +33,7 @@ Abstract: This is a stub class definition of CToolpath
 #include "lib3mf_toolpathlayerdata.hpp"
 #include "lib3mf_attachment.hpp"
 #include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_binarystream.hpp"
 
 // Include custom headers here.
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
@@ -120,6 +121,7 @@ IAttachment * CToolpath::AddLayer(const Lib3MF_uint32 nZMax, IToolpathLayerData*
 
 IToolpathLayerData * CToolpath::CreateEmptyLayerData()
 {
-	return new CToolpathLayerData();
+	
+	return new CToolpathLayerData(std::make_shared<NMR::CModelToolpathLayerData> (m_pToolpath.get ()));
 }
 

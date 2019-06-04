@@ -369,3 +369,8 @@ IBeamLattice* CMeshObject::BeamLattice()
 {
 	return new CBeamLattice(meshObject(), meshObject()->getBeamLatticeAttributes());
 }
+
+void CMeshObject::SetBinaryStream(IBinaryStream* pBinaryStream)
+{
+
+}

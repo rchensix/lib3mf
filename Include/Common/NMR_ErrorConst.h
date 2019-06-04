@@ -290,6 +290,12 @@ NMR_ErrorConst.h defines all error code constants.
 // XML prefix is already registered.
 #define NMR_ERROR_XMLPREFIXALREADYREGISTERED 0x104F
 
+// Stream Chunk already open
+#define NMR_ERROR_STREAMCHUNKALREADYOPEN 0x1050
+
+// No Stream Chunk open
+#define NMR_ERROR_NOSTREAMCHUNKOPEN 0x1051
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/
@@ -1205,5 +1211,27 @@ Library errors (0xAXXX)
 
 // Invalid Texture type
 #define NMR_ERROR_INVALIDTEXTURETYPE 0xA006
+
+/*-------------------------------------------------------------------
+Toolpath errors (0xBXXX)
+-------------------------------------------------------------------*/
+
+// Not in toolpath header writing mode
+#define NMR_ERROR_TOOLPATH_NOTWRITINGHEADER 0xB001
+
+// Not in toolpath data writing mode
+#define NMR_ERROR_TOOLPATH_NOTWRITINGDATA 0xB002
+
+// Toolpath has already been written out
+#define NMR_ERROR_TOOLPATH_DATAHASBEENWRITTEN 0xB003
+
+// Toolpath has an invalid number of points
+#define NMR_ERROR_TOOLPATH_INVALIDPOINTCOUNT 0xB004
+
+// Duplicate Binary Stream
+#define NMR_ERROR_DUPLICATEBINARYSTREAM 0xB005
+
+// Duplicate Binary Stream Path
+#define NMR_ERROR_DUPLICATEBINARYSTREAMPATH 0xB006
 
 #endif // __NMR_ERRORCONST

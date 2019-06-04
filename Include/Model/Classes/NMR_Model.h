@@ -39,6 +39,8 @@ NMR_Model.h defines the Model Class. A model is an in memory representation of t
 #include "Common/Math/NMR_Matrix.h" 
 #include "Common/Mesh/NMR_Mesh.h" 
 
+#include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamWriter.h"
+
 #include "Model/Classes/NMR_PackageResourceID.h"
 
 #include <list>
@@ -100,6 +102,8 @@ namespace NMR {
 		// Object Resources of the model
 		std::map<PackageResourceID, PModelResource> m_ResourceMap;
 		CResourceHandler m_resourceHandler;
+
+		std::map<std::string, NMR::PChunkedBinaryStreamWriter> m_BinaryStreamWriters;
 	private:
 		std::vector<PModelResource> m_Resources;
 
@@ -296,6 +300,13 @@ namespace NMR {
 
 		// Sorts objects by correct dependency
 		std::list<CModelObject *> getSortedObjectList ();
+
+		// Handle binary streams of the model
+		void registerBinaryStream (std::string sUUID, NMR::PChunkedBinaryStreamWriter pBinaryStream);
+		void unregisterBinaryStream(std::string sUUID);
+		void clearBinaryStreams();
+		NMR::CChunkedBinaryStreamWriter * findBinaryStream(std::string sUUID);
+
 	};
 
 	typedef std::shared_ptr <CModel> PModel;

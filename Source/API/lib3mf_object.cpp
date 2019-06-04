@@ -209,3 +209,8 @@ void CObject::AssignSliceStack(ISliceStack* pSliceStackInstance)
 	object()->assignSliceStack(pSliceStackResource);
 }
 
+
+NMR::PModelObject CObject::getObjectInstance()
+{
+	return std::dynamic_pointer_cast<NMR::CModelObject> (resource ());
+}

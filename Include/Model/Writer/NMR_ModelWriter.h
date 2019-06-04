@@ -37,6 +37,7 @@ A model writer exports the in memory represenation into the 3MF file.
 #include "Model/Classes/NMR_Model.h" 
 #include "Common/Platform/NMR_ExportStream.h" 
 #include "Common/3MF_ProgressMonitor.h" 
+#include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamWriter.h" 
 #include <list>
 
 namespace NMR {
@@ -47,15 +48,23 @@ namespace NMR {
 	protected:
 		PModel m_pModel;
 		PProgressMonitor m_pProgressMonitor;
+
+		std::map<std::string, PChunkedBinaryStreamWriter> m_Writers;
 	public:
 		CModelWriter() = delete;
 		CModelWriter(_In_ PModel pModel);
+		~CModelWriter();
 
 		virtual void exportToStream(_In_ PExportStream pStream) = 0;
 		void addCustomContentType(_In_ std::wstring sExtension, _In_ std::wstring sContentType);
  		void removeCustomContentType(_In_ std::wstring sExtension);
 
 		void SetProgressCallback(Lib3MFProgressCallback callback, void* userData);
+
+		CModel * getModel ();
+
+		void registerBinaryStream (const std::string &sPath, const std::string & sUUID, PChunkedBinaryStreamWriter pStreamWriter);
+		void unregisterBinaryStreams ();
 	};
 
 	typedef std::shared_ptr <CModelWriter> PModelWriter;

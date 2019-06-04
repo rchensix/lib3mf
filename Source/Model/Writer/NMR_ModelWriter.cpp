@@ -51,8 +51,37 @@ namespace NMR {
 		m_pProgressMonitor = std::make_shared<CProgressMonitor>();
 	}
 
+	CModelWriter::~CModelWriter()
+	{
+		unregisterBinaryStreams();
+	}
+
 	void CModelWriter::SetProgressCallback(Lib3MFProgressCallback callback, void* userData)
 	{
 		m_pProgressMonitor->SetProgressCallback(callback, userData);
 	}
+
+	CModel * CModelWriter::getModel()
+	{
+		return m_pModel.get();
+	}
+
+	void CModelWriter::registerBinaryStream(const std::string &sPath, const std::string & sUUID, PChunkedBinaryStreamWriter pStreamWriter)
+	{
+		auto iIter = m_Writers.find(sPath);
+		if (iIter != m_Writers.end())
+			throw CNMRException(NMR_ERROR_DUPLICATEBINARYSTREAMPATH);
+
+		m_pModel->registerBinaryStream(sUUID, pStreamWriter);
+		m_Writers.insert(std::make_pair (sPath, pStreamWriter));
+	}
+
+	void CModelWriter::unregisterBinaryStreams()
+	{
+		for (auto iIter : m_Writers) {
+			m_pModel->unregisterBinaryStream (iIter.first);
+		}
+	}
+
 }
+

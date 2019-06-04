@@ -30,6 +30,7 @@ Abstract: This is a stub class definition of CWriter
 
 #include "lib3mf_writer.hpp"
 #include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_binarystream.hpp"
 
 // Include custom headers here.
 // Include custom headers here.
@@ -162,4 +163,18 @@ void CWriter::SetProgressCallback(const Lib3MFProgressCallback callback, const L
 		};
 	m_pWriter->SetProgressCallback(lambdaCallback, reinterpret_cast<void*>(pUserData));
 }
+
+
+IBinaryStream * CWriter::CreateBinaryStream(const std::string & sPath)
+{
+	NMR::PExportStreamMemory pExportStream;
+	NMR::PChunkedBinaryStreamWriter pStreamWriter = std::make_shared<NMR::CChunkedBinaryStreamWriter>(pExportStream);
+
+	std::unique_ptr<CBinaryStream> pBinaryStream (new CBinaryStream(sPath, pStreamWriter));
+	
+	m_pWriter->registerBinaryStream(sPath, pBinaryStream->GetUUID(), pStreamWriter);
+
+	return pBinaryStream.release ();
+}
+
 

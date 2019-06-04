@@ -87,6 +87,9 @@ public:
 	void WriteToCallback(const Lib3MFWriteCallback pTheWriteCallback, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
 
 	void SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_pvoid pUserData);
+
+	IBinaryStream * CreateBinaryStream(const std::string & sPath);
+
 };
 
 }

@@ -116,6 +116,8 @@ public:
 
 	virtual void AssignSliceStack(ISliceStack* pSliceStackInstance);
 
+	NMR::PModelObject getObjectInstance();
+
 };
 
 }
