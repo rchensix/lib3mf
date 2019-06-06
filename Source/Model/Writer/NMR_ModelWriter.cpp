@@ -68,17 +68,17 @@ namespace NMR {
 
 	void CModelWriter::registerBinaryStream(const std::string &sPath, const std::string & sUUID, PChunkedBinaryStreamWriter pStreamWriter)
 	{
-		auto iIter = m_Writers.find(sPath);
-		if (iIter != m_Writers.end())
+		auto iIter = m_BinaryWriters.find(sPath);
+		if (iIter != m_BinaryWriters.end())
 			throw CNMRException(NMR_ERROR_DUPLICATEBINARYSTREAMPATH);
 
 		m_pModel->registerBinaryStream(sUUID, pStreamWriter);
-		m_Writers.insert(std::make_pair (sPath, pStreamWriter));
+		m_BinaryWriters.insert(std::make_pair (sPath, pStreamWriter));
 	}
 
 	void CModelWriter::unregisterBinaryStreams()
 	{
-		for (auto iIter : m_Writers) {
+		for (auto iIter : m_BinaryWriters) {
 			m_pModel->unregisterBinaryStream (iIter.first);
 		}
 	}

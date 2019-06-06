@@ -32,12 +32,50 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Common/NMR_Types.h"
 #include "Common/NMR_Local.h"
 #include "Common/Platform/NMR_ExportStream.h"
+#include "Common/Platform/NMR_ExportStream_Memory.h"
+
+#define BINARYCHUNKFILEHEADERSIGN 0x5A464D33
+#define BINARYCHUNKFILEHEADERVERSION 0x00000001
+#define BINARYCHUNKFILEHEADERRESERVED 8
+#define BINARYCHUNKFILECHUNKRESERVED 2
+
+#define BINARYCHUNKFILEENTRYTYPE_INT32ARRAY_NOPREDICTION 1
+#define BINARYCHUNKFILEENTRYTYPE_INT32ARRAY_DELTAPREDICTION 2
+
 
 namespace NMR {
 
+#pragma pack (1)
+	typedef struct {
+		nfUint32 m_Sign;
+		nfUint32 m_Version;
+		nfUint32 m_ChunkCount;
+		nfUint64 m_ChunkTableStart;
+		nfUint32 m_Reserved[BINARYCHUNKFILEHEADERRESERVED];
+	} BINARYCHUNKFILEHEADER;
+
+	typedef struct {
+		nfUint32 m_EntryCount;
+		nfUint64 m_EntryTableStart;
+		nfUint64 m_CompressedDataStart;
+		nfUint64 m_CompressedDataSize;
+		nfUint64 m_UncompressedDataSize;
+		nfUint32 m_Reserved[BINARYCHUNKFILECHUNKRESERVED];
+	} BINARYCHUNKFILECHUNK;
+
+	typedef struct {
+		nfUint32 m_EntryID;
+		nfUint32 m_EntryType;
+		nfUint32 m_PositionInChunk;
+		nfUint32 m_SizeInBytes;
+	} BINARYCHUNKFILEENTRYTABLE;
+
+#pragma pack()
+
+
 	class CChunkedBinaryStreamWriter {
 	private:
-		PExportStream m_pExportStream;
+		PExportStreamMemory m_pExportStream;
 		nfUint32 m_elementIDCounter;
 		void * m_CurrentContext;
 
@@ -47,7 +85,7 @@ namespace NMR {
 
 	public:
 	
-		CChunkedBinaryStreamWriter (PExportStream pExportStream);
+		CChunkedBinaryStreamWriter (PExportStreamMemory pExportStream);
 
 		void beginChunk();
 		void finishChunk();
@@ -56,6 +94,8 @@ namespace NMR {
 		void finishWriting ();
 
 		nfUint32 addIntArray (const nfInt32 * pData, nfUint32 nLength);
+
+		void copyToStream (PExportStream pStream);
 
 	};
 

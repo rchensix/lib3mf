@@ -49,7 +49,7 @@ namespace NMR {
 		PModel m_pModel;
 		PProgressMonitor m_pProgressMonitor;
 
-		std::map<std::string, PChunkedBinaryStreamWriter> m_Writers;
+		std::map<std::string, PChunkedBinaryStreamWriter> m_BinaryWriters;
 	public:
 		CModelWriter() = delete;
 		CModelWriter(_In_ PModel pModel);

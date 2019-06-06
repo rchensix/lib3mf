@@ -167,7 +167,7 @@ void CWriter::SetProgressCallback(const Lib3MFProgressCallback callback, const L
 
 IBinaryStream * CWriter::CreateBinaryStream(const std::string & sPath)
 {
-	NMR::PExportStreamMemory pExportStream;
+	NMR::PExportStreamMemory pExportStream = std::make_shared<NMR::CExportStreamMemory> ();
 	NMR::PChunkedBinaryStreamWriter pStreamWriter = std::make_shared<NMR::CChunkedBinaryStreamWriter>(pExportStream);
 
 	std::unique_ptr<CBinaryStream> pBinaryStream (new CBinaryStream(sPath, pStreamWriter));

@@ -27,37 +27,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --*/
 
 #include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamWriter.h" 
+#include "Common/Platform/NMR_ImportStream_Shared_Memory.h" 
 #include "Common/NMR_Exception.h" 
 #include <vector>
 
 
 namespace NMR {
 
-#define BINARYCHUNKFILEHEADERSIGN 0x5A464D33
-#define BINARYCHUNKFILEHEADERVERSION 0x00000001
-#define BINARYCHUNKFILEHEADERRESERVED 8
 
-#pragma pack (1)
-	typedef struct {
-		nfUint32 m_Sign;
-		nfUint32 m_Version;
-		nfUint32 m_ChunkCount;
-		nfUint64 m_ChunkTableStart;
-		nfUint32 m_Reserved[BINARYCHUNKFILEHEADERRESERVED];
-	} BINARYCHUNKFILEHEADER;
-#pragma pack()
-
-
-	CChunkedBinaryStreamWriter::CChunkedBinaryStreamWriter(PExportStream pExportStream)
+	CChunkedBinaryStreamWriter::CChunkedBinaryStreamWriter(PExportStreamMemory pExportStream)
 		: m_pExportStream (pExportStream), m_elementIDCounter (1), m_CurrentContext (nullptr), m_ChunkTableStart (0)
 	{
+		if (pExportStream.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
 		writeHeader();
 	}
 
 	void CChunkedBinaryStreamWriter::beginChunk()
 	{
 		if (m_CurrentContext != nullptr)
-			throw CNMRException(NMR_ERROR_STREAMCHUNKALREADYOPEN);
+			finishChunk ();
 
 		m_CurrentContext = new char[4];
 
@@ -104,11 +94,27 @@ namespace NMR {
 		Header.m_ChunkTableStart = m_ChunkTableStart;
 		for (int j = 0; j < BINARYCHUNKFILEHEADERRESERVED; j++)
 			Header.m_Reserved[j] = 0;
+
+		m_pExportStream->seekPosition(0, true);
+		m_pExportStream->writeBuffer(&Header, sizeof(Header));
+		m_pExportStream->seekFromEnd(0, true);
 	}
 
 	nfUint32 CChunkedBinaryStreamWriter::getChunkCount()
 	{
 		return 0;
+	}
+
+	void CChunkedBinaryStreamWriter::copyToStream(PExportStream pStream)
+	{
+		if (pStream.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		const nfByte * pData = m_pExportStream->getData();
+		nfUint64 nDataSize = m_pExportStream->getDataSize();
+
+		pStream->writeBuffer(pData, nDataSize);
+
 	}
 
 }
