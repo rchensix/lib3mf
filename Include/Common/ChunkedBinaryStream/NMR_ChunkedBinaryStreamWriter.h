@@ -77,11 +77,14 @@ namespace NMR {
 	private:
 		PExportStreamMemory m_pExportStream;
 		nfUint32 m_elementIDCounter;
-		void * m_CurrentContext;
+		BINARYCHUNKFILECHUNK * m_CurrentChunk;
 
 		nfUint64 m_ChunkTableStart;
 
+		std::vector<BINARYCHUNKFILECHUNK> m_Chunks;
+
 		void writeHeader();
+		void writeChunkTable();
 
 	public:
 	

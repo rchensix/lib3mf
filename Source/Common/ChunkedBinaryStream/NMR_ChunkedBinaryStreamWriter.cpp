@@ -36,7 +36,7 @@ namespace NMR {
 
 
 	CChunkedBinaryStreamWriter::CChunkedBinaryStreamWriter(PExportStreamMemory pExportStream)
-		: m_pExportStream (pExportStream), m_elementIDCounter (1), m_CurrentContext (nullptr), m_ChunkTableStart (0)
+		: m_pExportStream (pExportStream), m_elementIDCounter (1), m_CurrentChunk (nullptr), m_ChunkTableStart (0)
 	{
 		if (pExportStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -46,24 +46,37 @@ namespace NMR {
 
 	void CChunkedBinaryStreamWriter::beginChunk()
 	{
-		if (m_CurrentContext != nullptr)
+		if (m_CurrentChunk != nullptr)
 			finishChunk ();
 
-		m_CurrentContext = new char[4];
+		BINARYCHUNKFILECHUNK Chunk;
+		Chunk.m_EntryCount = 0;
+		Chunk.m_EntryTableStart = 0;
+		Chunk.m_CompressedDataSize = 0;
+		Chunk.m_UncompressedDataSize = 0;
+		Chunk.m_CompressedDataStart = 0;
+		for (int j = 0; j < BINARYCHUNKFILECHUNKRESERVED; j++)
+			Chunk.m_Reserved[j] = 0;
+		m_Chunks.push_back(Chunk);
+
+		m_CurrentChunk = &(*m_Chunks.rbegin());
 
 	}
 
 	void CChunkedBinaryStreamWriter::finishChunk()
 	{
-		if (m_CurrentContext == nullptr)
+		if (m_CurrentChunk == nullptr)
 			throw CNMRException(NMR_ERROR_NOSTREAMCHUNKOPEN);
 
-		delete m_CurrentContext;
-		m_CurrentContext = nullptr;
+		m_CurrentChunk = nullptr;
 	}
 
 	void CChunkedBinaryStreamWriter::finishWriting()
 	{
+		if (m_CurrentChunk != nullptr)
+			finishChunk();
+
+		writeChunkTable();
 		writeHeader();
 	}
 
@@ -74,7 +87,7 @@ namespace NMR {
 		if (pData == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		if (m_CurrentContext == nullptr)
+		if (m_CurrentChunk == nullptr)
 			beginChunk ();
 
 		unsigned int nElementID = m_elementIDCounter;
@@ -102,7 +115,7 @@ namespace NMR {
 
 	nfUint32 CChunkedBinaryStreamWriter::getChunkCount()
 	{
-		return 0;
+		return (nfUint32) m_Chunks.size ();
 	}
 
 	void CChunkedBinaryStreamWriter::copyToStream(PExportStream pStream)
@@ -115,6 +128,15 @@ namespace NMR {
 
 		pStream->writeBuffer(pData, nDataSize);
 
+	}
+
+
+	void CChunkedBinaryStreamWriter::writeChunkTable()
+	{
+		m_ChunkTableStart = m_pExportStream->getPosition();
+		if (m_Chunks.size() > 0) {
+			m_pExportStream->writeBuffer (m_Chunks.data(), sizeof (BINARYCHUNKFILECHUNK) * m_Chunks.size());
+		}
 	}
 
 }
