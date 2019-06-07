@@ -130,6 +130,12 @@ namespace NMR {
 		case NMR_ERROR_XMLPREFIXALREADYREGISTERED: return "An XML prefix is already registered.";
 		case NMR_ERROR_STREAMCHUNKALREADYOPEN: return "Stream Chunk already open";
 		case NMR_ERROR_NOSTREAMCHUNKOPEN: return "No Stream Chunk open";
+		case NMR_ERROR_STREAMWRITERALREADYFINISHED: return "Stream writer already finished";
+		case NMR_ERROR_STREAMWRITERNOTFINISHED: return "Stream writer not finished";
+		case NMR_ERROR_DUPLICATEBINARYSTREAM: return "Duplicate Binary Stream";
+		case NMR_ERROR_DUPLICATEBINARYSTREAMPATH: return "Duplicate Binary Stream Path";
+		case NMR_ERROR_COULDNOTCOMPRESSDATA: return "Could not compress data";
+
 
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;
@@ -439,8 +445,6 @@ namespace NMR {
 		case NMR_ERROR_TOOLPATH_NOTWRITINGDATA: return "Not in toolpath data writing mode";
 		case NMR_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "Toolpath has already been written out";
 		case NMR_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
-		case NMR_ERROR_DUPLICATEBINARYSTREAM: return "Duplicate Binary Stream";
-		case NMR_ERROR_DUPLICATEBINARYSTREAMPATH: return "Duplicate Binary Stream Path";
 
 		default:
 			return "unknown error";

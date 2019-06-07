@@ -42,7 +42,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define BINARYCHUNKFILEENTRYTYPE_INT32ARRAY_NOPREDICTION 1
 #define BINARYCHUNKFILEENTRYTYPE_INT32ARRAY_DELTAPREDICTION 2
 
-
 namespace NMR {
 
 #pragma pack (1)
@@ -58,8 +57,10 @@ namespace NMR {
 		nfUint32 m_EntryCount;
 		nfUint64 m_EntryTableStart;
 		nfUint64 m_CompressedDataStart;
-		nfUint64 m_CompressedDataSize;
-		nfUint64 m_UncompressedDataSize;
+		nfUint32 m_CompressedDataSize;
+		nfUint32 m_CompressedPropsSize;
+		nfUint32 m_UncompressedDataSize;
+		nfByte m_MD5Checksum[16];
 		nfUint32 m_Reserved[BINARYCHUNKFILECHUNKRESERVED];
 	} BINARYCHUNKFILECHUNK;
 
@@ -68,20 +69,24 @@ namespace NMR {
 		nfUint32 m_EntryType;
 		nfUint32 m_PositionInChunk;
 		nfUint32 m_SizeInBytes;
-	} BINARYCHUNKFILEENTRYTABLE;
+	} BINARYCHUNKFILEENTRY;
 
 #pragma pack()
 
+	enum eChunkedBinaryPredictionType { eptNoPredicition, eptDeltaPredicition };
 
 	class CChunkedBinaryStreamWriter {
 	private:
 		PExportStreamMemory m_pExportStream;
 		nfUint32 m_elementIDCounter;
-		BINARYCHUNKFILECHUNK * m_CurrentChunk;
-
+		nfBool m_bIsFinished;
 		nfUint64 m_ChunkTableStart;
 
 		std::vector<BINARYCHUNKFILECHUNK> m_Chunks;
+
+		BINARYCHUNKFILECHUNK * m_CurrentChunk;
+		std::vector<BINARYCHUNKFILEENTRY> m_CurrentChunkEntries;
+		std::vector<nfInt32> m_CurrentChunkData;
 
 		void writeHeader();
 		void writeChunkTable();
@@ -96,7 +101,7 @@ namespace NMR {
 
 		void finishWriting ();
 
-		nfUint32 addIntArray (const nfInt32 * pData, nfUint32 nLength);
+		nfUint32 addIntArray (const nfInt32 * pData, nfUint32 nLength, eChunkedBinaryPredictionType predictionType);
 
 		void copyToStream (PExportStream pStream);
 

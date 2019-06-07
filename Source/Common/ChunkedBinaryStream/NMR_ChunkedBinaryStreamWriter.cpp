@@ -29,6 +29,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamWriter.h" 
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h" 
 #include "Common/NMR_Exception.h" 
+#include "Libraries/lzma/LzmaLib.h"
+
 #include <vector>
 
 
@@ -36,7 +38,7 @@ namespace NMR {
 
 
 	CChunkedBinaryStreamWriter::CChunkedBinaryStreamWriter(PExportStreamMemory pExportStream)
-		: m_pExportStream (pExportStream), m_elementIDCounter (1), m_CurrentChunk (nullptr), m_ChunkTableStart (0)
+		: m_pExportStream (pExportStream), m_elementIDCounter (1), m_CurrentChunk (nullptr), m_ChunkTableStart (0), m_bIsFinished (false)
 	{
 		if (pExportStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -46,6 +48,9 @@ namespace NMR {
 
 	void CChunkedBinaryStreamWriter::beginChunk()
 	{
+		if (m_bIsFinished)
+			throw CNMRException(NMR_ERROR_STREAMWRITERALREADYFINISHED);
+
 		if (m_CurrentChunk != nullptr)
 			finishChunk ();
 
@@ -57,9 +62,13 @@ namespace NMR {
 		Chunk.m_CompressedDataStart = 0;
 		for (int j = 0; j < BINARYCHUNKFILECHUNKRESERVED; j++)
 			Chunk.m_Reserved[j] = 0;
+		for (int j = 0; j < 16; j++)
+			Chunk.m_MD5Checksum[j] = 0;
 		m_Chunks.push_back(Chunk);
 
 		m_CurrentChunk = &(*m_Chunks.rbegin());
+		m_CurrentChunkEntries.clear();
+		m_CurrentChunkData.clear();
 
 	}
 
@@ -68,23 +77,78 @@ namespace NMR {
 		if (m_CurrentChunk == nullptr)
 			throw CNMRException(NMR_ERROR_NOSTREAMCHUNKOPEN);
 
+		__NMRASSERT(m_CurrentChunk->m_UncompressedDataSize == (m_CurrentChunkData.size() * 4));
+
+		if (m_CurrentChunkEntries.size() > 0) {
+			m_CurrentChunk->m_EntryCount = (nfUint32)m_CurrentChunkEntries.size();
+			m_CurrentChunk->m_EntryTableStart = m_pExportStream->getPosition();
+			m_pExportStream->writeBuffer(m_CurrentChunkEntries.data(), m_CurrentChunkEntries.size() * sizeof (BINARYCHUNKFILEENTRY));
+		}
+
+		if (m_CurrentChunkData.size() > 0) {
+			std::vector <nfByte> outBuffer;
+			outBuffer.resize(m_CurrentChunk->m_UncompressedDataSize * 2);
+
+			std::vector <nfByte> outProps;
+			outProps.resize(m_CurrentChunk->m_UncompressedDataSize * 2);
+
+			nfByte * pInputBuffer = (nfByte*) m_CurrentChunkData.data();
+
+			size_t inputSize = m_CurrentChunkData.size() * 4;
+			size_t outBufferSize = outBuffer.size ();
+			size_t outPropsSize = outProps.size ();
+
+			int error;
+			error = LzmaCompress (
+				outBuffer.data(), &outBufferSize, 
+				pInputBuffer, inputSize, 
+				outProps.data(), &outPropsSize,
+				9, /* 0 <= level <= 9, default = 5 */
+				384 * 1024 * 1024, /* use (1 << N) or (3 << N). 4 KB < dictSize <= 128 MB */
+				8, /* 0 <= lc <= 8, default = 3  */
+				4, /* 0 <= lp <= 4, default = 0  */
+				4, /* 0 <= pb <= 4, default = 2  */
+				256,  /* 5 <= fb <= 273, default = 32 */
+				1 /* 1 or 2, default = 2 */
+			);
+
+			if (error != SZ_OK)
+				throw CNMRException(NMR_ERROR_COULDNOTCOMPRESSDATA);
+
+			m_CurrentChunk->m_CompressedDataSize = (nfUint32) outBufferSize;
+			m_CurrentChunk->m_CompressedPropsSize = (nfUint32)outPropsSize;
+
+			m_CurrentChunk->m_CompressedDataStart = m_pExportStream->getPosition();
+			m_pExportStream->writeBuffer (outBuffer.data(), outBufferSize);
+			m_pExportStream->writeBuffer (outProps.data(), outPropsSize);
+		}
+
 		m_CurrentChunk = nullptr;
 	}
 
 	void CChunkedBinaryStreamWriter::finishWriting()
 	{
+		if (m_bIsFinished)
+			throw CNMRException(NMR_ERROR_STREAMWRITERALREADYFINISHED);
 		if (m_CurrentChunk != nullptr)
 			finishChunk();
 
 		writeChunkTable();
 		writeHeader();
+
+		m_bIsFinished = true;
 	}
 
-	//compressionType = (uncompressed, deltaPrediction, Sparse, RLE);
-
-	nfUint32 CChunkedBinaryStreamWriter::addIntArray(const nfInt32 * pData, nfUint32 nLength)
+	nfUint32 CChunkedBinaryStreamWriter::addIntArray(const nfInt32 * pData, nfUint32 nLength, eChunkedBinaryPredictionType predictionType)
 	{
+		nfUint32 nIndex;
+
+		if (m_bIsFinished)
+			throw CNMRException(NMR_ERROR_STREAMWRITERALREADYFINISHED);
+
 		if (pData == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (nLength == 0)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		if (m_CurrentChunk == nullptr)
@@ -93,6 +157,37 @@ namespace NMR {
 		unsigned int nElementID = m_elementIDCounter;
 		m_elementIDCounter++;
 
+
+		BINARYCHUNKFILEENTRY Entry;
+		Entry.m_EntryID = nElementID;
+		Entry.m_SizeInBytes = (nLength * 4);
+		Entry.m_PositionInChunk = m_CurrentChunk->m_UncompressedDataSize;
+
+		switch (predictionType) {
+			case eptNoPredicition:
+				Entry.m_EntryType = BINARYCHUNKFILEENTRYTYPE_INT32ARRAY_NOPREDICTION;
+				for (nIndex = 0; nIndex < nLength; nIndex++) 
+					m_CurrentChunkData.push_back (pData[nIndex]);
+
+				break;
+			case eptDeltaPredicition:
+				Entry.m_EntryType = BINARYCHUNKFILEENTRYTYPE_INT32ARRAY_DELTAPREDICTION;
+				m_CurrentChunkData.push_back(pData[0]);
+				for (nIndex = 1; nIndex < nLength; nIndex++) 
+					m_CurrentChunkData.push_back(pData[nIndex] - pData[nIndex - 1]);
+
+				break;
+			default:
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		};
+
+
+		m_CurrentChunkEntries.push_back(Entry);
+
+		m_CurrentChunk->m_EntryCount++;
+		m_CurrentChunk->m_UncompressedDataSize += Entry.m_SizeInBytes;
+
 		return nElementID;
 
 	}
@@ -100,6 +195,12 @@ namespace NMR {
 
 	void CChunkedBinaryStreamWriter::writeHeader()
 	{
+		if (m_bIsFinished)
+			throw CNMRException(NMR_ERROR_STREAMWRITERALREADYFINISHED);
+
+		if (m_CurrentChunk != nullptr)
+			throw CNMRException(NMR_ERROR_STREAMCHUNKALREADYOPEN);
+
 		BINARYCHUNKFILEHEADER Header;
 		Header.m_Sign = BINARYCHUNKFILEHEADERSIGN;
 		Header.m_Version = BINARYCHUNKFILEHEADERVERSION;
@@ -120,6 +221,9 @@ namespace NMR {
 
 	void CChunkedBinaryStreamWriter::copyToStream(PExportStream pStream)
 	{
+		if (!m_bIsFinished)
+			throw CNMRException(NMR_ERROR_STREAMWRITERNOTFINISHED);
+
 		if (pStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
@@ -133,6 +237,12 @@ namespace NMR {
 
 	void CChunkedBinaryStreamWriter::writeChunkTable()
 	{
+		if (m_bIsFinished)
+			throw CNMRException(NMR_ERROR_STREAMWRITERALREADYFINISHED);
+
+		if (m_CurrentChunk != nullptr)
+			throw CNMRException(NMR_ERROR_STREAMCHUNKALREADYOPEN);
+
 		m_ChunkTableStart = m_pExportStream->getPosition();
 		if (m_Chunks.size() > 0) {
 			m_pExportStream->writeBuffer (m_Chunks.data(), sizeof (BINARYCHUNKFILECHUNK) * m_Chunks.size());

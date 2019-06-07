@@ -46,6 +46,7 @@ namespace NMR {
 	protected:
 		nfInt32 m_nRelationIDCounter;
 		CModel * m_pModel;
+		nfBool m_bLZMACompression;
 		std::vector<nfByte> m_aSliceStreamBuffer;
 
 		// These are OPC dependent functions
@@ -59,7 +60,7 @@ namespace NMR {
 
 	public:
 		CModelWriter_3MF_Native() = delete;
-		CModelWriter_3MF_Native(_In_ PModel pModel);
+		CModelWriter_3MF_Native(_In_ PModel pModel, _In_ nfBool bLZMACompression);
 	};
 
 }

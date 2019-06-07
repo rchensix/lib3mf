@@ -296,6 +296,22 @@ NMR_ErrorConst.h defines all error code constants.
 // No Stream Chunk open
 #define NMR_ERROR_NOSTREAMCHUNKOPEN 0x1051
 
+// Stream writer already finished
+#define NMR_ERROR_STREAMWRITERALREADYFINISHED 0x1052
+
+// Stream writer not finished
+#define NMR_ERROR_STREAMWRITERNOTFINISHED 0x1053
+
+// Duplicate Binary Stream
+#define NMR_ERROR_DUPLICATEBINARYSTREAM 0x1054
+
+// Duplicate Binary Stream Path
+#define NMR_ERROR_DUPLICATEBINARYSTREAMPATH 0x1055
+
+// Could not compress data
+#define NMR_ERROR_COULDNOTCOMPRESSDATA 0x1056
+
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/
@@ -1227,11 +1243,5 @@ Toolpath errors (0xBXXX)
 
 // Toolpath has an invalid number of points
 #define NMR_ERROR_TOOLPATH_INVALIDPOINTCOUNT 0xB004
-
-// Duplicate Binary Stream
-#define NMR_ERROR_DUPLICATEBINARYSTREAM 0xB005
-
-// Duplicate Binary Stream Path
-#define NMR_ERROR_DUPLICATEBINARYSTREAMPATH 0xB006
 
 #endif // __NMR_ERRORCONST

@@ -117,10 +117,10 @@ namespace NMR {
 		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARTID, nullptr, sPartID.c_str());
 
 		if (pStreamWriter != nullptr) {
-			unsigned int binaryKeyX1 = pStreamWriter->addIntArray(pX1Buffer, nHatchCount);
-			unsigned int binaryKeyY1 = pStreamWriter->addIntArray(pY1Buffer, nHatchCount);
-			unsigned int binaryKeyX2 = pStreamWriter->addIntArray(pX2Buffer, nHatchCount);
-			unsigned int binaryKeyY2 = pStreamWriter->addIntArray(pY2Buffer, nHatchCount);
+			unsigned int binaryKeyX1 = pStreamWriter->addIntArray(pX1Buffer, nHatchCount, eptDeltaPredicition);
+			unsigned int binaryKeyY1 = pStreamWriter->addIntArray(pY1Buffer, nHatchCount, eptDeltaPredicition);
+			unsigned int binaryKeyX2 = pStreamWriter->addIntArray(pX2Buffer, nHatchCount, eptDeltaPredicition);
+			unsigned int binaryKeyY2 = pStreamWriter->addIntArray(pY2Buffer, nHatchCount, eptDeltaPredicition);
 
 			std::string sKeyX1 = std::to_string(binaryKeyX1);
 			std::string sKeyY1 = std::to_string(binaryKeyY1);
@@ -185,8 +185,8 @@ namespace NMR {
 		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARTID, nullptr, sPartID.c_str());
 
 		if (pStreamWriter != nullptr) {
-			unsigned int binaryKeyX = pStreamWriter->addIntArray(pXBuffer, nPointCount);
-			unsigned int binaryKeyY = pStreamWriter->addIntArray(pYBuffer, nPointCount);
+			unsigned int binaryKeyX = pStreamWriter->addIntArray(pXBuffer, nPointCount, eptDeltaPredicition);
+			unsigned int binaryKeyY = pStreamWriter->addIntArray(pYBuffer, nPointCount, eptDeltaPredicition);
 
 			std::string sKeyX = std::to_string(binaryKeyX);
 			std::string sKeyY = std::to_string(binaryKeyY);
@@ -240,8 +240,8 @@ namespace NMR {
 
 		if (pStreamWriter != nullptr) {
 
-			unsigned int binaryKeyX = pStreamWriter->addIntArray(pXBuffer, nPointCount);
-			unsigned int binaryKeyY = pStreamWriter->addIntArray(pYBuffer, nPointCount);
+			unsigned int binaryKeyX = pStreamWriter->addIntArray(pXBuffer, nPointCount, eptDeltaPredicition);
+			unsigned int binaryKeyY = pStreamWriter->addIntArray(pYBuffer, nPointCount, eptDeltaPredicition);
 
 			std::string sKeyX = std::to_string(binaryKeyX);
 			std::string sKeyY = std::to_string(binaryKeyY);

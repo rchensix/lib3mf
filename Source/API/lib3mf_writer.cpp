@@ -54,7 +54,10 @@ CWriter::CWriter(std::string sWriterClass, NMR::PModel model)
 
 	// Create specified writer instance
 	if (sWriterClass.compare("3mf") == 0) {
-		m_pWriter = std::make_shared<NMR::CModelWriter_3MF_Native>(model);
+		m_pWriter = std::make_shared<NMR::CModelWriter_3MF_Native>(model, false);
+	}
+	else if (sWriterClass.compare("3mfz") == 0) {
+		m_pWriter = std::make_shared<NMR::CModelWriter_3MF_Native>(model, true);
 	}
 	else if (sWriterClass.compare("stl") == 0) {
 		m_pWriter = std::make_shared<NMR::CModelWriter_STL>(model);

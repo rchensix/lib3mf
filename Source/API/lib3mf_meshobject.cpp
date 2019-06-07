@@ -31,6 +31,7 @@ Abstract: This is a stub class definition of CMeshObject
 #include "lib3mf_interfaceexception.hpp"
 
 #include "lib3mf_beamlattice.hpp"
+#include "lib3mf_binarystream.hpp"
 // Include custom headers here.
 
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
@@ -372,5 +373,9 @@ IBeamLattice* CMeshObject::BeamLattice()
 
 void CMeshObject::SetBinaryStream(IBinaryStream* pBinaryStream)
 {
-
+	if (pBinaryStream == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	
+	meshObject()->setBinaryStreamUUID(pBinaryStream->GetUUID());
+	
 }
