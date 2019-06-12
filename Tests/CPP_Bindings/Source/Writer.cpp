@@ -43,16 +43,19 @@ namespace Lib3MF
 			reader->ReadFromFile(InFolder + "Pyramid.3mf");
 			writer3MF = model->QueryWriter("3mf");
 			writerSTL = model->QueryWriter("stl");
+			writer3MFz = model->QueryWriter("3mfz");
 		}
 		virtual void TearDown() {
 			model.reset();
 			writer3MF.reset();
 			writerSTL.reset();
+			writer3MFz.reset();
 		}
 	
 		PModel model;
 		PWriter writer3MF;
 		PWriter writerSTL;
+		PWriter writer3MFz;
 
 		static std::string InFolder;
 		static std::string OutFolder;
@@ -137,6 +140,60 @@ namespace Lib3MF
 		Writer::writerSTL->WriteToBuffer(buffer);
 
 		ASSERT_TRUE(std::equal(buffer.begin(), buffer.end(), callbackBuffer.vec.begin()));
+	}
+
+	TEST_F(Writer, ToolpathTest)
+	{
+
+		auto pModel = Writer::model;
+		auto pObject = pModel->AddMeshObject();
+		pObject->SetName("TestObject");
+
+		auto pBinaryStream = Writer::writer3MF->CreateBinaryStream("Toolpath/layers.dat");
+
+		auto pToolpath = pModel->AddToolpath(0.001);
+		auto pProfile1 = pToolpath->AddProfile("profile1", 100.0, 200.0, 3.0, 1);
+		auto pProfile2 = pToolpath->AddProfile("profile2", 120.0, 220.0, 3.2, 2);
+
+		auto pLayer1 = pToolpath->AddLayer(100, "/Toolpath/layer1.xml", Writer::writer3MF.get());
+		Writer::writer3MF->AssignBinaryStream(pLayer1.get(), pBinaryStream.get());
+		auto nProfileID1 = pLayer1->RegisterProfile(pProfile1.get());
+		auto nPartID1 = pLayer1->RegisterPart(pObject.get());
+
+		std::vector<Lib3MF::sPosition2D> PointsA;
+		PointsA.push_back(Lib3MF::sPosition2D{ 100.0, 200.0 });
+		PointsA.push_back(Lib3MF::sPosition2D{ 100.0, 300.0 });
+		PointsA.push_back(Lib3MF::sPosition2D{ 110.0, 200.0 });
+		PointsA.push_back(Lib3MF::sPosition2D{ 110.0, 300.0 });
+		pLayer1->WriteHatchData(nProfileID1, nPartID1, PointsA);
+
+		auto pLayer2 = pToolpath->AddLayer(200, "/Toolpath/layer2.xml", Writer::writer3MF.get());
+		auto nProfileID2 = pLayer2->RegisterProfile(pProfile2.get());
+		auto nPartID2 = pLayer2->RegisterPart(pObject.get());
+		std::vector<Lib3MF::sPosition2D> PointsB;
+		PointsB.push_back(Lib3MF::sPosition2D{ 100.0, 200.0 });
+		PointsB.push_back(Lib3MF::sPosition2D{ 100.0, 300.0 });
+		PointsB.push_back(Lib3MF::sPosition2D{ 110.0, 200.0 });
+		PointsB.push_back(Lib3MF::sPosition2D{ 110.0, 300.0 });
+		pLayer2->WriteHatchData(nProfileID2, nPartID2, PointsB);
+
+		Writer::writer3MF->WriteToFile(Writer::OutFolder + "toolpath.3mf");
+
+	}
+
+
+	TEST_F(Writer, BinaryMeshTest)
+	{
+
+		auto pBinaryStream = Writer::writer3MFz->CreateBinaryStream("Binary/mesh.dat");
+
+		auto Iterator = Writer::model->GetMeshObjects();
+		while (Iterator->MoveNext()) {
+			auto pMeshObject = Writer::model->GetMeshObjectByID(Iterator->GetCurrent()->GetResourceID());
+			Writer::writer3MFz->AssignBinaryStream (pMeshObject.get(), pBinaryStream.get());
+		}
+		Writer::writer3MFz->WriteToFile(Writer::OutFolder + "binarymesh.3mf");
+
 	}
 
 }
