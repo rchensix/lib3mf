@@ -188,15 +188,11 @@ NMR::PImportStream CToolpathLayerData::createStream()
 }
 
 
-void CToolpathLayerData::SetBinaryStream(IBinaryStream* pBinaryStream)
-{
 
-	if (pBinaryStream != nullptr) {
-		m_pLayerData->SetBinaryStream(pBinaryStream->GetUUID(), pBinaryStream->GetPath());
-	}
-	else {
-		m_pLayerData->SetBinaryStream("", "");
-	}
+
+std::string CToolpathLayerData::GetLayerDataUUID()
+{
+	return m_pLayerData->getUUID();
 }
 
 

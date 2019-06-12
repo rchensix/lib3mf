@@ -41,6 +41,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #define BINARYCHUNKFILEENTRYTYPE_INT32ARRAY_NOPREDICTION 1
 #define BINARYCHUNKFILEENTRYTYPE_INT32ARRAY_DELTAPREDICTION 2
+#define BINARYCHUNKFILEENTRYTYPE_FLOAT32ARRAY_NOPREDICTION 3
+#define BINARYCHUNKFILEENTRYTYPE_FLOAT32ARRAY_DELTAPREDICTION 4
+
+#define BINARYCHUNKFILE_MAXFLOATUNITS (1024 * 1024 * 1024)
 
 namespace NMR {
 
@@ -102,6 +106,7 @@ namespace NMR {
 		void finishWriting ();
 
 		nfUint32 addIntArray (const nfInt32 * pData, nfUint32 nLength, eChunkedBinaryPredictionType predictionType);
+		nfUint32 addFloatArray(const nfFloat * pData, nfUint32 nLength, eChunkedBinaryPredictionType predictionType, nfFloat fDiscretizationUnits);
 
 		void copyToStream (PExportStream pStream);
 

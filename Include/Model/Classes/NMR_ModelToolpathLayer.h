@@ -46,16 +46,16 @@ namespace NMR {
 
 	class CModelToolpathLayer {
 	private:
-		PModelAttachment m_pAttachment;
+		std::string m_sLayerDataPath;
 		nfUint32 m_nMaxZ;
 
 	public:
 		CModelToolpathLayer() = delete;
-		CModelToolpathLayer(PModelAttachment pAttachment, nfUint32 nMaxZ);
+		CModelToolpathLayer(std::string sLayerDataPath, nfUint32 nMaxZ);
 
 		nfUint32 getMaxZ();
 
-		PModelAttachment getAttachment();
+		std::string getLayerDataPath();
 	};
 
 	typedef std::shared_ptr <CModelToolpathLayer> PModelToolpathLayer;

@@ -99,6 +99,14 @@ namespace NMR {
 	}
 
 
+	void CModelWriterNode100_Model::registerStreamWriter(const std::string & sInstanceUUID, const std::string & sPath, CChunkedBinaryStreamWriter * pBinaryStreamWriter)
+	{
+		if (pBinaryStreamWriter == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		m_BinaryStreamWriters.insert(std::make_pair (sInstanceUUID, std::make_pair (sPath, pBinaryStreamWriter)));
+	}
+
+
 	void CModelWriterNode100_Model::RegisterMetaDataGroupNameSpaces(PModelMetaDataGroup mdg)
 	{
 		for (nfUint32 i = 0; i < mdg->getMetaDataCount(); i++)
@@ -464,8 +472,17 @@ namespace NMR {
 					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PINDEX, nDefaultPropertyIndex);
 				}
 
+				CChunkedBinaryStreamWriter * pMeshBinaryWriter = nullptr;
+				std::string sMeshBinaryPath;
+
+				auto iBinaryIter = m_BinaryStreamWriters.find (pMeshObject->uuid()->toString ());
+				if (iBinaryIter != m_BinaryStreamWriters.end()) {
+					sMeshBinaryPath = iBinaryIter->second.first;
+					pMeshBinaryWriter = iBinaryIter->second.second;
+				}
+
 				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
-					m_pPropertyIndexMapping, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
+					m_pPropertyIndexMapping, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension, pMeshBinaryWriter, sMeshBinaryPath);
 				ModelWriter_Mesh.writeToXML();
 			}
 
@@ -896,7 +913,7 @@ namespace NMR {
 
 					writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHLAYER, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
 					writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLAYER_ZTOP, pLayer->getMaxZ());
-					writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLAYER_PATH, pLayer->getAttachment()->getPathURI());
+					writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLAYER_PATH, pLayer->getLayerDataPath ());
 					writeEndElement();
 
 				}

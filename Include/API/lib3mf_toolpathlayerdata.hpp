@@ -79,9 +79,9 @@ public:
 
 	void finishHeader();
 
-	void SetBinaryStream(IBinaryStream* pBinaryStream);
-
 	NMR::PImportStream createStream();
+
+	std::string GetLayerDataUUID();
 
 };
 

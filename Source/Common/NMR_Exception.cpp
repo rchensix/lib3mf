@@ -135,7 +135,9 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATEBINARYSTREAM: return "Duplicate Binary Stream";
 		case NMR_ERROR_DUPLICATEBINARYSTREAMPATH: return "Duplicate Binary Stream Path";
 		case NMR_ERROR_COULDNOTCOMPRESSDATA: return "Could not compress data";
-
+		case NMR_ERROR_BINARYCHUNK_DISCRETIZATIONVALUEOUTOFRANGE: return "Discretization Value out of range";
+		case NMR_ERROR_DUPLICATEBINARYSTREAMUUID: return "Duplicate Binary Stream UUID";
+		case NMR_ERROR_BINARYSTREAMNOTFOUND: return "Binary stream not found";
 
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;

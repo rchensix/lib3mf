@@ -52,9 +52,9 @@ namespace NMR {
 		return std::make_shared<CModelToolpath> (sID, pModel, dUnitFactor);
 	}
 
-	PModelToolpathLayer CModelToolpath::addLayer(PModelAttachment pAttachment, nfUint32 nMaxZ)
+	PModelToolpathLayer CModelToolpath::addLayer(const std::string & sPath, nfUint32 nMaxZ)
 	{
-		auto pLayer = std::make_shared<CModelToolpathLayer>(pAttachment, nMaxZ);
+		auto pLayer = std::make_shared<CModelToolpathLayer>(sPath, nMaxZ);
 		m_Layers.push_back(pLayer);
 		return pLayer;
 	}

@@ -180,4 +180,29 @@ IBinaryStream * CWriter::CreateBinaryStream(const std::string & sPath)
 	return pBinaryStream.release ();
 }
 
+void CWriter::AssignBinaryStream(IBase* pInstance, IBinaryStream* pBinaryStream)
+{
+	if (pBinaryStream == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	IToolpathLayerData * pLayerData = dynamic_cast<IToolpathLayerData *> (pInstance);
+	if (pLayerData != nullptr)
+		m_pWriter->assignBinaryStream (pLayerData->GetLayerDataUUID(), pBinaryStream->GetUUID ());
+
+	IObject * pObject = dynamic_cast<IObject *> (pInstance);
+	if (pObject != nullptr) {
+		bool bHasUUID;
+		std::string sUUID = pObject->GetUUID(bHasUUID);
+		if (bHasUUID) {
+			m_pWriter->assignBinaryStream(sUUID, pBinaryStream->GetUUID());
+		}
+	}
+}
+
+NMR::PModelWriter CWriter::getModelWriter()
+{
+	return m_pWriter;
+}
+
+
 

@@ -371,11 +371,3 @@ IBeamLattice* CMeshObject::BeamLattice()
 	return new CBeamLattice(meshObject(), meshObject()->getBeamLatticeAttributes());
 }
 
-void CMeshObject::SetBinaryStream(IBinaryStream* pBinaryStream)
-{
-	if (pBinaryStream == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	
-	meshObject()->setBinaryStreamUUID(pBinaryStream->GetUUID());
-	
-}

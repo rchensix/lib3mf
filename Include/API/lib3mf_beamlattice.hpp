@@ -110,8 +110,6 @@ public:
 
 	IBeamSet * GetBeamSet (const Lib3MF_uint32 nIndex);
 
-	void SetBinaryStream(IBinaryStream* pBinaryStream);
-
 };
 
 } // namespace Impl

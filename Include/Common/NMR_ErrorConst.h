@@ -311,6 +311,14 @@ NMR_ErrorConst.h defines all error code constants.
 // Could not compress data
 #define NMR_ERROR_COULDNOTCOMPRESSDATA 0x1056
 
+// Discretization Value out of range
+#define NMR_ERROR_BINARYCHUNK_DISCRETIZATIONVALUEOUTOFRANGE 0x1057
+
+// Duplicate Binary Stream UUID
+#define NMR_ERROR_DUPLICATEBINARYSTREAMUUID 0x1058
+
+// Binary stream not found
+#define NMR_ERROR_BINARYSTREAMNOTFOUND 0x1059
 
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)

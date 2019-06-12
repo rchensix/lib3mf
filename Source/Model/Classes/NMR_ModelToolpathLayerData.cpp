@@ -39,16 +39,23 @@ NMR_ModelToolpathLayer.cpp defines the Model Toolpath Layer.
 #include "Common/Platform/NMR_XmlWriter_Native.h"
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
 
+#include "Common/NMR_UUID.h"
+
 #include <sstream>
 #include <algorithm>
 
 namespace NMR {
 
-	CModelToolpathLayerData::CModelToolpathLayerData(_In_ CModelToolpath * pModelToolpath)
-		: m_pModelToolpath (pModelToolpath)
+	CModelToolpathLayerData::CModelToolpathLayerData(_In_ CModelToolpath * pModelToolpath, _In_ NMR::PModelWriter pModelWriter)
+		: m_pModelToolpath (pModelToolpath), m_pModelWriter (pModelWriter)
 	{
 		if (pModelToolpath == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (pModelWriter.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		CUUID uuid;
+		m_sUUID = uuid.toString();
 
 		m_pExportStream = std::make_shared<NMR::CExportStreamMemory>();
 
@@ -93,7 +100,8 @@ namespace NMR {
 
 	void CModelToolpathLayerData::WriteHatchData(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nHatchCount, const nfInt32 * pX1Buffer, const nfInt32 * pY1Buffer, const nfInt32 * pX2Buffer, const nfInt32 * pY2Buffer)
 	{
-		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter();
+		std::string sPath;
+		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
 		if (pX1Buffer == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		if (pY1Buffer == nullptr)
@@ -169,7 +177,8 @@ namespace NMR {
 		if (pYBuffer == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter();
+		std::string sPath;
+		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
 
 		if (m_bWritingHeader)
 			finishHeader();
@@ -219,12 +228,14 @@ namespace NMR {
 
 	void CModelToolpathLayerData::WritePolyline(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32 * pXBuffer, const nfInt32 * pYBuffer)
 	{
+		std::string sPath;
+
 		if (pXBuffer == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		if (pYBuffer == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter();
+		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
 		if (m_bWritingHeader)
 			finishHeader();
 		if (!m_bWritingData)
@@ -274,7 +285,9 @@ namespace NMR {
 
 	void CModelToolpathLayerData::finishHeader()
 	{
-		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter();
+		std::string sPath;
+
+		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
 
 		if (!m_bWritingHeader)
 			throw CNMRException(NMR_ERROR_TOOLPATH_NOTWRITINGHEADER);
@@ -312,18 +325,13 @@ namespace NMR {
 		m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_SEGMENTS, nullptr);
 
 		if (pStreamWriter != nullptr)
-			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, XML_3MF_TOOLPATHATTRIBUTE_BINARY, nullptr, m_sBinaryStreamPath.c_str());
+			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, XML_3MF_TOOLPATHATTRIBUTE_BINARY, nullptr, sPath.c_str());
 
 		m_bWritingData = true;
 
 
 	}
 
-	void CModelToolpathLayerData::SetBinaryStream(const std::string sBinaryStreamUUID, const std::string sBinaryStreamPath)
-	{
-		m_sBinaryStreamPath = sBinaryStreamPath;
-		m_sBinaryStreamUUID = sBinaryStreamUUID;
-	}
 
 	NMR::PImportStream CModelToolpathLayerData::createStream()
 	{
@@ -350,10 +358,10 @@ namespace NMR {
 
 	}
 
-	NMR::CChunkedBinaryStreamWriter * CModelToolpathLayerData::getStreamWriter()
+	NMR::CChunkedBinaryStreamWriter * CModelToolpathLayerData::getStreamWriter(std::string & sPath)
 	{
-		CModel * pModel = m_pModelToolpath->getModel();
-		return pModel->findBinaryStream (m_sBinaryStreamUUID);
+	
+		return m_pModelWriter->findBinaryStream (m_sUUID, sPath);
 
 	}
 
@@ -361,6 +369,12 @@ namespace NMR {
 	{
 		return m_pModelToolpath->getUnitFactor();
 	}
+
+	std::string CModelToolpathLayerData::getUUID()
+	{
+		return m_sUUID;
+	}
+
 
 }
 

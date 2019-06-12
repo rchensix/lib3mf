@@ -34,6 +34,7 @@ Abstract: This is a stub class definition of CToolpath
 #include "lib3mf_attachment.hpp"
 #include "lib3mf_interfaceexception.hpp"
 #include "lib3mf_binarystream.hpp"
+#include "lib3mf_writer.hpp"
 
 // Include custom headers here.
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
@@ -67,12 +68,6 @@ Lib3MF_uint32 CToolpath::GetProfileCount()
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IAttachment * CToolpath::GetLayerAttachment(const Lib3MF_uint32 nLayerIndex)
-{
-	auto pLayer = m_pToolpath->getLayer(nLayerIndex);
-	return new CAttachment(pLayer->getAttachment());
-}
-
 Lib3MF_uint32 CToolpath::GetLayerZ(const Lib3MF_uint32 nLayerIndex)
 {
 	auto pLayer = m_pToolpath->getLayer(nLayerIndex);
@@ -102,26 +97,21 @@ IToolpathProfile * CToolpath::GetProfileUUID(const std::string & sProfileUUID)
 }
 
 
-IAttachment * CToolpath::AddLayer(const Lib3MF_uint32 nZMax, IToolpathLayerData* pLayerData, const std::string & sPath)
+IToolpathLayerData * CToolpath::AddLayer(const Lib3MF_uint32 nZMax, const std::string & sPath, IWriter * pModelWriter)
 {
-	NMR::CModel * pModel = m_pToolpath->getModel();
-
-	CToolpathLayerData * pInternalLayerData = dynamic_cast<CToolpathLayerData *> (pLayerData);
-	if (pInternalLayerData == nullptr)
+	if (pModelWriter == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
-	NMR::PImportStream pStream = pInternalLayerData->createStream ();
+	CWriter * pWriterInstance = dynamic_cast<CWriter *> (pModelWriter);
+	if (pWriterInstance == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 
-	auto pAttachment = pModel->addAttachment (sPath, PACKAGE_TOOLPATH_RELATIONSHIP_TYPE, pStream);
-	m_pToolpath->addLayer(pAttachment, nZMax);
+	std::unique_ptr<CToolpathLayerData> pToolpathData (new CToolpathLayerData(std::make_shared<NMR::CModelToolpathLayerData>(m_pToolpath.get(), pWriterInstance->getModelWriter ())));
 
-	return new CAttachment (pAttachment);
+	m_pToolpath->addLayer(sPath, nZMax);
+
+	return pToolpathData.release();
+
 }
 
-
-IToolpathLayerData * CToolpath::CreateEmptyLayerData()
-{
-	
-	return new CToolpathLayerData(std::make_shared<NMR::CModelToolpathLayerData> (m_pToolpath.get ()));
-}
 

@@ -1163,33 +1163,5 @@ namespace NMR {
 		return resultList;
 	}
 
-	// Handle binary streams of the model
-	void CModel::registerBinaryStream(std::string sUUID, NMR::PChunkedBinaryStreamWriter pBinaryStream)
-	{
-		auto iIter = m_BinaryStreamWriters.find(sUUID);
-		if (iIter != m_BinaryStreamWriters.end()) 
-			throw CNMRException(NMR_ERROR_DUPLICATEBINARYSTREAM);
-		
-		m_BinaryStreamWriters.insert(std::make_pair (sUUID, pBinaryStream));
-	}
-
-	void CModel::unregisterBinaryStream(std::string sUUID)
-	{
-		m_BinaryStreamWriters.erase(sUUID);
-	}
-
-	void CModel::clearBinaryStreams()
-	{
-		m_BinaryStreamWriters.clear();
-	}
-
-	NMR::CChunkedBinaryStreamWriter * CModel::findBinaryStream(std::string sUUID)
-	{
-		auto iIter = m_BinaryStreamWriters.find(sUUID);
-		if (iIter != m_BinaryStreamWriters.end())
-			return iIter->second.get();
-
-		return nullptr;
-	}
 
 }

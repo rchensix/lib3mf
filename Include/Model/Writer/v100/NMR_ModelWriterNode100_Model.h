@@ -62,6 +62,8 @@ namespace NMR {
 		nfBool m_bIsRootModel;
 		nfBool m_bWriteCustomNamespaces;
 
+		std::map<std::string, std::pair<std::string, CChunkedBinaryStreamWriter *>> m_BinaryStreamWriters;
+
 		void writeModelMetaData();
 		void writeMetaData(_In_ PModelMetaData pMetaData);
 		void writeMetaDataGroup(_In_ PModelMetaDataGroup pMetaDataGroup);
@@ -94,6 +96,8 @@ namespace NMR {
 		CModelWriterNode100_Model() = delete;
 		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor);
 		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor, nfBool bWritesRootModel);
+
+		void registerStreamWriter(const std::string & sInstanceUUID, const std::string & sPath, CChunkedBinaryStreamWriter * pBinaryStreamWriter);
 		
 		virtual void writeToXML();
 	};

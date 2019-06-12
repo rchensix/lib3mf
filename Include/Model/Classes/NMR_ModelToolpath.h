@@ -67,7 +67,7 @@ namespace NMR {
 
 		static PModelToolpath make(_In_ const ModelResourceID sID, _In_ CModel * pModel, double dUnitFactor);
 
-		PModelToolpathLayer addLayer (PModelAttachment pAttachment, nfUint32 nMaxZ);
+		PModelToolpathLayer addLayer (const std::string & sPath, nfUint32 nMaxZ);
 		nfUint32 getLayerCount();
 		PModelToolpathLayer getLayer(nfUint32 nIndex);
 

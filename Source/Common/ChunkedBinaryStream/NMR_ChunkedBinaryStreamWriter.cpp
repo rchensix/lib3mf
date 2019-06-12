@@ -129,7 +129,8 @@ namespace NMR {
 	void CChunkedBinaryStreamWriter::finishWriting()
 	{
 		if (m_bIsFinished)
-			throw CNMRException(NMR_ERROR_STREAMWRITERALREADYFINISHED);
+			return;
+
 		if (m_CurrentChunk != nullptr)
 			finishChunk();
 
@@ -138,6 +139,7 @@ namespace NMR {
 
 		m_bIsFinished = true;
 	}
+
 
 	nfUint32 CChunkedBinaryStreamWriter::addIntArray(const nfInt32 * pData, nfUint32 nLength, eChunkedBinaryPredictionType predictionType)
 	{
@@ -192,6 +194,85 @@ namespace NMR {
 
 	}
 
+
+	nfUint32 CChunkedBinaryStreamWriter::addFloatArray(const nfFloat * pData, nfUint32 nLength, eChunkedBinaryPredictionType predictionType, nfFloat fDiscretizationUnits)
+	{
+		nfUint32 nIndex;
+		nfInt64 nValue;
+		nfInt64 nOldValue;
+
+		if (fDiscretizationUnits <= 0.0f)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		if (m_bIsFinished)
+			throw CNMRException(NMR_ERROR_STREAMWRITERALREADYFINISHED);
+
+		if (pData == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (nLength == 0)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		if (m_CurrentChunk == nullptr)
+			beginChunk();
+
+		unsigned int nElementID = m_elementIDCounter;
+		m_elementIDCounter++;
+
+
+		BINARYCHUNKFILEENTRY Entry;
+		Entry.m_EntryID = nElementID;
+		Entry.m_SizeInBytes = (nLength * 4) + 4;
+		Entry.m_PositionInChunk = m_CurrentChunk->m_UncompressedDataSize;
+
+		// Add Discretization units
+		m_CurrentChunkData.push_back(*((nfInt32 *)&fDiscretizationUnits));
+
+		switch (predictionType) {
+		case eptNoPredicition:
+			Entry.m_EntryType = BINARYCHUNKFILEENTRYTYPE_FLOAT32ARRAY_NOPREDICTION;
+
+			for (nIndex = 0; nIndex < nLength; nIndex++) {
+				nfInt64 nValue = (nfInt64) (pData[nIndex]);
+				if (abs (nValue) > BINARYCHUNKFILE_MAXFLOATUNITS)
+					throw CNMRException(NMR_ERROR_BINARYCHUNK_DISCRETIZATIONVALUEOUTOFRANGE);
+
+				m_CurrentChunkData.push_back((nfInt32)pData[nIndex]);
+			}
+
+			break;
+		case eptDeltaPredicition:  
+			Entry.m_EntryType = BINARYCHUNKFILEENTRYTYPE_FLOAT32ARRAY_DELTAPREDICTION;
+			
+			nValue = (nfInt64)(pData[0]);
+			if (abs(nValue) > BINARYCHUNKFILE_MAXFLOATUNITS)
+				throw CNMRException(NMR_ERROR_BINARYCHUNK_DISCRETIZATIONVALUEOUTOFRANGE);
+			nOldValue = nValue;
+
+			m_CurrentChunkData.push_back((nfInt32) nValue);
+			for (nIndex = 1; nIndex < nLength; nIndex++) {
+				nValue = (nfInt64)(pData[nIndex]);
+				if (abs(nValue) > BINARYCHUNKFILE_MAXFLOATUNITS)
+					throw CNMRException(NMR_ERROR_BINARYCHUNK_DISCRETIZATIONVALUEOUTOFRANGE);
+				m_CurrentChunkData.push_back(((nfInt32) nValue) - ((nfInt32) nOldValue));
+
+				nOldValue = nValue;
+			}
+
+			break;
+		default:
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		};
+
+
+		m_CurrentChunkEntries.push_back(Entry);
+
+		m_CurrentChunk->m_EntryCount++;
+		m_CurrentChunk->m_UncompressedDataSize += Entry.m_SizeInBytes;
+
+		return nElementID;
+
+	}
 
 	void CChunkedBinaryStreamWriter::writeHeader()
 	{

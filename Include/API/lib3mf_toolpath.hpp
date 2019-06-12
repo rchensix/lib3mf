@@ -67,9 +67,7 @@ public:
 
 	Lib3MF_uint32 GetProfileCount();
 
-	IAttachment * AddLayer(const Lib3MF_uint32 nZMax, IToolpathLayerData* pLayerData, const std::string & sPath);
-
-	IAttachment * GetLayerAttachment(const Lib3MF_uint32 nLayerIndex);
+	IToolpathLayerData * AddLayer(const Lib3MF_uint32 nZMax, const std::string & sPath, IWriter* pModelWriter);
 
 	Lib3MF_uint32 GetLayerZ(const Lib3MF_uint32 nLayerIndex);
 
@@ -78,8 +76,6 @@ public:
 	IToolpathProfile * GetProfile(const Lib3MF_uint32 nProfileIndex);
 
 	IToolpathProfile * GetProfileUUID(const std::string & sProfileUUID);
-
-	IToolpathLayerData * CreateEmptyLayerData();
 
 };
 

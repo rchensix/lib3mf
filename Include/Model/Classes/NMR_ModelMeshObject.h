@@ -51,7 +51,6 @@ namespace NMR {
 	private:
 		PMesh m_pMesh; 
 		PModelMeshBeamLatticeAttributes m_pBeamLatticeAttributes;
-		std::string m_sBinaryStreamUUID;
 
 	public:
 		CModelMeshObject() = delete;
@@ -78,9 +77,6 @@ namespace NMR {
 
 		_Ret_notnull_ PModelMeshBeamLatticeAttributes getBeamLatticeAttributes();
 		void setBeamLatticeAttributes(_In_ PModelMeshBeamLatticeAttributes pBeamLatticeAttributes);
-
-		void setBinaryStreamUUID(const std::string & sUUID);
-		std::string getBinaryStreamUUID();
 
 	};
 

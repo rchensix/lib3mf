@@ -36,6 +36,8 @@ NMR_ModelToolpath.h defines the Model Toolpath Layer Data.
 #include "Common/NMR_Types.h" 
 
 #include "Model/Classes/NMR_ModelToolpath.h" 
+#include "Model/Writer/NMR_ModelWriter.h" 
+
 #include "Common/Platform/NMR_XmlWriter.h" 
 #include "Common/Platform/NMR_ExportStream_Memory.h" 
 #include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamWriter.h" 
@@ -54,13 +56,14 @@ namespace NMR {
 
 	class CModelToolpathLayerData {
 	private:
+		std::string m_sUUID;
+
 		CModelToolpath * m_pModelToolpath;
+
+		NMR::PModelWriter m_pModelWriter;
 
 		NMR::PXmlWriter m_pXmlWriter;
 		NMR::PExportStreamMemory m_pExportStream;
-
-		std::string m_sBinaryStreamPath;
-		std::string m_sBinaryStreamUUID;
 
 		std::map <unsigned int, PModelToolpathProfile> m_Profiles;
 		std::map <unsigned int, PModelObject> m_Parts;
@@ -72,11 +75,11 @@ namespace NMR {
 
 		double m_dUnits;
 
-		NMR::CChunkedBinaryStreamWriter * getStreamWriter();
+		NMR::CChunkedBinaryStreamWriter * getStreamWriter(std::string & sPath);
 		
 	public:
 		CModelToolpathLayerData() = delete;
-		CModelToolpathLayerData(_In_ CModelToolpath * pModelToolpath);
+		CModelToolpathLayerData(_In_ CModelToolpath * pModelToolpath, _In_ NMR::PModelWriter pModelWriter);
 
 		nfUint32 RegisterProfile(_In_ PModelToolpathProfile pProfile);
 
@@ -90,12 +93,12 @@ namespace NMR {
 
 		void finishHeader();
 
-		void SetBinaryStream(const std::string sBinaryStreamUUID, const std::string sBinaryStreamPath);
-
 		NMR::PImportStream createStream();
 
 		double getUnits();
-		
+
+		std::string getUUID ();
+
 	};
 
 	typedef std::shared_ptr <CModelToolpathLayerData> PModelToolpathLayerData;

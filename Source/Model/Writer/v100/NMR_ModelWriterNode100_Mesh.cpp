@@ -52,8 +52,12 @@ namespace NMR {
 	const int CModelWriterNode100_Mesh::m_snPutDoubleFactor = (int)(pow(10, CModelWriterNode100_Mesh::m_snPosAfterDecPoint));
 
 	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
-		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
-		:CModelWriterNode(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor)
+		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension,
+		CChunkedBinaryStreamWriter * pBinaryStreamWriter, std::string sBinaryStreamPath)
+		: CModelWriterNode(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor),
+			m_pBinaryStreamWriter (pBinaryStreamWriter),
+			m_sBinaryStreamPath (sBinaryStreamPath)
+
 	{
 		__NMRASSERT(pModelMeshObject != nullptr);
 		if (!pPropertyIndexMapping.get())
@@ -112,26 +116,78 @@ namespace NMR {
 		// Write Mesh Element
 		writeStartElement(XML_3MF_ELEMENT_MESH);
 
+		if (m_pBinaryStreamWriter != nullptr) {
+			writePrefixedStringAttribute (XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, XML_3MF_ATTRIBUTE_MESH_BINARY, m_sBinaryStreamPath.c_str());
+		}
+
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENODES);
 		// Write Vertices
 		writeStartElement(XML_3MF_ELEMENT_VERTICES);
-		for (nNodeIndex = 0; nNodeIndex < nNodeCount; nNodeIndex++) {
-			// Get Mesh Node
-			MESHNODE * pMeshNode = pMesh->getNode(nNodeIndex);
-			writeVertexData(pMeshNode);
 
-			/* The following works, but would be a major output speed bottleneck!
+		if (m_pBinaryStreamWriter != nullptr) {
 
-			// Write Vertex
-			writeStartElement(XML_3MF_ELEMENT_VERTEX);
-			writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_X, pMeshNode->m_position.m_values.x);
-			writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_Y, pMeshNode->m_position.m_values.y);
-			writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_Z, pMeshNode->m_position.m_values.z);
-			writeEndElement(); */
+			float fUnits = 0.001f;
 
-			if (nNodeIndex % PROGRESS_NODEUPDATE == PROGRESS_NODEUPDATE-1) {
-				m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+			if (nNodeCount > 0) {
+
+				MESHNODE * pMeshNode = pMesh->getNode(0);
+				nfFloat originX = pMeshNode->m_position.m_fields[0];
+				nfFloat originY = pMeshNode->m_position.m_fields[1];
+				nfFloat originZ = pMeshNode->m_position.m_fields[2];
+
+				std::vector<nfFloat> XValues;
+				std::vector<nfFloat> YValues;
+				std::vector<nfFloat> ZValues;
+				XValues.resize(nNodeCount);
+				YValues.resize(nNodeCount);
+				ZValues.resize(nNodeCount);
+
+				for (nNodeIndex = 0; nNodeIndex < nNodeCount; nNodeIndex++) {
+					// Get Mesh Node
+					MESHNODE * pMeshNode = pMesh->getNode(nNodeIndex);
+					XValues[nNodeIndex] = pMeshNode->m_position.m_fields[0] - originX;
+					YValues[nNodeIndex] = pMeshNode->m_position.m_fields[1] - originY;
+					ZValues[nNodeIndex] = pMeshNode->m_position.m_fields[2] - originZ;
+				}
+
+				unsigned int binaryKeyX = m_pBinaryStreamWriter->addFloatArray(XValues.data(), nNodeCount, eptDeltaPredicition, fUnits);
+				unsigned int binaryKeyY = m_pBinaryStreamWriter->addFloatArray(YValues.data(), nNodeCount, eptDeltaPredicition, fUnits);
+				unsigned int binaryKeyZ = m_pBinaryStreamWriter->addFloatArray(ZValues.data(), nNodeCount, eptDeltaPredicition, fUnits);
+
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_VERTEX, XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_VERTEX_X, binaryKeyX);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_VERTEX_Y, binaryKeyY);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_VERTEX_Z, binaryKeyZ);
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_ORIGINX, originX);
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_ORIGINY, originY);
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_ORIGINZ, originZ);
+				writeEndElement();
+
 			}
+
+		}
+		else {
+
+
+			for (nNodeIndex = 0; nNodeIndex < nNodeCount; nNodeIndex++) {
+				// Get Mesh Node
+				MESHNODE * pMeshNode = pMesh->getNode(nNodeIndex);
+				writeVertexData(pMeshNode);
+
+				/* The following works, but would be a major output speed bottleneck!
+
+				// Write Vertex
+				writeStartElement(XML_3MF_ELEMENT_VERTEX);
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_X, pMeshNode->m_position.m_values.x);
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_Y, pMeshNode->m_position.m_values.y);
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_Z, pMeshNode->m_position.m_values.z);
+				writeEndElement(); */
+
+				if (nNodeIndex % PROGRESS_NODEUPDATE == PROGRESS_NODEUPDATE - 1) {
+					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+				}
+			}
+
 		}
 		writeFullEndElement();
 
@@ -147,10 +203,13 @@ namespace NMR {
 			if (pInformation)
 				pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
 		}
-		
-		CChunkedBinaryStreamWriter * pStreamWriter = m_pModel->findBinaryStream(m_pModelMeshObject->getBinaryStreamUUID ());
 
-		if (pStreamWriter != nullptr) {
+		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITETRIANGLES);
+		// Write Triangles
+		writeStartElement(XML_3MF_ELEMENT_TRIANGLES);
+
+
+		if (m_pBinaryStreamWriter != nullptr) {
 
 			std::vector<nfInt32> Node1Indices;
 			std::vector<nfInt32> Node2Indices;
@@ -161,16 +220,16 @@ namespace NMR {
 
 			for (nFaceIndex = 0; nFaceIndex < nFaceCount; nFaceIndex++) {
 				MESHFACE * pMeshFace = pMesh->getFace(nFaceIndex);
-				Node1Indices[nFaceIndex] = pMeshFace->m_nodeindices[0];
-				Node2Indices[nFaceIndex] = pMeshFace->m_nodeindices[1];
-				Node3Indices[nFaceIndex] = pMeshFace->m_nodeindices[2];
+				Node1Indices[nFaceIndex] = (nfInt32) pMeshFace->m_nodeindices[0];
+				Node2Indices[nFaceIndex] = (nfInt32) pMeshFace->m_nodeindices[1] - (nfInt32) pMeshFace->m_nodeindices[0];
+				Node3Indices[nFaceIndex] = (nfInt32) pMeshFace->m_nodeindices[2] - (nfInt32) pMeshFace->m_nodeindices[0];
 			}
 
-			unsigned int binaryKeyV1 = pStreamWriter->addIntArray(Node1Indices.data(), nFaceCount, eptDeltaPredicition);
-			unsigned int binaryKeyV2 = pStreamWriter->addIntArray(Node2Indices.data(), nFaceCount, eptDeltaPredicition);
-			unsigned int binaryKeyV3 = pStreamWriter->addIntArray(Node3Indices.data(), nFaceCount, eptDeltaPredicition);
+			unsigned int binaryKeyV1 = m_pBinaryStreamWriter->addIntArray(Node1Indices.data(), nFaceCount, eptDeltaPredicition);
+			unsigned int binaryKeyV2 = m_pBinaryStreamWriter->addIntArray(Node2Indices.data(), nFaceCount, eptDeltaPredicition);
+			unsigned int binaryKeyV3 = m_pBinaryStreamWriter->addIntArray(Node3Indices.data(), nFaceCount, eptDeltaPredicition);
 
-			writeStartElementWithPrefix(XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, XML_3MF_ELEMENT_TRIANGLE);
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_TRIANGLE, XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION);
 			writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V1, binaryKeyV1);
 			writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V2, binaryKeyV2);
 			writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V3, binaryKeyV3);
@@ -178,9 +237,6 @@ namespace NMR {
 
 		} else {
 
-			m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITETRIANGLES);
-			// Write Triangles
-			writeStartElement(XML_3MF_ELEMENT_TRIANGLES);
 			for (nFaceIndex = 0; nFaceIndex < nFaceCount; nFaceIndex++) {
 				if (nFaceIndex % PROGRESS_TRIANGLEUPDATE == PROGRESS_TRIANGLEUPDATE - 1) {
 					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);

@@ -41,12 +41,9 @@ namespace NMR {
 
 
 
-	CModelToolpathLayer::CModelToolpathLayer(PModelAttachment pAttachment, nfUint32 nMaxZ)
-		: m_pAttachment(pAttachment), m_nMaxZ (nMaxZ)
+	CModelToolpathLayer::CModelToolpathLayer(std::string sLayerDataPath, nfUint32 nMaxZ)
+		: m_sLayerDataPath(sLayerDataPath), m_nMaxZ (nMaxZ)
 	{
-		if (pAttachment.get() == nullptr)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
 	}
 
 	nfUint32 CModelToolpathLayer::getMaxZ()
@@ -54,9 +51,9 @@ namespace NMR {
 		return m_nMaxZ;
 	}
 
-	PModelAttachment CModelToolpathLayer::getAttachment()
+	std::string CModelToolpathLayer::getLayerDataPath()
 	{
-		return m_pAttachment;
+		return m_sLayerDataPath;
 	}
 
 }

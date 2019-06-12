@@ -49,7 +49,11 @@ namespace NMR {
 		PModel m_pModel;
 		PProgressMonitor m_pProgressMonitor;
 
-		std::map<std::string, PChunkedBinaryStreamWriter> m_BinaryWriters;
+		std::map<std::string, std::pair <std::string, PChunkedBinaryStreamWriter>> m_BinaryWriterUUIDMap;
+		std::map<std::string, std::string> m_BinaryWriterPathMap;
+		std::map<std::string, std::string> m_BinaryWriterAssignmentMap;
+		
+
 	public:
 		CModelWriter() = delete;
 		CModelWriter(_In_ PModel pModel);
@@ -65,6 +69,10 @@ namespace NMR {
 
 		void registerBinaryStream (const std::string &sPath, const std::string & sUUID, PChunkedBinaryStreamWriter pStreamWriter);
 		void unregisterBinaryStreams ();
+
+		void assignBinaryStream (const std::string &InstanceUUID, const std::string & sBinaryStreamUUID);
+		CChunkedBinaryStreamWriter * findBinaryStream(const std::string &InstanceUUID, std::string & Path);
+
 	};
 
 	typedef std::shared_ptr <CModelWriter> PModelWriter;

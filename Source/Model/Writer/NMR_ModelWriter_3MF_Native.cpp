@@ -140,11 +140,11 @@ namespace NMR {
 		}
 
 		// Write Binary Streams
-		for (auto iBinaryIter : m_BinaryWriters) {
+		for (auto iBinaryIter : m_BinaryWriterUUIDMap) {
 			
-			iBinaryIter.second->finishWriting();
-			POpcPackagePart pBinaryPart = pPackageWriter->addPart(iBinaryIter.first);
- 			iBinaryIter.second->copyToStream (pBinaryPart->getExportStream());
+			iBinaryIter.second.second->finishWriting();
+			POpcPackagePart pBinaryPart = pPackageWriter->addPart(iBinaryIter.second.first);
+ 			iBinaryIter.second.second->copyToStream (pBinaryPart->getExportStream());
 			
 		}
 

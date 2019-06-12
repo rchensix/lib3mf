@@ -68,19 +68,53 @@ namespace NMR {
 
 	void CModelWriter::registerBinaryStream(const std::string &sPath, const std::string & sUUID, PChunkedBinaryStreamWriter pStreamWriter)
 	{
-		auto iIter = m_BinaryWriters.find(sPath);
-		if (iIter != m_BinaryWriters.end())
+		auto iPathIter = m_BinaryWriterPathMap.find(sPath);
+		if (iPathIter != m_BinaryWriterPathMap.end())
 			throw CNMRException(NMR_ERROR_DUPLICATEBINARYSTREAMPATH);
 
-		m_pModel->registerBinaryStream(sUUID, pStreamWriter);
-		m_BinaryWriters.insert(std::make_pair (sPath, pStreamWriter));
+		auto iUUIDIter = m_BinaryWriterUUIDMap.find(sUUID);
+		if (iUUIDIter != m_BinaryWriterUUIDMap.end())
+			throw CNMRException(NMR_ERROR_DUPLICATEBINARYSTREAMUUID);
+
+		m_BinaryWriterUUIDMap.insert(std::make_pair(sUUID, std::make_pair (sPath, pStreamWriter)));
+		m_BinaryWriterPathMap.insert(std::make_pair(sPath, sUUID));
 	}
 
 	void CModelWriter::unregisterBinaryStreams()
 	{
-		for (auto iIter : m_BinaryWriters) {
-			m_pModel->unregisterBinaryStream (iIter.first);
+		m_BinaryWriterPathMap.clear();
+		m_BinaryWriterUUIDMap.clear();
+		m_BinaryWriterAssignmentMap.clear();
+	}
+
+	void CModelWriter::assignBinaryStream(const std::string &InstanceUUID, const std::string & sBinaryStreamUUID)
+	{
+		auto iUUIDIter = m_BinaryWriterUUIDMap.find(sBinaryStreamUUID);
+		if (iUUIDIter == m_BinaryWriterUUIDMap.end())
+			throw CNMRException(NMR_ERROR_BINARYSTREAMNOTFOUND);
+
+
+		if ((sBinaryStreamUUID.length ()) > 0) {
+			m_BinaryWriterAssignmentMap.insert(std::make_pair(InstanceUUID, sBinaryStreamUUID));
 		}
+		else {
+			m_BinaryWriterAssignmentMap.erase(InstanceUUID);
+		}
+
+	}
+
+	CChunkedBinaryStreamWriter * CModelWriter::findBinaryStream(const std::string &InstanceUUID, std::string & Path)
+	{
+		auto iAssignIter = m_BinaryWriterAssignmentMap.find(InstanceUUID);
+		if (iAssignIter != m_BinaryWriterAssignmentMap.end()) {
+			auto iWriterIter = m_BinaryWriterUUIDMap.find (iAssignIter->second);
+			if (iWriterIter != m_BinaryWriterUUIDMap.end()) {
+				Path = iWriterIter->second.first;
+				return iWriterIter->second.second.get();
+			}
+		}
+
+		return nullptr;
 	}
 
 }

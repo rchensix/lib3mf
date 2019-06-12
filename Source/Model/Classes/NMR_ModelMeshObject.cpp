@@ -217,16 +217,6 @@ namespace NMR {
 	}
 
 
-	void CModelMeshObject::setBinaryStreamUUID(const std::string & sUUID)
-	{
-		m_sBinaryStreamUUID = sUUID;
-	}
-
-	std::string CModelMeshObject::getBinaryStreamUUID()
-	{
-		return m_sBinaryStreamUUID;
-	}
-
 }
 
 

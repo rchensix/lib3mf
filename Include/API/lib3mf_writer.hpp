@@ -74,6 +74,7 @@ public:
 	CWriter(std::string sWriterClass, NMR::PModel model);
 
 	NMR::CModelWriter& writer();
+
 	/**
 	* Public member functions to implement.
 	*/
@@ -90,6 +91,9 @@ public:
 
 	IBinaryStream * CreateBinaryStream(const std::string & sPath);
 
+	void AssignBinaryStream(IBase* pInstance, IBinaryStream* pBinaryStream);
+
+	NMR::PModelWriter getModelWriter();
 };
 
 }

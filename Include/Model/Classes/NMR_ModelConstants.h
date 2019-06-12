@@ -112,6 +112,7 @@ These are given by the 3MF Standard
 
 // Mesh element.
 #define XML_3MF_ELEMENT_MESH                        "mesh"
+#define XML_3MF_ATTRIBUTE_MESH_BINARY				"binary"
 
 // Slices element.
 #define XML_3MF_ELEMENT_SLICES                      "slices"
@@ -128,6 +129,7 @@ These are given by the 3MF Standard
 
 // Triangles element.
 #define XML_3MF_ELEMENT_TRIANGLES                   "triangles"
+
 
 
 #define XML_3MF_ELEMENT_BEAMLATTICE                       "beamlattice"
@@ -177,6 +179,9 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_VERTEX_X                  "x"
 #define XML_3MF_ATTRIBUTE_VERTEX_Y                  "y"
 #define XML_3MF_ATTRIBUTE_VERTEX_Z                  "z"
+#define XML_3MF_ATTRIBUTE_VERTEX_ORIGINX            "originx"
+#define XML_3MF_ATTRIBUTE_VERTEX_ORIGINY            "originy"
+#define XML_3MF_ATTRIBUTE_VERTEX_ORIGINZ            "originz"
 
 // Texturevertex element.
 #define XML_3MF_ELEMENT_TEXTUREVERTEX               "texturevertex"

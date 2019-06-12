@@ -103,7 +103,6 @@ namespace NMR {
 		std::map<PackageResourceID, PModelResource> m_ResourceMap;
 		CResourceHandler m_resourceHandler;
 
-		std::map<std::string, NMR::PChunkedBinaryStreamWriter> m_BinaryStreamWriters;
 	private:
 		std::vector<PModelResource> m_Resources;
 
@@ -300,12 +299,6 @@ namespace NMR {
 
 		// Sorts objects by correct dependency
 		std::list<CModelObject *> getSortedObjectList ();
-
-		// Handle binary streams of the model
-		void registerBinaryStream (std::string sUUID, NMR::PChunkedBinaryStreamWriter pBinaryStream);
-		void unregisterBinaryStream(std::string sUUID);
-		void clearBinaryStreams();
-		NMR::CChunkedBinaryStreamWriter * findBinaryStream(std::string sUUID);
 
 	};
 

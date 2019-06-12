@@ -261,7 +261,4 @@ IBeamSet * CBeamLattice::GetBeamSet (const Lib3MF_uint32 nIndex)
 	return new CBeamSet(m_mesh.getBeamSet(nIndex), m_pMeshObject);
 }
 
-void CBeamLattice::SetBinaryStream(IBinaryStream* pBinaryStream)
-{
-}
 
