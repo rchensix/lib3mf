@@ -40,7 +40,7 @@ A model writer exports the in memory representation into a binary STL file.
 
 namespace NMR {
 
-	CModelWriter_STL::CModelWriter_STL(_In_ PModel pModel) : CModelWriter(pModel)
+	CModelWriter_STL::CModelWriter_STL(_In_ PModel pModel) : CModelWriter(pModel, false)
 	{
 		// empty on purpose
 	}

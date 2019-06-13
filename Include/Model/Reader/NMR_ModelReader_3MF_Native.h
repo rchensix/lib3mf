@@ -48,6 +48,7 @@ namespace NMR {
 	class CModelReader_3MF_Native : public CModelReader_3MF {
 	private:
 		POpcPackageReader m_pPackageReader;
+		nfBool m_bAllowBinaryStreams;
 
 	protected:
 		void extractCustomDataFromRelationships(_In_ std::string& sTargetPartURIDir, _In_ COpcPackagePart * pModelPart);
@@ -60,7 +61,7 @@ namespace NMR {
 
 	public:
 		CModelReader_3MF_Native() = delete;
-		CModelReader_3MF_Native(_In_ PModel pModel);
+		CModelReader_3MF_Native(_In_ PModel pModel, _In_ nfBool bAllowBinaryStreams);
 	};
 
 	typedef std::shared_ptr <CModelReader_3MF_Native> PModelReader_3MF_Native;

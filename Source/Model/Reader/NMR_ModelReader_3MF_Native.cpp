@@ -42,8 +42,8 @@ It uses libzip and irrxml to parse the OPC package.
 
 namespace NMR {
 
-	CModelReader_3MF_Native::CModelReader_3MF_Native(_In_ PModel pModel)
-		: CModelReader_3MF(pModel)
+	CModelReader_3MF_Native::CModelReader_3MF_Native(_In_ PModel pModel, _In_ nfBool bAllowBinaryStreams)
+		: CModelReader_3MF(pModel, bAllowBinaryStreams)
 	{
 		// empty on purpose
 	}

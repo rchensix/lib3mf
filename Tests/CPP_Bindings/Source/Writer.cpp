@@ -149,7 +149,7 @@ namespace Lib3MF
 		auto pObject = pModel->AddMeshObject();
 		pObject->SetName("TestObject");
 
-		auto pBinaryStream = Writer::writer3MF->CreateBinaryStream("Toolpath/layers.dat");
+		auto pBinaryStream = Writer::writer3MFz->CreateBinaryStream("Toolpath/layers.dat");
 
 		auto pToolpath = pModel->AddToolpath(0.001);
 		auto pProfile1 = pToolpath->AddProfile("profile1", 100.0, 200.0, 3.0, 1);
@@ -177,7 +177,7 @@ namespace Lib3MF
 		PointsB.push_back(Lib3MF::sPosition2D{ 110.0, 300.0 });
 		pLayer2->WriteHatchData(nProfileID2, nPartID2, PointsB);
 
-		Writer::writer3MF->WriteToFile(Writer::OutFolder + "toolpath.3mf");
+		Writer::writer3MFz->WriteToFile(Writer::OutFolder + "toolpath.3mf");
 
 	}
 

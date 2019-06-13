@@ -42,12 +42,14 @@ namespace NMR {
 
 	class CModelReader_3MF : public CModelReader {
 	protected:
+		nfBool m_bAllowBinaryStreams;
+
 		virtual PImportStream extract3MFOPCPackage(_In_ PImportStream pPackageStream) = 0;
 		virtual void release3MFOPCPackage() = 0;
 
 	public:
 		CModelReader_3MF() = delete;
-		CModelReader_3MF(_In_ PModel pModel);
+		CModelReader_3MF(_In_ PModel pModel, _In_ nfBool bAllowBinaryStreams);
 
 		virtual void readStream(_In_ PImportStream pStream);
 		virtual void addTextureAttachment(_In_ std::string sPath, _In_ PImportStream pStream);

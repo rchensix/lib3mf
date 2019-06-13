@@ -138,6 +138,7 @@ namespace NMR {
 		case NMR_ERROR_BINARYCHUNK_DISCRETIZATIONVALUEOUTOFRANGE: return "Discretization Value out of range";
 		case NMR_ERROR_DUPLICATEBINARYSTREAMUUID: return "Duplicate Binary Stream UUID";
 		case NMR_ERROR_BINARYSTREAMNOTFOUND: return "Binary stream not found";
+		case NMR_ERROR_BINARYSTREAMSNOTALLOWED: return "Binary streams not allowed";
 
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;

@@ -44,7 +44,7 @@ A model writer exports the in memory represenation into a 3MF file.
 
 namespace NMR {
 
-	CModelWriter_3MF::CModelWriter_3MF(_In_ PModel pModel) : CModelWriter(pModel)
+	CModelWriter_3MF::CModelWriter_3MF(_In_ PModel pModel, _In_ nfBool bAllowBinaryStreams) : CModelWriter(pModel, bAllowBinaryStreams)
 	{
 		// empty on purpose
 	}

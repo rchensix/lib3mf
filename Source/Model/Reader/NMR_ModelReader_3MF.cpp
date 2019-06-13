@@ -51,8 +51,8 @@ NMR_ModelReader_3MF.cpp implements the Model Reader Class for
 
 namespace NMR {
 
-	CModelReader_3MF::CModelReader_3MF(_In_ PModel pModel)
-		: CModelReader(pModel)
+	CModelReader_3MF::CModelReader_3MF(_In_ PModel pModel, _In_ nfBool bAllowBinaryStreams)
+		: CModelReader(pModel), m_bAllowBinaryStreams (bAllowBinaryStreams)
 	{
 		// empty on purpose
 	}

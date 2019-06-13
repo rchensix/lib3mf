@@ -48,6 +48,7 @@ namespace NMR {
 	protected:
 		PModel m_pModel;
 		PProgressMonitor m_pProgressMonitor;
+		nfBool m_bAllowBinaryStreams;
 
 		std::map<std::string, std::pair <std::string, PChunkedBinaryStreamWriter>> m_BinaryWriterUUIDMap;
 		std::map<std::string, std::string> m_BinaryWriterPathMap;
@@ -56,12 +57,10 @@ namespace NMR {
 
 	public:
 		CModelWriter() = delete;
-		CModelWriter(_In_ PModel pModel);
+		CModelWriter(_In_ PModel pModel, _In_ nfBool bAllowBinaryStreams);
 		~CModelWriter();
 
 		virtual void exportToStream(_In_ PExportStream pStream) = 0;
-		void addCustomContentType(_In_ std::wstring sExtension, _In_ std::wstring sContentType);
- 		void removeCustomContentType(_In_ std::wstring sExtension);
 
 		void SetProgressCallback(Lib3MFProgressCallback callback, void* userData);
 

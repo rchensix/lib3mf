@@ -320,6 +320,9 @@ NMR_ErrorConst.h defines all error code constants.
 // Binary stream not found
 #define NMR_ERROR_BINARYSTREAMNOTFOUND 0x1059
 
+// Binary streams not allowed
+#define NMR_ERROR_BINARYSTREAMSNOTALLOWED 0x105A
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/

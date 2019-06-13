@@ -53,7 +53,7 @@ namespace NMR {
 		virtual void releasePackage() = 0;
 	public:
 		CModelWriter_3MF() = delete;
-		CModelWriter_3MF(_In_ PModel pModel);
+		CModelWriter_3MF(_In_ PModel pModel, _In_ nfBool bAllowBinaryStreams);
 
 		virtual void exportToStream(_In_ PExportStream pStream);
 	};

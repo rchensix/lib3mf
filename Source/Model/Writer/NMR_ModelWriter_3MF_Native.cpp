@@ -51,8 +51,8 @@ using LibZ and a native XML writer implementation.
 
 namespace NMR {
 	
-	CModelWriter_3MF_Native::CModelWriter_3MF_Native(_In_ PModel pModel, _In_ nfBool bLZMACompression) 
-		: CModelWriter_3MF(pModel), m_nRelationIDCounter (0), m_pModel (nullptr), m_bLZMACompression (bLZMACompression)
+	CModelWriter_3MF_Native::CModelWriter_3MF_Native(_In_ PModel pModel, _In_ nfBool bAllowBinaryStreams)
+		: CModelWriter_3MF(pModel, bAllowBinaryStreams), m_nRelationIDCounter (0), m_pModel (nullptr)
 	{
 	}
 
@@ -144,6 +144,7 @@ namespace NMR {
 			
 			iBinaryIter.second.second->finishWriting();
 			POpcPackagePart pBinaryPart = pPackageWriter->addPart(iBinaryIter.second.first);
+			pModelPart->addRelationship("binary" + iBinaryIter.first, PACKAGE_ZCOMPRESSION_RELATIONSHIP_TYPE, pBinaryPart->getURI());
  			iBinaryIter.second.second->copyToStream (pBinaryPart->getExportStream());
 			
 		}

@@ -42,7 +42,8 @@ A model writer exports the in memory represenation into a model file.
 
 namespace NMR {
 
-	CModelWriter::CModelWriter(_In_ PModel pModel)
+	CModelWriter::CModelWriter(_In_ PModel pModel, _In_ nfBool bAllowBinaryStreams)
+		: m_bAllowBinaryStreams(bAllowBinaryStreams)
 	{
 		if (!pModel.get())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -68,6 +69,9 @@ namespace NMR {
 
 	void CModelWriter::registerBinaryStream(const std::string &sPath, const std::string & sUUID, PChunkedBinaryStreamWriter pStreamWriter)
 	{
+		if (!m_bAllowBinaryStreams)
+			throw CNMRException(NMR_ERROR_BINARYSTREAMSNOTALLOWED);
+
 		auto iPathIter = m_BinaryWriterPathMap.find(sPath);
 		if (iPathIter != m_BinaryWriterPathMap.end())
 			throw CNMRException(NMR_ERROR_DUPLICATEBINARYSTREAMPATH);
