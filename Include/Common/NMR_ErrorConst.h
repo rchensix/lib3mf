@@ -359,6 +359,21 @@ NMR_ErrorConst.h defines all error code constants.
 // Invalid chunk data
 #define NMR_ERROR_INVALIDCHUNKDATA 0x1066
 
+// Invalid chunk entry position
+#define NMR_ERROR_INVALIDCHUNKENTRYPOSITION 0x1067
+
+// Invalid chunk entry end position
+#define NMR_ERROR_INVALIDCHUNKENTRYENDPOSITION 0x1068
+
+// Invalid chunk entry size
+#define NMR_ERROR_INVALIDCHUNKENTRYSIZE 0x1069
+
+// Not enough data to read from chunk
+#define NMR_ERROR_NOTENOUGHDATATOREADFROMCHUNK 0x106A
+
+// Invalid chunk entry type
+#define NMR_ERROR_INVALIDCHUNKENTRYTYPE 0x106B
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/

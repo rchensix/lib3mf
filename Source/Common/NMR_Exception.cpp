@@ -150,7 +150,11 @@ namespace NMR {
 		case NMR_ERROR_COULDNOTUNCOMPRESSDATA: return "Could not uncompressed data";
 		case NMR_ERROR_BINARYCHUNKENTRYNOTFOUND: return "Binary chunk entry not found";
 		case NMR_ERROR_INVALIDCHUNKDATA: return "Invalid chunk data";
-
+		case NMR_ERROR_INVALIDCHUNKENTRYPOSITION: return "Invalid chunk entry position";
+		case NMR_ERROR_INVALIDCHUNKENTRYENDPOSITION: return "Invalid chunk entry end position";
+		case NMR_ERROR_INVALIDCHUNKENTRYSIZE: return "Invalid chunk entry size";
+		case NMR_ERROR_NOTENOUGHDATATOREADFROMCHUNK: return "Not enough data to read from chunk";
+		case NMR_ERROR_INVALIDCHUNKENTRYTYPE: return "Invalid chunk entry type";
 
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;

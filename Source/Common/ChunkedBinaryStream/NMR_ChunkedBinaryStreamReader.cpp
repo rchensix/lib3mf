@@ -37,7 +37,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace NMR {
 
 	CChunkedBinaryStreamReaderChunk::CChunkedBinaryStreamReaderChunk(CChunkedBinaryStreamReader * pReader, const BINARYCHUNKFILECHUNK & Chunk, const nfUint32 nChunkIndex)
-		: m_pReader (pReader), m_nChunkIndex (nChunkIndex), m_Chunk (Chunk), m_bHasCachedData(false)
+		: m_pReader (pReader), 
+		  m_nChunkIndex (nChunkIndex), 
+		  m_Chunk (Chunk), 
+		  m_bHasCachedData(false),
+		  m_nCurrentReadPosition(0),
+	      m_nCurrentEndPosition(0)
 	{
 		if (pReader == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -112,7 +117,8 @@ namespace NMR {
 		}
 
 		m_bHasCachedData = true;
-
+		m_nCurrentReadPosition = 0;
+		m_nCurrentEndPosition = 0;
 	}
 
 	void CChunkedBinaryStreamReaderChunk::unloadData()
@@ -122,6 +128,8 @@ namespace NMR {
 
 		m_Data.resize(0);
 		m_bHasCachedData = false;
+		m_nCurrentReadPosition = 0;
+		m_nCurrentEndPosition = 0;
 	}
 
 
@@ -158,6 +166,68 @@ namespace NMR {
 				nCount = 0;
 		} 
 	}
+
+	void CChunkedBinaryStreamReaderChunk::seekToEntry(nfUint32 nEntryIndex, nfUint32 & nEntryType, nfUint32 & nEntrySize)
+	{
+		if (nEntryIndex >= m_ChunkEntries.size())
+			throw CNMRException(NMR_ERROR_INVALIDENTRYINDEX);
+
+		auto pEntry = &m_ChunkEntries[nEntryIndex];
+		if (pEntry->m_PositionInChunk > m_Data.size())
+			throw CNMRException(NMR_ERROR_INVALIDCHUNKENTRYPOSITION);
+		
+		nfUint32 nReadEndPosition;
+		nfUint32 nReadStartPosition = pEntry->m_PositionInChunk;
+		if ((nEntryIndex + 1) < m_ChunkEntries.size()) {
+			nReadEndPosition = m_ChunkEntries[nEntryIndex + 1].m_PositionInChunk;
+		}
+		else {
+			nReadEndPosition = (nfUint32) m_Data.size();
+		}
+		
+		if (nReadEndPosition < nReadStartPosition)
+			throw CNMRException(NMR_ERROR_INVALIDCHUNKENTRYENDPOSITION);
+		nEntrySize = nReadEndPosition - nReadStartPosition;
+
+		if (nEntrySize != pEntry->m_SizeInBytes)
+			throw CNMRException(NMR_ERROR_INVALIDCHUNKENTRYSIZE);
+
+		m_nCurrentReadPosition = nReadStartPosition;
+		m_nCurrentEndPosition = nReadEndPosition;
+
+		nEntryType = pEntry->m_EntryType;
+	}
+
+	nfInt32 CChunkedBinaryStreamReaderChunk::readInt32()
+	{
+		if (m_nCurrentReadPosition > m_Data.size())
+			throw CNMRException(NMR_ERROR_INVALIDCHUNKENTRYPOSITION);
+		if (m_nCurrentEndPosition > m_Data.size ())
+			throw CNMRException(NMR_ERROR_INVALIDCHUNKENTRYENDPOSITION);
+		if ((m_nCurrentReadPosition + 4) > m_nCurrentEndPosition)
+			throw CNMRException(NMR_ERROR_NOTENOUGHDATATOREADFROMCHUNK);
+
+		nfInt32 * pIntValue = (nfInt32*) &m_Data[m_nCurrentReadPosition];
+		m_nCurrentReadPosition += 4;
+
+		return *pIntValue;
+	}
+
+	nfFloat CChunkedBinaryStreamReaderChunk::readFloat()
+	{
+		if (m_nCurrentReadPosition > m_Data.size())
+			throw CNMRException(NMR_ERROR_INVALIDCHUNKENTRYPOSITION);
+		if (m_nCurrentEndPosition > m_Data.size())
+			throw CNMRException(NMR_ERROR_INVALIDCHUNKENTRYENDPOSITION);
+		if ((m_nCurrentReadPosition + 4) > m_nCurrentEndPosition)
+			throw CNMRException(NMR_ERROR_NOTENOUGHDATATOREADFROMCHUNK);
+
+		nfFloat * pFloatValue = (nfFloat*)&m_Data[m_nCurrentReadPosition];
+		m_nCurrentReadPosition += 4;
+
+		return *pFloatValue;
+	}
+
 
 
 	CChunkedBinaryStreamReader::CChunkedBinaryStreamReader(PImportStream pImportStream)
@@ -224,19 +294,86 @@ namespace NMR {
 	}
 
 
-	void CChunkedBinaryStreamReader::readIntArray(nfUint32 nEntryID, const nfInt32 * pData, nfUint32 nDataCount)
+	void CChunkedBinaryStreamReader::readIntArray(nfUint32 nEntryID, nfInt32 * pData, nfUint32 nDataCount)
 	{
-		nfUint32 nEntryIndex;
+		nfUint32 nEntryIndex, nEntryType, nEntrySize;
+		nfUint32 nIndex;
+		nfInt32 nLastValue;
+
 		auto pChunk = findChunkByEntry(nEntryID, nEntryIndex);
 		pChunk->loadData();
+		pChunk->seekToEntry(nEntryIndex, nEntryType, nEntrySize);
+
+		if ((nEntrySize % 4) != 0)
+			throw CNMRException(NMR_ERROR_INVALIDCHUNKDATA);
+		nfUint32 nExistingCount = (nEntrySize / 4);
+		if (nDataCount != nExistingCount)
+			throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+		if (nDataCount > 0) {
+
+			switch (nEntryType) {
+				case BINARYCHUNKFILEENTRYTYPE_INT32ARRAY_NOPREDICTION:
+					for (nIndex = 0; nIndex < nDataCount; nIndex++)
+						pData[nIndex] = pChunk->readInt32();
+
+					break;
+				case BINARYCHUNKFILEENTRYTYPE_INT32ARRAY_DELTAPREDICTION:
+					nLastValue = 0;
+					for (nIndex = 0; nIndex < nDataCount; nIndex++) {
+						pData[nIndex] = pChunk->readInt32() + nLastValue;
+						nLastValue = pData[nIndex];
+					}
+					break;
+
+				default:					
+					throw CNMRException(NMR_ERROR_INVALIDCHUNKENTRYTYPE);
+			}
+		}
 
 	}
 
-	void CChunkedBinaryStreamReader::readFloatArray(nfUint32 nEntryID, const nfFloat * pData, nfUint32 nDataCount)
+	void CChunkedBinaryStreamReader::readFloatArray(nfUint32 nEntryID, nfFloat * pData, nfUint32 nDataCount)
 	{
-		nfUint32 nEntryIndex;
+		nfUint32 nEntryIndex, nEntryType, nEntrySize;
+		nfUint32 nIndex;
+		nfInt32 nValue, nLastValue;
+
 		auto pChunk = findChunkByEntry(nEntryID, nEntryIndex);
 		pChunk->loadData();
+		pChunk->seekToEntry(nEntryIndex, nEntryType, nEntrySize);
+
+		if ((nEntrySize % 4) != 0)
+			throw CNMRException(NMR_ERROR_INVALIDCHUNKDATA);
+		if (nEntrySize < 4)
+			throw CNMRException(NMR_ERROR_INVALIDCHUNKDATA);
+		nfUint32 nExistingCount = ((nEntrySize - 4) / 4);
+		if (nDataCount != nExistingCount)
+			throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+		nfFloat fUnits = pChunk->readFloat();
+
+		if (nDataCount > 0) {
+
+			switch (nEntryType) {
+			case BINARYCHUNKFILEENTRYTYPE_FLOAT32ARRAY_NOPREDICTION:
+				for (nIndex = 0; nIndex < nDataCount; nIndex++)
+					pData[nIndex] = pChunk->readInt32() * fUnits;
+
+				break;
+			case BINARYCHUNKFILEENTRYTYPE_FLOAT32ARRAY_DELTAPREDICTION:
+				nLastValue = 0;
+				for (nIndex = 0; nIndex < nDataCount; nIndex++) {
+					nValue = pChunk->readInt32() + nLastValue;
+					pData[nIndex] = nValue * fUnits;
+					nLastValue = nValue;
+				}
+				break;
+			default:
+				throw CNMRException(NMR_ERROR_INVALIDCHUNKENTRYTYPE);
+
+			}
+		}
 
 	}
 

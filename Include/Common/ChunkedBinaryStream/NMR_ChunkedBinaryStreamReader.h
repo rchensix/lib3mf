@@ -56,6 +56,8 @@ namespace NMR {
 
 		BINARYCHUNKFILECHUNK m_Chunk;
 		nfUint32 m_nChunkIndex;
+		nfUint32 m_nCurrentReadPosition;
+		nfUint32 m_nCurrentEndPosition;
 
 	public:
 		CChunkedBinaryStreamReaderChunk(CChunkedBinaryStreamReader * pReader, const BINARYCHUNKFILECHUNK & Chunk, const nfUint32 nChunkIndex);
@@ -64,6 +66,10 @@ namespace NMR {
 		void unloadData();
 
 		void getInformation(nfUint32 nEntryIndex, eChunkedBinaryDataType & dataType, nfUint32 & nCount);
+
+		void seekToEntry(nfUint32 nEntryIndex, nfUint32 & nEntryType, nfUint32 & nEntrySize);
+		nfInt32 readInt32();
+		nfFloat readFloat();
 
 	};
 
@@ -82,8 +88,8 @@ namespace NMR {
 		CChunkedBinaryStreamReader(PImportStream pImportStream);
 
 		void findChunkInformation (nfUint32 nEntryID, eChunkedBinaryDataType & dataType, nfUint32 & nCount);
-		void readIntArray(nfUint32 nEntryID, const nfInt32 * pData, nfUint32 nDataCount);
-		void readFloatArray(nfUint32 nEntryID, const nfFloat * pData, nfUint32 nDataCount);
+		void readIntArray(nfUint32 nEntryID, nfInt32 * pData, nfUint32 nDataCount);
+		void readFloatArray(nfUint32 nEntryID, nfFloat * pData, nfUint32 nDataCount);
 
 		void clearCache ();
 
