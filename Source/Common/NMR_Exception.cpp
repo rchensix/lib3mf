@@ -139,6 +139,18 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATEBINARYSTREAMUUID: return "Duplicate Binary Stream UUID";
 		case NMR_ERROR_BINARYSTREAMNOTFOUND: return "Binary stream not found";
 		case NMR_ERROR_BINARYSTREAMSNOTALLOWED: return "Binary streams not allowed";
+		case NMR_ERROR_INVALIDCHUNKSTREAM: return "Invalid binary chunk stream";
+		case NMR_ERROR_INVALIDCHUNKSTREAMSIGN: return "Invalid binary chunk stream sign";
+		case NMR_ERROR_INVALIDCHUNKSTREAMVERSION: return "Invalid binary chunk stream version";
+		case NMR_ERROR_TOOMANYBINARYCHUNKS: return "Too many binary chunks";
+		case NMR_ERROR_TOOMANYBINARYCHUNKENTRIES: return "Too many binary chunk entries";
+		case NMR_ERROR_DUPLICATECHUNKENTRY: return "Duplicate chunk entry in binary stream";
+		case NMR_ERROR_INVALIDFILECHUNKDATASIZE: return "Invalid file chunk data size";
+		case NMR_ERROR_INVALIDCHUNKCOMPRESSEDDATA: return "Invalid chunk compressed data";
+		case NMR_ERROR_COULDNOTUNCOMPRESSDATA: return "Could not uncompressed data";
+		case NMR_ERROR_BINARYCHUNKENTRYNOTFOUND: return "Binary chunk entry not found";
+		case NMR_ERROR_INVALIDCHUNKDATA: return "Invalid chunk data";
+
 
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;

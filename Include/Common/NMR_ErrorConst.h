@@ -323,6 +323,42 @@ NMR_ErrorConst.h defines all error code constants.
 // Binary streams not allowed
 #define NMR_ERROR_BINARYSTREAMSNOTALLOWED 0x105A
 
+// Invalid binary chunk stream
+#define NMR_ERROR_INVALIDCHUNKSTREAM 0x105B
+
+// Invalid binary chunk stream sign
+#define NMR_ERROR_INVALIDCHUNKSTREAMSIGN 0x105C
+
+// Invalid binary chunk stream version
+#define NMR_ERROR_INVALIDCHUNKSTREAMVERSION 0x105D
+
+// Too many binary chunks
+#define NMR_ERROR_TOOMANYBINARYCHUNKS 0x105E
+
+// Too many binary chunk entries
+#define NMR_ERROR_TOOMANYBINARYCHUNKENTRIES 0x105F
+
+// Duplicate chunk entry in binary stream
+#define NMR_ERROR_DUPLICATECHUNKENTRY 0x1060
+
+// Invalid file chunk data size
+#define NMR_ERROR_INVALIDFILECHUNKDATASIZE 0x1061
+
+// Invalid chunk compressed data
+#define NMR_ERROR_INVALIDCHUNKCOMPRESSEDDATA 0x1062
+
+// Could not uncompressed data
+#define NMR_ERROR_COULDNOTUNCOMPRESSDATA 0x1063
+
+// Binary chunk entry not found
+#define NMR_ERROR_BINARYCHUNKENTRYNOTFOUND 0x1064
+
+// Invalid chunk entry index
+#define NMR_ERROR_INVALIDENTRYINDEX 0x1065
+
+// Invalid chunk data
+#define NMR_ERROR_INVALIDCHUNKDATA 0x1066
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/

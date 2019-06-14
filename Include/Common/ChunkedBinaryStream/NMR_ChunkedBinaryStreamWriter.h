@@ -34,50 +34,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Common/Platform/NMR_ExportStream.h"
 #include "Common/Platform/NMR_ExportStream_Memory.h"
 
-#define BINARYCHUNKFILEHEADERSIGN 0x5A464D33
-#define BINARYCHUNKFILEHEADERVERSION 0x00000001
-#define BINARYCHUNKFILEHEADERRESERVED 8
-#define BINARYCHUNKFILECHUNKRESERVED 2
-
-#define BINARYCHUNKFILEENTRYTYPE_INT32ARRAY_NOPREDICTION 1
-#define BINARYCHUNKFILEENTRYTYPE_INT32ARRAY_DELTAPREDICTION 2
-#define BINARYCHUNKFILEENTRYTYPE_FLOAT32ARRAY_NOPREDICTION 3
-#define BINARYCHUNKFILEENTRYTYPE_FLOAT32ARRAY_DELTAPREDICTION 4
-
-#define BINARYCHUNKFILE_MAXFLOATUNITS (1024 * 1024 * 1024)
+#include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamTypes.h" 
 
 namespace NMR {
-
-#pragma pack (1)
-	typedef struct {
-		nfUint32 m_Sign;
-		nfUint32 m_Version;
-		nfUint32 m_ChunkCount;
-		nfUint64 m_ChunkTableStart;
-		nfUint32 m_Reserved[BINARYCHUNKFILEHEADERRESERVED];
-	} BINARYCHUNKFILEHEADER;
-
-	typedef struct {
-		nfUint32 m_EntryCount;
-		nfUint64 m_EntryTableStart;
-		nfUint64 m_CompressedDataStart;
-		nfUint32 m_CompressedDataSize;
-		nfUint32 m_CompressedPropsSize;
-		nfUint32 m_UncompressedDataSize;
-		nfByte m_MD5Checksum[16];
-		nfUint32 m_Reserved[BINARYCHUNKFILECHUNKRESERVED];
-	} BINARYCHUNKFILECHUNK;
-
-	typedef struct {
-		nfUint32 m_EntryID;
-		nfUint32 m_EntryType;
-		nfUint32 m_PositionInChunk;
-		nfUint32 m_SizeInBytes;
-	} BINARYCHUNKFILEENTRY;
-
-#pragma pack()
-
-	enum eChunkedBinaryPredictionType { eptNoPredicition, eptDeltaPredicition };
 
 	class CChunkedBinaryStreamWriter {
 	private:

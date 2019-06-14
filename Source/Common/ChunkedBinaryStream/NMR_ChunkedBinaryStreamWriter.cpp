@@ -29,6 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamWriter.h" 
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h" 
 #include "Common/NMR_Exception.h" 
+
 #include "Libraries/lzma/LzmaLib.h"
 
 #include <vector>

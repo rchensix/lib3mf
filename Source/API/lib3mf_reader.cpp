@@ -48,7 +48,11 @@ CReader::CReader(std::string sReaderClass, NMR::PModel model)
 
 	// Create specified writer instance
 	if (sReaderClass.compare("3mf") == 0) {
-		m_pReader = std::make_shared<NMR::CModelReader_3MF_Native>(model);
+		m_pReader = std::make_shared<NMR::CModelReader_3MF_Native>(model, false);
+
+	}
+	else if (sReaderClass.compare("3mfz") == 0) {
+		m_pReader = std::make_shared<NMR::CModelReader_3MF_Native>(model, true);
 
 	}
 	else if (sReaderClass.compare("stl") == 0) {
