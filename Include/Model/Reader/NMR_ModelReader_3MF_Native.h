@@ -54,6 +54,7 @@ namespace NMR {
 		void extractCustomDataFromRelationships(_In_ std::string& sTargetPartURIDir, _In_ COpcPackagePart * pModelPart);
 		void extractTexturesFromRelationships(_In_ std::string& sTargetPartURIDir, _In_ COpcPackagePart * pModelPart);
 		void extractModelDataFromRelationships(_In_ std::string& sTargetPartURIDir, _In_ COpcPackagePart * pModelPart);
+		void extractBinaryStreamsFromRelationships(_In_ std::string& sTargetPartURIDir, _In_ COpcPackagePart * pModelPart);
 		void checkContentTypes();
 	
 		virtual PImportStream extract3MFOPCPackage(_In_ PImportStream pPackageStream);

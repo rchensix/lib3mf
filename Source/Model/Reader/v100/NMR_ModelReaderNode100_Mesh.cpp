@@ -96,6 +96,32 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 	}
 
+	void CModelReaderNode100_Mesh::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
+	{
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+		__NMRASSERT(pNameSpace);
+
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_ZCOMPRESSION) == 0) {
+			if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_MESH_BINARY) == 0)
+			{
+				std::string sBinaryPath(pAttributeValue);
+				if (sBinaryPath == "")
+					throw CNMRException(NMR_ERROR_INVALIDMESHBINARYPATH);
+				if (m_sMeshBinaryPath != "")
+					throw CNMRException(NMR_ERROR_DUPLICATEMESHBINARYPATH);
+
+				m_sMeshBinaryPath = sBinaryPath;
+			} 
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+
+
+		}
+
+	}
+
+
 	void CModelReaderNode100_Mesh::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
@@ -110,7 +136,8 @@ namespace NMR {
 					m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READMESH);
 					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 				}
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Vertices>(m_pMesh, m_pWarnings);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Vertices>(m_pMesh, m_sMeshBinaryPath, m_pWarnings);
+				pXMLNode->setBinaryStreamCollection(m_pBinaryStreamCollection);
 				pXMLNode->parseXML(pXMLReader);
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_TRIANGLES) == 0)
@@ -119,7 +146,8 @@ namespace NMR {
 					m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READMESH);
 					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 				}
-				PModelReaderNode100_Triangles pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, m_pMesh, m_pWarnings, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
+				PModelReaderNode100_Triangles pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, m_pMesh, m_sMeshBinaryPath, m_pWarnings, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
+				pXMLNode->setBinaryStreamCollection(m_pBinaryStreamCollection);
 				pXMLNode->parseXML(pXMLReader);
 				if (m_nDefaultPropertyID == 0) {
 					// warn, if object does not have a default property, but a triangle has one
@@ -148,6 +176,7 @@ namespace NMR {
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
+
 
 	}
 

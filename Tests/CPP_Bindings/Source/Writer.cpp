@@ -155,8 +155,8 @@ namespace Lib3MF
 		auto pProfile1 = pToolpath->AddProfile("profile1", 100.0, 200.0, 3.0, 1);
 		auto pProfile2 = pToolpath->AddProfile("profile2", 120.0, 220.0, 3.2, 2);
 
-		auto pLayer1 = pToolpath->AddLayer(100, "/Toolpath/layer1.xml", Writer::writer3MF.get());
-		Writer::writer3MF->AssignBinaryStream(pLayer1.get(), pBinaryStream.get());
+		auto pLayer1 = pToolpath->AddLayer(100, "/Toolpath/layer1.xml", Writer::writer3MFz.get());
+		Writer::writer3MF->AssignBinaryStream(pLayer1.get(), pBinaryStream.get() );
 		auto nProfileID1 = pLayer1->RegisterProfile(pProfile1.get());
 		auto nPartID1 = pLayer1->RegisterPart(pObject.get());
 
@@ -167,7 +167,7 @@ namespace Lib3MF
 		PointsA.push_back(Lib3MF::sPosition2D{ 110.0, 300.0 });
 		pLayer1->WriteHatchData(nProfileID1, nPartID1, PointsA);
 
-		auto pLayer2 = pToolpath->AddLayer(200, "/Toolpath/layer2.xml", Writer::writer3MF.get());
+		auto pLayer2 = pToolpath->AddLayer(200, "/Toolpath/layer2.xml", Writer::writer3MFz.get());
 		auto nProfileID2 = pLayer2->RegisterProfile(pProfile2.get());
 		auto nPartID2 = pLayer2->RegisterPart(pObject.get());
 		std::vector<Lib3MF::sPosition2D> PointsB;

@@ -239,5 +239,19 @@ namespace NMR {
 
 	}
 
+	void CModelReaderNode::setBinaryStreamCollection(PChunkedBinaryStreamCollection pBinaryStreamCollection)
+	{
+		m_pBinaryStreamCollection = pBinaryStreamCollection;
+	}
+
+	PChunkedBinaryStreamCollection CModelReaderNode::getBinaryStreamCollection()
+	{
+		return m_pBinaryStreamCollection;
+	}
+
+	nfBool CModelReaderNode::supportsBinaryStreams()
+	{
+		return m_pBinaryStreamCollection.get() != nullptr;
+	}
 
 }

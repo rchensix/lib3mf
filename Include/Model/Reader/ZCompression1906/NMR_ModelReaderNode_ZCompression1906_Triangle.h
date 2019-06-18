@@ -26,39 +26,40 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReader_3MF.h defines the Model Reader Class for
-3MF Files. A 3MF model reader reads in a 3MF file and generates an in-memory representation of it.
+NMR_ModelReaderNode100_Triangle.h defines the Model Reader Triangle Node Class.
+A triangle reader model node is a parser for the triangle node of an XML Model Stream.
 
 --*/
 
-#ifndef __NMR_MODELREADER_3MF
-#define __NMR_MODELREADER_3MF
+#ifndef __NMR_MODELREADERNODE_ZCOMPRESSION1906_TRIANGLE
+#define __NMR_MODELREADERNODE_ZCOMPRESSION1906_TRIANGLE
 
-#include "Model/Reader/NMR_ModelReader.h" 
-#include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamCollection.h"
-#include <string>
-#include <map>
+#include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_ModelComponent.h"
+#include "Model/Classes/NMR_ModelObject.h"
 
 namespace NMR {
 
-	class CModelReader_3MF : public CModelReader {
+	class CModelReaderNode_ZCompression1906_Triangle : public CModelReaderNode {
 	protected:
-		nfBool m_bAllowBinaryStreams;
-		PChunkedBinaryStreamCollection m_pBinaryStreamCollection;
+		ModelResourceID m_nVertices1BinaryID;
+		ModelResourceID m_nVertices2BinaryID;
+		ModelResourceID m_nVertices3BinaryID;
 
-		virtual PImportStream extract3MFOPCPackage(_In_ PImportStream pPackageStream) = 0;
-		virtual void release3MFOPCPackage() = 0;
-
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
-		CModelReader_3MF() = delete;
-		CModelReader_3MF(_In_ PModel pModel, _In_ nfBool bAllowBinaryStreams);
+		CModelReaderNode_ZCompression1906_Triangle() = delete;
+		CModelReaderNode_ZCompression1906_Triangle(_In_ PModelReaderWarnings pWarnings);
 
-		virtual void readStream(_In_ PImportStream pStream);
-		virtual void addTextureAttachment(_In_ std::string sPath, _In_ PImportStream pStream);
+		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+		void getBinaryIDs(ModelResourceID & nV1BinaryID, ModelResourceID & nV2BinaryID, ModelResourceID & nV3BinaryID);
+
 	};
 
-	typedef std::shared_ptr <CModelReader_3MF> PModelReader_3MF;
+	typedef std::shared_ptr <CModelReaderNode_ZCompression1906_Triangle> PModelReaderNode_ZCompression1906_Triangle;
 
 }
 
-#endif // __NMR_MODELREADER_3MF
+#endif // __NMR_MODELREADERNODE_ZCOMPRESSION1906_TRIANGLE
+
+

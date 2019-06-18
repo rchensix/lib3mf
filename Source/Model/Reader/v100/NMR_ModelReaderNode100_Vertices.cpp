@@ -35,6 +35,8 @@ XML Model Stream.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Vertices.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Vertex.h"
 
+#include "Model/Reader/ZCompression1906/NMR_ModelReaderNode_ZCompression1906_Vertex.h"
+
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
@@ -42,11 +44,12 @@ XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Vertices::CModelReaderNode100_Vertices(_In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_Vertices::CModelReaderNode100_Vertices(_In_ CMesh * pMesh, _In_ std::string sBinaryStreamPath, _In_ PModelReaderWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pMesh);
 		m_pMesh = pMesh;
+		m_sBinaryStreamPath = sBinaryStreamPath;
 	}
 
 	void CModelReaderNode100_Vertices::parseXML(_In_ CXmlReader * pXMLReader)
@@ -87,6 +90,61 @@ namespace NMR {
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
+
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_ZCOMPRESSION) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_VERTEX) == 0)
+			{
+				PModelReaderNode_ZCompression1906_Vertex pXMLNode = std::make_shared<CModelReaderNode_ZCompression1906_Vertex>(m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+				ModelResourceID nXID, nYID, nZID;
+				nfFloat fOriginX, fOriginY, fOriginZ;
+				pXMLNode->getBinaryIDs(nXID, nYID, nZID);				
+				pXMLNode->getOrigin(fOriginX, fOriginY, fOriginZ);
+
+				if ((m_pBinaryStreamCollection.get() == nullptr) || (m_sBinaryStreamPath.empty ()))
+					throw CNMRException(NMR_ERROR_NOBINARYSTREAMAVAILABLE);
+
+				auto pReader = m_pBinaryStreamCollection->findReader(m_sBinaryStreamPath);
+				if (pReader == nullptr)
+					throw CNMRException(NMR_ERROR_BINARYSTREAMNOTFOUND);
+
+				nfUint32 nXCount = pReader->getTypedChunkEntryCount (nXID, edtFloatArray);
+				nfUint32 nYCount = pReader->getTypedChunkEntryCount (nYID, edtFloatArray);
+				nfUint32 nZCount = pReader->getTypedChunkEntryCount (nZID, edtFloatArray);
+
+				if ((nXCount != nYCount) || (nXCount != nZCount) || (nYCount != nZCount))
+					throw CNMRException(NMR_ERROR_INCONSISTENTBINARYSTREAMCOUNT);
+				nfUint32 nCount = nXCount;
+
+				if (nCount > 0) {
+
+					std::vector<nfFloat> XValues;
+					std::vector<nfFloat> YValues;
+					std::vector<nfFloat> ZValues;
+
+					XValues.resize(nCount);
+					YValues.resize(nCount);
+					ZValues.resize(nCount);
+
+					pReader->readFloatArray(nXID, XValues.data(), nCount);
+					pReader->readFloatArray(nYID, YValues.data(), nCount);
+					pReader->readFloatArray(nZID, ZValues.data(), nCount);
+
+					auto iX = XValues.begin();
+					auto iY = YValues.begin();
+					auto iZ = ZValues.begin();
+
+					for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+						m_pMesh->addNode(fnVEC3_make(*iX + fOriginX, *iY + fOriginY, *iZ + fOriginZ));
+						iX++; iY++; iZ++;
+					}
+				}
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		}
+
 	}
 
 }

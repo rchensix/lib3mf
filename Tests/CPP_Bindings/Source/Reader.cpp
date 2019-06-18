@@ -40,17 +40,20 @@ namespace Lib3MF
 		virtual void SetUp() {
 			model = wrapper->CreateModel();
 			reader3MF = model->QueryReader("3mf");
+			reader3MFz = model->QueryReader("3mfz");
 			readerSTL = model->QueryReader("stl");
 		}
 		virtual void TearDown() {
 			model.reset();
 			reader3MF.reset();
+			reader3MFz.reset();
 			readerSTL.reset();
 		}
 	
 		PModel model;
 		PReader reader3MF;
 		PReader readerSTL;
+		PReader reader3MFz;
 
 		static void SetUpTestCase() {
 			wrapper = CWrapper::loadLibrary();
@@ -97,6 +100,12 @@ namespace Lib3MF
 			reinterpret_cast<Lib3MF_pvoid>(&bufferCallback)
 		);
 		CheckReaderWarnings(Reader::reader3MF, 0);
+	}
+
+	TEST_F(Reader, 3MFReadFromBinaryFile)
+	{
+		Reader::reader3MFz->ReadFromFile(sTestFilesPath + "/Reader/" + "BinaryPyramid.3mf");
+		CheckReaderWarnings(Reader::reader3MFz, 0);
 	}
 
 }

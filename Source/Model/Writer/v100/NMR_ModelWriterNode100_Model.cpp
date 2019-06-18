@@ -75,6 +75,7 @@ namespace NMR {
 
 		m_bIsRootModel = true;
 		m_bWriteCustomNamespaces = true;
+		m_bWriteLZMAExtension = false;
 
 		// register custom NameSpaces from metadata in objects, build items and the model itself
 		RegisterMetaDataNameSpaces();
@@ -96,6 +97,7 @@ namespace NMR {
 		m_bIsRootModel = false;
 		m_bWriteSliceExtension = true;
 		m_bWriteCustomNamespaces = true;
+		m_bWriteLZMAExtension = false;
 	}
 
 
@@ -180,6 +182,13 @@ namespace NMR {
 					sRequiredExtensions = sRequiredExtensions + " ";
 				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_SLICE;
 			}
+		}
+
+		if (m_bWriteLZMAExtension) {
+			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, XML_3MF_NAMESPACE_ZCOMPRESSION);
+			if (sRequiredExtensions.size() > 0)
+				sRequiredExtensions = sRequiredExtensions + " ";
+			sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION;
 		}
 
 		if (m_bWriteCustomNamespaces) {
@@ -926,4 +935,11 @@ namespace NMR {
 		}
 	}
 
+	void CModelWriterNode100_Model::setWriteLZMAExtension(nfBool bValue)
+	{
+		m_bWriteLZMAExtension = bValue;
+	}
+
 }
+
+

@@ -24,41 +24,42 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
-
-NMR_ModelReader_3MF.h defines the Model Reader Class for
-3MF Files. A 3MF model reader reads in a 3MF file and generates an in-memory representation of it.
-
 --*/
 
-#ifndef __NMR_MODELREADER_3MF
-#define __NMR_MODELREADER_3MF
+#include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamCollection.h" 
+#include "Common/NMR_Exception.h" 
+#include "Common/NMR_StringUtils.h" 
 
-#include "Model/Reader/NMR_ModelReader.h" 
-#include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamCollection.h"
-#include <string>
-#include <map>
+#include <vector>
+
 
 namespace NMR {
 
-	class CModelReader_3MF : public CModelReader {
-	protected:
-		nfBool m_bAllowBinaryStreams;
-		PChunkedBinaryStreamCollection m_pBinaryStreamCollection;
+	CChunkedBinaryStreamCollection::CChunkedBinaryStreamCollection()
+	{
 
-		virtual PImportStream extract3MFOPCPackage(_In_ PImportStream pPackageStream) = 0;
-		virtual void release3MFOPCPackage() = 0;
+	}
 
-	public:
-		CModelReader_3MF() = delete;
-		CModelReader_3MF(_In_ PModel pModel, _In_ nfBool bAllowBinaryStreams);
+	void CChunkedBinaryStreamCollection::registerReader(const std::string & sPath, PChunkedBinaryStreamReader pReader)
+	{
+		if (pReader.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		virtual void readStream(_In_ PImportStream pStream);
-		virtual void addTextureAttachment(_In_ std::string sPath, _In_ PImportStream pStream);
-	};
+		std::string sAbsolutePath = fnRemoveLeadingPathDelimiter(sPath);
+		m_ReaderMap.insert(std::make_pair (sAbsolutePath, pReader));
+	}
 
-	typedef std::shared_ptr <CModelReader_3MF> PModelReader_3MF;
+	CChunkedBinaryStreamReader * CChunkedBinaryStreamCollection::findReader(const std::string & sPath)
+	{
+		std::string sAbsolutePath = fnRemoveLeadingPathDelimiter(sPath);
+
+		auto iIter = m_ReaderMap.find (sAbsolutePath);
+		if (iIter != m_ReaderMap.end())
+			return iIter->second.get();
+
+		return nullptr;
+	}
+
 
 }
 
-#endif // __NMR_MODELREADER_3MF

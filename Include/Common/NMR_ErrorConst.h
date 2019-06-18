@@ -374,6 +374,9 @@ NMR_ErrorConst.h defines all error code constants.
 // Invalid chunk entry type
 #define NMR_ERROR_INVALIDCHUNKENTRYTYPE 0x106B
 
+// Unexpected chunk data type
+#define NMR_ERROR_UNEXPECTEDCHUNKDATATYPE 0x106C
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/
@@ -1187,6 +1190,20 @@ Model error codes (0x8XXX)
 // Version 093 of the core-specification is not supported
 #define NMR_ERROR_VERSION093_NOT_SUPPORTED 0x80E7
 
+// Invalid Mesh Binary Path
+#define NMR_ERROR_INVALIDMESHBINARYPATH 0x80E8
+
+// Duplicate Mesh Binary Path
+#define NMR_ERROR_DUPLICATEMESHBINARYPATH 0x80E9
+
+// Invalid XML attribute in namespace
+#define NMR_ERROR_INVALIDBINARYELEMENTID 0x80EA
+
+// No Binary stream available
+#define NMR_ERROR_NOBINARYSTREAMAVAILABLE 0x80EB
+
+// Inconsistent binary stream count
+#define NMR_ERROR_INCONSISTENTBINARYSTREAMCOUNT 0x80EC
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)

@@ -81,13 +81,15 @@ namespace NMR {
 		std::map <nfUint32, std::pair<nfUint32, nfUint32>> m_ChunkMap;
 
 		void readHeader();		
-		PChunkedBinaryStreamReaderChunk findChunkByEntry (_In_ nfUint32 nEntryID,  _Out_ nfUint32 & nEntryIndex);
+		CChunkedBinaryStreamReaderChunk * findChunkByEntry (_In_ nfUint32 nEntryID,  _Out_ nfUint32 & nEntryIndex);
 
 	public:
 	
 		CChunkedBinaryStreamReader(PImportStream pImportStream);
 
 		void findChunkInformation (nfUint32 nEntryID, eChunkedBinaryDataType & dataType, nfUint32 & nCount);
+		nfUint32 getTypedChunkEntryCount(nfUint32 nEntryID, eChunkedBinaryDataType dataType);
+
 		void readIntArray(nfUint32 nEntryID, nfInt32 * pData, nfUint32 nDataCount);
 		void readFloatArray(nfUint32 nEntryID, nfFloat * pData, nfUint32 nDataCount);
 

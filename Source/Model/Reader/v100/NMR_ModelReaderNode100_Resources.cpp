@@ -90,6 +90,7 @@ namespace NMR {
 				m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Object>(m_pModel, m_pWarnings, m_pProgressMonitor);
+				pXMLNode->setBinaryStreamCollection(m_pBinaryStreamCollection);
 				pXMLNode->parseXML(pXMLReader);
 
 			}

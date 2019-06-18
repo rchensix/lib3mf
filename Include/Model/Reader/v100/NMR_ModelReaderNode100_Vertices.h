@@ -43,12 +43,13 @@ namespace NMR {
 	class CModelReaderNode100_Vertices : public CModelReaderNode {
 	private:
 		CMesh * m_pMesh;
+		std::string m_sBinaryStreamPath;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_Vertices() = delete;
-		CModelReaderNode100_Vertices(_In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode100_Vertices(_In_ CMesh * pMesh, _In_ std::string sBinaryStreamPath, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

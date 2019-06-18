@@ -158,13 +158,13 @@ void fnCreateBox(std::vector<sLib3MFPosition> &vctVertices, std::vector<sLib3MFT
 
 inline void CheckReaderWarnings(Lib3MF::PReader reader, Lib3MF_uint32 nWarnings)
 {
-	EXPECT_EQ(reader->GetWarningCount(), nWarnings);
 	for (Lib3MF_uint32 iWarning = 0; iWarning < reader->GetWarningCount(); iWarning++)
 	{
 		Lib3MF_uint32 nErrorCode;
 		std::string sWarning = reader->GetWarning(iWarning, nErrorCode);
 		EXPECT_TRUE(true) << iWarning << ": " << nErrorCode << ", " << sWarning;
 	}
+	EXPECT_EQ(reader->GetWarningCount(), nWarnings);
 }
 
 

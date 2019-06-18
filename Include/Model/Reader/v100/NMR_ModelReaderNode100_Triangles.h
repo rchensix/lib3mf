@@ -51,13 +51,17 @@ namespace NMR {
 		ModelResourceIndex m_nDefaultResourceIndex;
 		ModelResourceID m_nUsedResourceID;
 
+		std::string m_sBinaryStreamPath;
+
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 
 		_Ret_notnull_ CMeshInformation_Properties * createPropertiesInformation();
+
+		void addFace (ModelResourceIndex nIndex1, ModelResourceIndex nIndex2, ModelResourceIndex nIndex3, ModelResourceID nResourceID, ModelResourceIndex nResourceIndex1, ModelResourceIndex nResourceIndex2, ModelResourceIndex nResourceIndex3);
 	public:
 		CModelReaderNode100_Triangles() = delete;
-		CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
+		CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ std::string sBinaryStreamPath, _In_ PModelReaderWarnings pWarnings, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		ModelResourceID getUsedPropertyID() const;

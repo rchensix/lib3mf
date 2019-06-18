@@ -69,6 +69,7 @@ namespace NMR {
 		extractTexturesFromRelationships(sTargetPartURIDir, pModelPart.get());
 		extractCustomDataFromRelationships(sTargetPartURIDir, pModelPart.get());
 		extractModelDataFromRelationships(sTargetPartURIDir, pModelPart.get());
+		extractBinaryStreamsFromRelationships(sTargetPartURIDir, pModelPart.get());
 		
 		nfUint32 prodAttCount = m_pModel->getProductionAttachmentCount();
 		for (nfUint32 i = 0; i < prodAttCount; i++)
@@ -98,6 +99,37 @@ namespace NMR {
 	void CModelReader_3MF_Native::release3MFOPCPackage()
 	{
 		m_pPackageReader = nullptr;
+	}
+
+	void CModelReader_3MF_Native::extractBinaryStreamsFromRelationships(_In_ std::string& sTargetPartURIDir, _In_ COpcPackagePart * pModelPart)
+	{
+		if (pModelPart == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (m_pBinaryStreamCollection.get() != nullptr) {
+
+			std::multimap<std::string, POpcPackageRelationship>& RelationShips = pModelPart->getRelationShips();
+
+			for (auto iIterator = RelationShips.begin(); iIterator != RelationShips.end(); iIterator++) {
+				auto theRelationShip = iIterator->second;
+				std::string sType = theRelationShip->getType();
+
+				if (sType == PACKAGE_ZCOMPRESSION_RELATIONSHIP_TYPE)
+				{
+					std::string sURI = theRelationShip->getTargetPartURI();
+					// TODO: this logic might not be correct yet
+					if (!fnStartsWithPathDelimiter(sURI))
+						sURI = sTargetPartURIDir + sURI;
+
+					POpcPackagePart pBinaryStreamPart = m_pPackageReader->createPart(sURI);
+					NMR::PImportStream pImportStream = pBinaryStreamPart->getImportStream();
+					NMR::PImportStream pMemoryStream = pImportStream->copyToMemory();
+
+					m_pBinaryStreamCollection->registerReader(sURI, std::make_shared<CChunkedBinaryStreamReader> (pMemoryStream));
+
+				}
+			}
+		}
+
 	}
 
 	void CModelReader_3MF_Native::extractTexturesFromRelationships(_In_ std::string& sTargetPartURIDir, _In_ COpcPackagePart * pModelPart)

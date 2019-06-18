@@ -407,6 +407,7 @@ These are given by the 3MF Standard
 #define XML_3MF_MAXMETADATACOUNT                    2147483647
 #define XML_3MF_MAXBUILDITEMCOUNT                   2147483647
 #define XML_3MF_MAXRESOURCECOUNT                    2147483647
+#define XML_3MF_MAXBINARYID							2147483647
 #define XML_3MF_MAXIMUMBEAMRADIUSVALUE              1000000000.0f
 #define XML_3MF_MAXIMUMSKINTHICKNESSVALUE           1000000000.0f
 #define XML_3MF_MAXBEAMCOUNT                        2147483647

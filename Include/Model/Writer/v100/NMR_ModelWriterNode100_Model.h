@@ -59,6 +59,7 @@ namespace NMR {
 		nfBool m_bWriteBaseMaterials;
 		nfBool m_bWriteObjects;
 		nfBool m_bWriteToolpaths;
+		nfBool m_bWriteLZMAExtension;
 		nfBool m_bIsRootModel;
 		nfBool m_bWriteCustomNamespaces;
 
@@ -100,6 +101,8 @@ namespace NMR {
 		void registerStreamWriter(const std::string & sInstanceUUID, const std::string & sPath, CChunkedBinaryStreamWriter * pBinaryStreamWriter);
 		
 		virtual void writeToXML();
+
+		void setWriteLZMAExtension(nfBool bValue);
 	};
 
 }

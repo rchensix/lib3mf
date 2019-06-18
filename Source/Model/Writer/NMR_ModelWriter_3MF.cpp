@@ -86,6 +86,7 @@ namespace NMR {
 
 		pXMLWriter->WriteStartDocument();
 		CModelWriterNode100_Model ModelNode(m_pModel.get(), pXMLWriter, m_pProgressMonitor, false);
+		ModelNode.setWriteLZMAExtension(m_bAllowBinaryStreams);
 
 		for (auto iAssignmentIter : m_BinaryWriterAssignmentMap) {
 			auto iBinaryIter = m_BinaryWriterUUIDMap.find(iAssignmentIter.second);
@@ -109,6 +110,8 @@ namespace NMR {
 		pXMLWriter->WriteStartDocument();
 
 		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, m_pProgressMonitor);
+		ModelNode.setWriteLZMAExtension(m_bAllowBinaryStreams);
+
 		for (auto iAssignmentIter : m_BinaryWriterAssignmentMap) {
 			auto iBinaryIter = m_BinaryWriterUUIDMap.find(iAssignmentIter.second);
 			if (iBinaryIter != m_BinaryWriterUUIDMap.end()) {

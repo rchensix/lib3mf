@@ -26,39 +26,43 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReader_3MF.h defines the Model Reader Class for
-3MF Files. A 3MF model reader reads in a 3MF file and generates an in-memory representation of it.
+NMR_ModelReaderNode_Vertex.h defines the Model Reader Vertex Node Class.
+A vertex reader model node is a parser for the vertex node of an XML Model Stream.
 
 --*/
 
-#ifndef __NMR_MODELREADER_3MF
-#define __NMR_MODELREADER_3MF
+#ifndef __NMR_MODELREADERNODE_ZCOMPRESSION1906_VERTEX
+#define __NMR_MODELREADERNODE_ZCOMPRESSION1906_VERTEX
 
-#include "Model/Reader/NMR_ModelReader.h" 
-#include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamCollection.h"
-#include <string>
-#include <map>
+#include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_ModelComponent.h"
+#include "Model/Classes/NMR_ModelObject.h"
 
 namespace NMR {
 
-	class CModelReader_3MF : public CModelReader {
-	protected:
-		nfBool m_bAllowBinaryStreams;
-		PChunkedBinaryStreamCollection m_pBinaryStreamCollection;
+	class CModelReaderNode_ZCompression1906_Vertex : public CModelReaderNode {
+	private:
+		ModelResourceID m_nXBinaryID;
+		ModelResourceID m_nYBinaryID;
+		ModelResourceID m_nZBinaryID;
 
-		virtual PImportStream extract3MFOPCPackage(_In_ PImportStream pPackageStream) = 0;
-		virtual void release3MFOPCPackage() = 0;
-
+		nfFloat m_fOriginX;
+		nfFloat m_fOriginY;
+		nfFloat m_fOriginZ;
 	public:
-		CModelReader_3MF() = delete;
-		CModelReader_3MF(_In_ PModel pModel, _In_ nfBool bAllowBinaryStreams);
+		CModelReaderNode_ZCompression1906_Vertex() = delete;
+		CModelReaderNode_ZCompression1906_Vertex(_In_ PModelReaderWarnings pWarnings);
 
-		virtual void readStream(_In_ PImportStream pStream);
-		virtual void addTextureAttachment(_In_ std::string sPath, _In_ PImportStream pStream);
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+
+		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+
+		void getBinaryIDs(ModelResourceID & XBinaryID, ModelResourceID & YBinaryID, ModelResourceID & ZBinaryID);
+		void getOrigin(nfFloat & fOriginX, nfFloat & fOriginY, nfFloat & fOriginZ);
 	};
 
-	typedef std::shared_ptr <CModelReader_3MF> PModelReader_3MF;
+	typedef std::shared_ptr <CModelReaderNode_ZCompression1906_Vertex> PModelReaderNode_ZCompression1906_Vertex;
 
 }
 
-#endif // __NMR_MODELREADER_3MF
+#endif // __NMR_MODELREADERNODE_ZCOMPRESSION1906_VERTEX

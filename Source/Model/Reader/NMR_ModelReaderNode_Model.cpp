@@ -81,12 +81,14 @@ namespace NMR {
 				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_MATERIALSPEC) != 0 &&
 				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_PRODUCTIONSPEC) != 0 &&
 				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_SLICESPEC) != 0 &&
-				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_BEAMLATTICESPEC) != 0 )
+				((strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_ZCOMPRESSION) != 0) || !supportsBinaryStreams()) &&
+				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_BEAMLATTICESPEC) != 0 ) 
 			{
 				m_pWarnings->addWarning(MODELREADERWARNING_REQUIREDEXTENSIONNOTSUPPORTED, NMR_ERROR_REQUIREDEXTENSIONNOTSUPPORTED, mrwInvalidMandatoryValue);
 			}
 		}
 	}
+
 
 	void CModelReaderNode_Model::parseXML(_In_ CXmlReader * pXMLReader)
 	{
@@ -153,6 +155,8 @@ namespace NMR {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Resources>(m_pModel, m_pWarnings, m_sPath.c_str(), m_pProgressMonitor);
 				if (m_bHasResources)
 					throw CNMRException(NMR_ERROR_DUPLICATERESOURCES);
+
+				pXMLNode->setBinaryStreamCollection(m_pBinaryStreamCollection);
 				pXMLNode->parseXML(pXMLReader);
 				m_bHasResources = true;
 			}
@@ -252,5 +256,6 @@ namespace NMR {
 	{
 		m_bIgnoreMetaData = bIgnoreMetaData;
 	}
+
 
 }

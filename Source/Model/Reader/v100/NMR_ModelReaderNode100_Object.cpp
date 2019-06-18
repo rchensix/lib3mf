@@ -240,6 +240,7 @@ namespace NMR {
 				
 				// Read Mesh
 				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, pMesh.get(), m_pWarnings, m_pProgressMonitor, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
+				pXMLNode->setBinaryStreamCollection(m_pBinaryStreamCollection);
 				pXMLNode->parseXML(pXMLReader);
 
 				// Add Object to Parent

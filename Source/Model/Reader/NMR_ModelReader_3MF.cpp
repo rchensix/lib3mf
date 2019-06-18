@@ -55,6 +55,8 @@ namespace NMR {
 		: CModelReader(pModel), m_bAllowBinaryStreams (bAllowBinaryStreams)
 	{
 		// empty on purpose
+		if (bAllowBinaryStreams)
+			m_pBinaryStreamCollection = std::make_shared<CChunkedBinaryStreamCollection>();
 	}
 
 	void readProductionAttachmentModels(_In_ PModel pModel, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor)
@@ -163,6 +165,8 @@ namespace NMR {
 
 				m_pModel->setCurPath(m_pModel->rootPath().c_str());
 				PModelReaderNode_Model pXMLNode = std::make_shared<CModelReaderNode_Model>(m_pModel.get(), m_pWarnings, m_pModel->rootPath().c_str(), m_pProgressMonitor);
+				pXMLNode->setBinaryStreamCollection(m_pBinaryStreamCollection);
+
 				pXMLNode->parseXML(pXMLReader.get());
 
 				if (!pXMLNode->getHasResources())

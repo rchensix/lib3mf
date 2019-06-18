@@ -111,6 +111,7 @@ Source/Common/Platform/NMR_XmlWriter.cpp
 Source/Common/Platform/NMR_XmlWriter_Native.cpp
 Source/Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamWriter.cpp
 Source/Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamReader.cpp
+Source/Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamCollection.cpp
 Source/Libraries/lzma/Alloc.c
 Source/Libraries/lzma/LzFind.c
 Source/Libraries/lzma/LzFindMt.c
@@ -190,6 +191,8 @@ Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceRefResources.cpp
 Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceStack.cpp
 Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Vertex.cpp
 Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Vertices.cpp
+Source/Model/Reader/ZCompression1906/NMR_ModelReaderNode_ZCompression1906_Triangle.cpp
+Source/Model/Reader/ZCompression1906/NMR_ModelReaderNode_ZCompression1906_Vertex.cpp
 Source/Model/Writer/NMR_ModelWriter.cpp
 Source/Model/Writer/NMR_ModelWriterNode.cpp
 Source/Model/Writer/NMR_ModelWriter_3MF.cpp

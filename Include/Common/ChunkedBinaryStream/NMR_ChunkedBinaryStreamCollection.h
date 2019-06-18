@@ -24,41 +24,38 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
-
-NMR_ModelReader_3MF.h defines the Model Reader Class for
-3MF Files. A 3MF model reader reads in a 3MF file and generates an in-memory representation of it.
-
 --*/
 
-#ifndef __NMR_MODELREADER_3MF
-#define __NMR_MODELREADER_3MF
+#ifndef __NMR_CHUNKEDBINARYSTREAMCOLLECTION
+#define __NMR_CHUNKEDBINARYSTREAMCOLLECTION
 
-#include "Model/Reader/NMR_ModelReader.h" 
-#include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamCollection.h"
-#include <string>
+#include "Common/NMR_Types.h"
+#include "Common/NMR_Local.h"
+#include "Common/Platform/NMR_ImportStream.h"
+
 #include <map>
+#include <vector>
+
+#include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamReader.h" 
 
 namespace NMR {
 
-	class CModelReader_3MF : public CModelReader {
-	protected:
-		nfBool m_bAllowBinaryStreams;
-		PChunkedBinaryStreamCollection m_pBinaryStreamCollection;
-
-		virtual PImportStream extract3MFOPCPackage(_In_ PImportStream pPackageStream) = 0;
-		virtual void release3MFOPCPackage() = 0;
+	class CChunkedBinaryStreamCollection {
+	private:
+		std::map <std::string, PChunkedBinaryStreamReader> m_ReaderMap;
 
 	public:
-		CModelReader_3MF() = delete;
-		CModelReader_3MF(_In_ PModel pModel, _In_ nfBool bAllowBinaryStreams);
+		CChunkedBinaryStreamCollection();
 
-		virtual void readStream(_In_ PImportStream pStream);
-		virtual void addTextureAttachment(_In_ std::string sPath, _In_ PImportStream pStream);
+		void registerReader (const std::string & sPath, PChunkedBinaryStreamReader pReader);
+		CChunkedBinaryStreamReader * findReader(const std::string & sPath);
+
 	};
 
-	typedef std::shared_ptr <CModelReader_3MF> PModelReader_3MF;
+	typedef std::shared_ptr <CChunkedBinaryStreamCollection> PChunkedBinaryStreamCollection;
+
 
 }
 
-#endif // __NMR_MODELREADER_3MF
+#endif // __NMR_CHUNKEDBINARYSTREAMCOLLECTION
+

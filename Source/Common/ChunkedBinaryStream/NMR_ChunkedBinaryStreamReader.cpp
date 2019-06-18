@@ -66,7 +66,7 @@ namespace NMR {
 			m_ChunkEntries.resize(Chunk.m_EntryCount);
 			pImportStream->readBuffer((nfByte *) m_ChunkEntries.data(), sizeof (BINARYCHUNKFILEENTRY) * m_ChunkEntries.size(), true);
 
-			for (size_t nEntryIndex = 0; nEntryIndex < m_ChunkEntries.size(); nEntryIndex) {
+			for (size_t nEntryIndex = 0; nEntryIndex < m_ChunkEntries.size(); nEntryIndex++) {
 				nfUint32 nEntryID = m_ChunkEntries[nEntryIndex].m_EntryID;
 				auto iChunkIter = ChunkMap->find(nEntryID);
 				if (iChunkIter != ChunkMap->end())
@@ -233,7 +233,7 @@ namespace NMR {
 	CChunkedBinaryStreamReader::CChunkedBinaryStreamReader(PImportStream pImportStream)
 		: m_pImportStream(pImportStream)
 	{
-		if (pImportStream.get())
+		if (pImportStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		readHeader();
@@ -273,7 +273,7 @@ namespace NMR {
 			   
 	}
 
-	PChunkedBinaryStreamReaderChunk CChunkedBinaryStreamReader::findChunkByEntry(_In_ nfUint32 nEntryID, _Out_ nfUint32 & nEntryIndex)
+	CChunkedBinaryStreamReaderChunk * CChunkedBinaryStreamReader::findChunkByEntry(_In_ nfUint32 nEntryID, _Out_ nfUint32 & nEntryIndex)
 	{
 
 		auto iEntryIter = m_ChunkMap.find(nEntryID);
@@ -283,7 +283,7 @@ namespace NMR {
 		nfUint32 nChunkIndex = iEntryIter->second.first;
 		nEntryIndex = iEntryIter->second.second;
 
-		return m_Chunks[nEntryIndex];
+		return m_Chunks[nChunkIndex].get();
 	}
 
 	void CChunkedBinaryStreamReader::findChunkInformation(nfUint32 nEntryID, eChunkedBinaryDataType & dataType, nfUint32 & nCount)
@@ -293,6 +293,17 @@ namespace NMR {
 		pChunk->getInformation(nEntryIndex, dataType, nCount);
 	}
 
+	nfUint32 CChunkedBinaryStreamReader::getTypedChunkEntryCount(nfUint32 nEntryID, eChunkedBinaryDataType dataType)
+	{
+		nfUint32 nCount;
+		eChunkedBinaryDataType existingDataType;
+
+		findChunkInformation(nEntryID, existingDataType, nCount);
+		if (existingDataType != dataType)
+			throw CNMRException(NMR_ERROR_UNEXPECTEDCHUNKDATATYPE);
+
+		return nCount;
+	}
 
 	void CChunkedBinaryStreamReader::readIntArray(nfUint32 nEntryID, nfInt32 * pData, nfUint32 nDataCount)
 	{

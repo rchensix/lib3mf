@@ -422,7 +422,12 @@ namespace NMR {
 		case NMR_ERROR_MULTIPROPERTIES_INVALID_MULTI_ELEMENT: return "A multi-element is invalid";
 		case NMR_ERROR_INVALID_RESOURCE_INDEX: return "A Resource Index is invalid";
 		case NMR_ERROR_VERSION093_NOT_SUPPORTED: return "This document contains content from Version 093 of the core-specification. This is not supported by Lib3MF version 2 or later.";
-
+		case NMR_ERROR_INVALIDMESHBINARYPATH: return "Invalid Mesh Binary Path";
+		case NMR_ERROR_DUPLICATEMESHBINARYPATH: return "Duplicate Mesh Binary Path";			
+		case NMR_ERROR_INVALIDBINARYELEMENTID: return "Invalid XML attribute in namespace";
+		case NMR_ERROR_NOBINARYSTREAMAVAILABLE: return "No Binary stream available";
+		case NMR_ERROR_UNEXPECTEDCHUNKDATATYPE: return "Unexpected chunk data type";
+		case NMR_ERROR_INCONSISTENTBINARYSTREAMCOUNT: return "Inconsistent binary stream count";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

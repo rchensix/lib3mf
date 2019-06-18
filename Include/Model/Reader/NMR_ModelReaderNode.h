@@ -39,6 +39,8 @@ A model reader node is an abstract base class for all XML nodes of a 3MF Model S
 #include "Common/Platform/NMR_XmlReader.h"
 #include "Common/3MF_ProgressMonitor.h"
 
+#include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamCollection.h"
+
 namespace NMR {
 
 	class CModelReaderNode {
@@ -51,6 +53,7 @@ namespace NMR {
 	protected:
 		PProgressMonitor m_pProgressMonitor;
 		PModelReaderWarnings m_pWarnings;
+		PChunkedBinaryStreamCollection m_pBinaryStreamCollection;
 
 		void parseName(_In_ CXmlReader * pXMLReader);
 		void parseAttributes(_In_ CXmlReader * pXMLReader);
@@ -70,6 +73,10 @@ namespace NMR {
 		PModelReaderWarnings getWarnings();
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader) = 0;
+
+		void setBinaryStreamCollection (PChunkedBinaryStreamCollection pBinaryStreamCollection);
+		PChunkedBinaryStreamCollection getBinaryStreamCollection();
+		nfBool supportsBinaryStreams();
 	};
 
 	typedef std::shared_ptr <CModelReaderNode> PModelReaderNode;
