@@ -108,4 +108,13 @@ namespace Lib3MF
 		CheckReaderWarnings(Reader::reader3MFz, 0);
 	}
 
+	TEST_F(Reader, 3MFReadFromBinaryPart)
+	{
+		Reader::reader3MFz->ReadFromFile(sTestFilesPath + "/Reader/" + "BinaryPart.3mfz");
+		CheckReaderWarnings(Reader::reader3MFz, 0);
+
+		auto writer = Reader::model->QueryWriter("3mf");
+		writer->WriteToFile(sOutFilesPath + "/Writer/binarypart_decoded.3mf");
+	}
+
 }

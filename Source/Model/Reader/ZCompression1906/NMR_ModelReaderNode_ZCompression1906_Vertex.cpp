@@ -125,9 +125,9 @@ namespace NMR {
 
 	void CModelReaderNode_ZCompression1906_Vertex::getOrigin(nfFloat & fOriginX, nfFloat & fOriginY, nfFloat & fOriginZ)
 	{
-		m_fOriginX = fOriginX;
-		m_fOriginY = fOriginY;
-		m_fOriginZ = fOriginZ;
+		fOriginX = m_fOriginX;
+		fOriginY = m_fOriginY;
+		fOriginZ = m_fOriginZ;
 	}
 
 }

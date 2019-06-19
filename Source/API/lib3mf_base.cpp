@@ -42,9 +42,8 @@ using namespace Lib3MF::Impl;
 
 bool CBase::GetLastErrorMessage(std::string & sErrorMessage)
 {
-	if (m_pErrors && !m_pErrors->empty()) {
-		sErrorMessage = m_pErrors->back();
-		m_pErrors->pop_back();
+	if (m_pLastError != nullptr) {
+		sErrorMessage = *m_pLastError;
 		return true;
 	} else {
 		sErrorMessage = "";
@@ -54,15 +53,15 @@ bool CBase::GetLastErrorMessage(std::string & sErrorMessage)
 
 void CBase::ClearErrorMessages()
 {
-	m_pErrors.reset();
+	m_pLastError.reset();
 }
 
 void CBase::RegisterErrorMessage(const std::string & sErrorMessage)
 {
-	if (!m_pErrors) {
-		m_pErrors.reset(new std::list<std::string>());
+	if (!m_pLastError) {
+		m_pLastError.reset(new std::string());
 	}
-	m_pErrors->push_back(sErrorMessage);
+	*m_pLastError = sErrorMessage;
 }
 
 void CBase::IncRefCount()

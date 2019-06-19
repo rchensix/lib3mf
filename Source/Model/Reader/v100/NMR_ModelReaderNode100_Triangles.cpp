@@ -235,8 +235,8 @@ namespace NMR {
 					for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
 
 						ModelResourceIndex nIndex1 = (nfUint32)*pV1;
-						ModelResourceIndex nIndex2 = (nfUint32)(*pV2 + *pV1);
-						ModelResourceIndex nIndex3 = (nfUint32)(*pV3 + *pV1);
+						ModelResourceIndex nIndex2 = (nfUint32)*pV2;
+						ModelResourceIndex nIndex3 = (nfUint32)*pV3;
 
 						addFace(nIndex1, nIndex2, nIndex3, nResourceID, nResourceIndex1, nResourceIndex2, nResourceIndex3);
 

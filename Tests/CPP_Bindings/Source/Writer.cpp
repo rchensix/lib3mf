@@ -156,7 +156,7 @@ namespace Lib3MF
 		auto pProfile2 = pToolpath->AddProfile("profile2", 120.0, 220.0, 3.2, 2);
 
 		auto pLayer1 = pToolpath->AddLayer(100, "/Toolpath/layer1.xml", Writer::writer3MFz.get());
-		Writer::writer3MF->AssignBinaryStream(pLayer1.get(), pBinaryStream.get() );
+		Writer::writer3MFz->AssignBinaryStream(pLayer1.get(), pBinaryStream.get() );
 		auto nProfileID1 = pLayer1->RegisterProfile(pProfile1.get());
 		auto nPartID1 = pLayer1->RegisterPart(pObject.get());
 
@@ -193,6 +193,26 @@ namespace Lib3MF
 			Writer::writer3MFz->AssignBinaryStream (pMeshObject.get(), pBinaryStream.get());
 		}
 		Writer::writer3MFz->WriteToFile(Writer::OutFolder + "binarymesh.3mf");
+
+	}
+
+	TEST_F(Writer, BinaryMeshTestPart)
+	{
+
+
+		auto pModel = wrapper->CreateModel();
+		auto pReader = pModel->QueryReader("3mf");
+		pReader->ReadFromFile(sTestFilesPath + "Writer/" + "Part4.3mf");
+
+		auto pWriter = pModel->QueryWriter("3mfz");
+		auto pBinaryStream = pWriter->CreateBinaryStream("Binary/mesh.dat");
+
+		auto Iterator = pModel->GetMeshObjects();
+		while (Iterator->MoveNext()) {
+			auto pMeshObject = pModel->GetMeshObjectByID(Iterator->GetCurrent()->GetResourceID());
+			pWriter->AssignBinaryStream(pMeshObject.get(), pBinaryStream.get());
+		}
+		pWriter->WriteToFile(Writer::OutFolder + "binarypart4.3mf");
 
 	}
 

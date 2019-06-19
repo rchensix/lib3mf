@@ -221,8 +221,8 @@ namespace NMR {
 			for (nFaceIndex = 0; nFaceIndex < nFaceCount; nFaceIndex++) {
 				MESHFACE * pMeshFace = pMesh->getFace(nFaceIndex);
 				Node1Indices[nFaceIndex] = (nfInt32) pMeshFace->m_nodeindices[0];
-				Node2Indices[nFaceIndex] = (nfInt32) pMeshFace->m_nodeindices[1] - (nfInt32) pMeshFace->m_nodeindices[0];
-				Node3Indices[nFaceIndex] = (nfInt32) pMeshFace->m_nodeindices[2] - (nfInt32) pMeshFace->m_nodeindices[0];
+				Node2Indices[nFaceIndex] = (nfInt32) pMeshFace->m_nodeindices[1];
+				Node3Indices[nFaceIndex] = (nfInt32) pMeshFace->m_nodeindices[2];
 			}
 
 			unsigned int binaryKeyV1 = m_pBinaryStreamWriter->addIntArray(Node1Indices.data(), nFaceCount, eptDeltaPredicition);

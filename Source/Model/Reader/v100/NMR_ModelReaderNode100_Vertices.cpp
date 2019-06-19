@@ -131,9 +131,9 @@ namespace NMR {
 					pReader->readFloatArray(nYID, YValues.data(), nCount);
 					pReader->readFloatArray(nZID, ZValues.data(), nCount);
 
-					auto iX = XValues.begin();
-					auto iY = YValues.begin();
-					auto iZ = ZValues.begin();
+					auto iX = XValues.data();
+					auto iY = YValues.data();
+					auto iZ = ZValues.data();
 
 					for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
 						m_pMesh->addNode(fnVEC3_make(*iX + fOriginX, *iY + fOriginY, *iZ + fOriginZ));

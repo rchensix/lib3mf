@@ -124,6 +124,7 @@ namespace NMR {
 			if (cbBytesWritten == 0)
 				throw CNMRException(NMR_ERROR_COULDNOTDEFLATE);
 
+			pByte += cbBytesWritten;
 			cbCount -= cbBytesWritten;
 		}
 

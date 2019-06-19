@@ -233,7 +233,7 @@ namespace NMR {
 			Entry.m_EntryType = BINARYCHUNKFILEENTRYTYPE_FLOAT32ARRAY_NOPREDICTION;
 
 			for (nIndex = 0; nIndex < nLength; nIndex++) {
-				nfInt64 nValue = (nfInt64) (pData[nIndex]);
+				nfInt64 nValue = (nfInt64) (pData[nIndex] / fDiscretizationUnits);
 				if (abs (nValue) > BINARYCHUNKFILE_MAXFLOATUNITS)
 					throw CNMRException(NMR_ERROR_BINARYCHUNK_DISCRETIZATIONVALUEOUTOFRANGE);
 
@@ -251,7 +251,7 @@ namespace NMR {
 
 			m_CurrentChunkData.push_back((nfInt32) nValue);
 			for (nIndex = 1; nIndex < nLength; nIndex++) {
-				nValue = (nfInt64)(pData[nIndex]);
+				nValue = (nfInt64)(pData[nIndex] / fDiscretizationUnits);
 				if (abs(nValue) > BINARYCHUNKFILE_MAXFLOATUNITS)
 					throw CNMRException(NMR_ERROR_BINARYCHUNK_DISCRETIZATIONVALUEOUTOFRANGE);
 				m_CurrentChunkData.push_back(((nfInt32) nValue) - ((nfInt32) nOldValue));
