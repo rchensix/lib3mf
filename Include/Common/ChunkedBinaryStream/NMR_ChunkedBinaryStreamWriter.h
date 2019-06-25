@@ -45,6 +45,8 @@ namespace NMR {
 		nfBool m_bIsFinished;
 		nfUint64 m_ChunkTableStart;
 
+		nfBool m_bIsEmpty;
+
 		std::vector<BINARYCHUNKFILECHUNK> m_Chunks;
 
 		BINARYCHUNKFILECHUNK * m_CurrentChunk;
@@ -68,6 +70,8 @@ namespace NMR {
 		nfUint32 addFloatArray(const nfFloat * pData, nfUint32 nLength, eChunkedBinaryPredictionType predictionType, nfFloat fDiscretizationUnits);
 
 		void copyToStream (PExportStream pStream);
+
+		nfBool isEmpty();
 
 	};
 

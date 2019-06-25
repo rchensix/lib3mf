@@ -142,10 +142,14 @@ namespace NMR {
 		// Write Binary Streams
 		for (auto iBinaryIter : m_BinaryWriterUUIDMap) {
 			
-			iBinaryIter.second.second->finishWriting();
-			POpcPackagePart pBinaryPart = pPackageWriter->addPart(iBinaryIter.second.first);
-			pModelPart->addRelationship("binary" + iBinaryIter.first, PACKAGE_ZCOMPRESSION_RELATIONSHIP_TYPE, pBinaryPart->getURI());
- 			iBinaryIter.second.second->copyToStream (pBinaryPart->getExportStream());
+			auto pBinaryWriter = iBinaryIter.second.second;
+
+			if (!pBinaryWriter->isEmpty()) {
+				iBinaryIter.second.second->finishWriting();
+				POpcPackagePart pBinaryPart = pPackageWriter->addPart(iBinaryIter.second.first);
+				pModelPart->addRelationship("binary" + iBinaryIter.first, PACKAGE_ZCOMPRESSION_RELATIONSHIP_TYPE, pBinaryPart->getURI());
+				pBinaryWriter->copyToStream(pBinaryPart->getExportStream());
+			}
 			
 		}
 

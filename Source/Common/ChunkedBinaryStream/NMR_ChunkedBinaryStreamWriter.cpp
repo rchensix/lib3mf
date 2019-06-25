@@ -39,7 +39,12 @@ namespace NMR {
 
 
 	CChunkedBinaryStreamWriter::CChunkedBinaryStreamWriter(PExportStreamMemory pExportStream)
-		: m_pExportStream (pExportStream), m_elementIDCounter (1), m_CurrentChunk (nullptr), m_ChunkTableStart (0), m_bIsFinished (false)
+		: m_pExportStream (pExportStream), 
+		  m_elementIDCounter (1), 
+		  m_CurrentChunk (nullptr), 
+		  m_ChunkTableStart (0), 
+		  m_bIsFinished (false), 
+		  m_bIsEmpty (true)
 	{
 		if (pExportStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -160,6 +165,7 @@ namespace NMR {
 		unsigned int nElementID = m_elementIDCounter;
 		m_elementIDCounter++;
 
+		m_bIsEmpty = false;
 
 		BINARYCHUNKFILEENTRY Entry;
 		Entry.m_EntryID = nElementID;
@@ -219,6 +225,7 @@ namespace NMR {
 		unsigned int nElementID = m_elementIDCounter;
 		m_elementIDCounter++;
 
+		m_bIsEmpty = false;
 
 		BINARYCHUNKFILEENTRY Entry;
 		Entry.m_EntryID = nElementID;
@@ -329,6 +336,11 @@ namespace NMR {
 		if (m_Chunks.size() > 0) {
 			m_pExportStream->writeBuffer (m_Chunks.data(), sizeof (BINARYCHUNKFILECHUNK) * m_Chunks.size());
 		}
+	}
+
+	nfBool CChunkedBinaryStreamWriter::isEmpty()
+	{
+		return m_bIsEmpty;
 	}
 
 }
