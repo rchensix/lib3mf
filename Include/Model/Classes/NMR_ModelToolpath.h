@@ -77,6 +77,7 @@ namespace NMR {
 		PModelToolpathProfile getProfileByUUID(std::string sUUID);
 
 		double getUnitFactor ();
+
 	};
 
 

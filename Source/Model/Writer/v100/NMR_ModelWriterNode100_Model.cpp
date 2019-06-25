@@ -782,11 +782,10 @@ namespace NMR {
 			if (m_bWriteSliceExtension) {
 				writeSliceStacks();
 			}
-			if (m_bWriteObjects)
-				writeObjects();
-
 			if (m_bWriteToolpaths)
 				writeToolpaths();
+			if (m_bWriteObjects)
+				writeObjects();
 		}
 		else {
 			if (m_bWriteSliceExtension) {
@@ -923,12 +922,14 @@ namespace NMR {
 					writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHLAYER, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
 					writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLAYER_ZTOP, pLayer->getMaxZ());
 					writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLAYER_PATH, pLayer->getLayerDataPath ());
-					writeEndElement();
+					writeEndElement();					
 
 				}
 
 
 				writeFullEndElement();
+
+
 
 			}
 

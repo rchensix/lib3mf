@@ -1160,7 +1160,10 @@
       <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
       <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data" />
     </method>
-	
+
+	<method name="Finish" description="finishes all writing of the layer and compresses toolpath data.">
+    </method>
+
   </class>
 
 

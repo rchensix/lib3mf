@@ -159,8 +159,9 @@ namespace Lib3MF
 		Writer::writer3MFz->AssignBinaryStream(pLayer1.get(), pBinaryStream.get() );
 		auto nProfileID1 = pLayer1->RegisterProfile(pProfile1.get());
 		auto nPartID1 = pLayer1->RegisterPart(pObject.get());
+		pLayer1 = nullptr;
 
-		std::vector<Lib3MF::sPosition2D> PointsA;
+/*		std::vector<Lib3MF::sPosition2D> PointsA;
 		PointsA.push_back(Lib3MF::sPosition2D{ 100.0, 200.0 });
 		PointsA.push_back(Lib3MF::sPosition2D{ 100.0, 300.0 });
 		PointsA.push_back(Lib3MF::sPosition2D{ 110.0, 200.0 });
@@ -175,7 +176,7 @@ namespace Lib3MF
 		PointsB.push_back(Lib3MF::sPosition2D{ 100.0, 300.0 });
 		PointsB.push_back(Lib3MF::sPosition2D{ 110.0, 200.0 });
 		PointsB.push_back(Lib3MF::sPosition2D{ 110.0, 300.0 });
-		pLayer2->WriteHatchData(nProfileID2, nPartID2, PointsB);
+		pLayer2->WriteHatchData(nProfileID2, nPartID2, PointsB); */
 
 		Writer::writer3MFz->WriteToFile(Writer::OutFolder + "toolpath.3mf");
 

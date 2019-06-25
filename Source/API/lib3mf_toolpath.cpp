@@ -106,7 +106,14 @@ IToolpathLayerData * CToolpath::AddLayer(const Lib3MF_uint32 nZMax, const std::s
 	if (pWriterInstance == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 
-	std::unique_ptr<CToolpathLayerData> pToolpathData (new CToolpathLayerData(std::make_shared<NMR::CModelToolpathLayerData>(m_pToolpath.get(), pWriterInstance->getModelWriter ())));
+	// Retrieve 3mf writer instance
+	NMR::PModelWriter pNMRModelWriterInstance = pWriterInstance->getModelWriter();
+	NMR::PModelWriter_3MF pNMRModelWriter3MFInstance = std::dynamic_pointer_cast<NMR::CModelWriter_3MF> (pNMRModelWriterInstance);
+	if (pNMRModelWriter3MFInstance.get() == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+
+
+	std::unique_ptr<CToolpathLayerData> pToolpathData (new CToolpathLayerData(std::make_shared<NMR::CModelToolpathLayerData>(m_pToolpath.get(), pNMRModelWriter3MFInstance, sPath)));
 
 	m_pToolpath->addLayer(sPath, nZMax);
 

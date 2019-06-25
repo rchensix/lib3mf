@@ -82,10 +82,12 @@ Lib3MF_uint32 CToolpathLayerData::RegisterPart(IObject* pPart)
 	return m_pLayerData->RegisterPart (pObjectClass->getObjectInstance ());
 }
 
-void CToolpathLayerData::finishHeader()
+
+void CToolpathLayerData::Finish()
 {
-	m_pLayerData->finishHeader();
+	m_pLayerData->finishWriting ();
 }
+
 
 
 void CToolpathLayerData::WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer)
@@ -181,12 +183,6 @@ void CToolpathLayerData::WritePolyline(const Lib3MF_uint32 nProfileID, const Lib
 
 	m_pLayerData->WritePolyline(nProfileID, nPartID, nPointCount, XValues.data(), YValues.data());
 }
-
-NMR::PImportStream CToolpathLayerData::createStream()
-{
-	return m_pLayerData->createStream();
-}
-
 
 
 

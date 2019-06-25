@@ -149,6 +149,17 @@ namespace NMR {
 			
 		}
 
+		// Write Additional Attachments that are not part of the model
+		for (auto iAttachmentIter : m_AdditionalAttachments) {
+			CUUID uuid;
+			POpcPackagePart pAttachmentPart = pPackageWriter->addPart(iAttachmentIter.first);
+			pModelPart->addRelationship("attachment" + uuid.toString(), iAttachmentIter.second.second, pAttachmentPart->getURI());
+			
+			PImportStream pAttachmentStream = iAttachmentIter.second.first;
+			pAttachmentStream->seekPosition(0, true);
+			pAttachmentPart->getExportStream()->copyFrom (pAttachmentStream.get(), pAttachmentStream->retrieveSize (), MODELWRITER_NATIVE_BUFFERSIZE);
+		}
+
 	}
 
 

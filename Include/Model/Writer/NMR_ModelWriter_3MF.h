@@ -39,8 +39,13 @@ A model writer exports the in memory represenation into a 3MF file.
 
 namespace NMR {
 
+
 	class CModelWriter_3MF : public CModelWriter {
 	protected:
+
+		// Additional streams to write into to package
+		std::map <std::string, std::pair<PImportStream, std::string>> m_AdditionalAttachments;
+
 		// Creates a model stream
 		void writeModelStream(_In_ CXmlWriter * pXMLWriter, _In_ CModel * pModel);
 
@@ -56,8 +61,13 @@ namespace NMR {
 		CModelWriter_3MF(_In_ PModel pModel, _In_ nfBool bAllowBinaryStreams);
 
 		virtual void exportToStream(_In_ PExportStream pStream);
+
+		void addAdditionalAttachment (_In_ std::string sPath, _In_ PImportStream pStream, _In_ std::string sRelationShipType);
 	};
 
+	typedef std::shared_ptr <CModelWriter_3MF> PModelWriter_3MF;
+
 }
+
 
 #endif // __NMR_MODELWRITER_3MF

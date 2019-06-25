@@ -46,8 +46,8 @@ NMR_ModelToolpathLayer.cpp defines the Model Toolpath Layer.
 
 namespace NMR {
 
-	CModelToolpathLayerData::CModelToolpathLayerData(_In_ CModelToolpath * pModelToolpath, _In_ NMR::PModelWriter pModelWriter)
-		: m_pModelToolpath (pModelToolpath), m_pModelWriter (pModelWriter)
+	CModelToolpathLayerData::CModelToolpathLayerData(_In_ CModelToolpath * pModelToolpath, _In_ NMR::PModelWriter_3MF pModelWriter, const std::string & sPackagePath)
+		: m_pModelToolpath (pModelToolpath), m_pModelWriter (pModelWriter), m_sPackagePath (sPackagePath)
 	{
 		if (pModelToolpath == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -70,6 +70,12 @@ namespace NMR {
 
 		m_nIDCounter = 1;
 
+	}
+
+	CModelToolpathLayerData::~CModelToolpathLayerData()
+	{
+		if (!m_bWritingFinished)
+			finishWriting ();
 	}
 
 	nfUint32 CModelToolpathLayerData::RegisterProfile(_In_ PModelToolpathProfile pProfile)
@@ -373,6 +379,15 @@ namespace NMR {
 	std::string CModelToolpathLayerData::getUUID()
 	{
 		return m_sUUID;
+	}
+
+	void CModelToolpathLayerData::finishWriting()
+	{
+		if (!m_bWritingFinished) {
+			PImportStream pImportStream = createStream();
+			m_pModelWriter->addAdditionalAttachment (m_sPackagePath, pImportStream, PACKAGE_TOOLPATH_RELATIONSHIP_TYPE);
+
+		}
 	}
 
 
