@@ -155,6 +155,8 @@ namespace NMR {
 		case NMR_ERROR_INVALIDCHUNKENTRYSIZE: return "Invalid chunk entry size";
 		case NMR_ERROR_NOTENOUGHDATATOREADFROMCHUNK: return "Not enough data to read from chunk";
 		case NMR_ERROR_INVALIDCHUNKENTRYTYPE: return "Invalid chunk entry type";
+		case NMR_ERROR_UNEXPECTEDCHUNKDATATYPE: return "Unexpected chunk data type";
+		case NMR_ERROR_INVALIDFLOATVALUE: return "Invalid float value";
 
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;
@@ -426,8 +428,15 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATEMESHBINARYPATH: return "Duplicate Mesh Binary Path";			
 		case NMR_ERROR_INVALIDBINARYELEMENTID: return "Invalid XML attribute in namespace";
 		case NMR_ERROR_NOBINARYSTREAMAVAILABLE: return "No Binary stream available";
-		case NMR_ERROR_UNEXPECTEDCHUNKDATATYPE: return "Unexpected chunk data type";
 		case NMR_ERROR_INCONSISTENTBINARYSTREAMCOUNT: return "Inconsistent binary stream count";
+		case NMR_ERROR_MISSINGUNITFACTOR: return "Missing Unit Factor";
+		case NMR_ERROR_MISSINGNAME: return "Missing Name";
+		case NMR_ERROR_MISSINGLASERPOWER: return "Missing Laser Power";
+		case NMR_ERROR_MISSINGLASERSPEED: return "Missing Laser Speed";
+		case NMR_ERROR_MISSINGLASERFOCUS: return "Missing Laser Focus";
+		case NMR_ERROR_MISSINGPATH: return "Missing Path";
+		case NMR_ERROR_MISSINGZTOP: return "Missing ZTop";
+
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

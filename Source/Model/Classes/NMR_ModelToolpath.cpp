@@ -90,6 +90,21 @@ namespace NMR {
 	
 	}
 
+
+	PModelToolpathProfile CModelToolpath::addExistingProfile(const std::string & sUUID, const std::string & sName, nfDouble dLaserPower, nfDouble dLaserSpeed, nfDouble dLaserFocus, nfUint32 nLaserIndex)
+	{
+		CUUID checkUUID (sUUID.c_str());
+
+		auto pProfile = std::make_shared<CModelToolpathProfile>(checkUUID.toString (), sName, dLaserPower, dLaserSpeed, dLaserFocus, nLaserIndex);
+		m_Profiles.push_back(pProfile);
+
+		m_ProfileMap.insert(std::make_pair(sUUID, pProfile));
+
+		return pProfile;
+
+	}
+
+
 	nfUint32 CModelToolpath::getProfileCount()
 	{
 		return (nfUint32)m_Profiles.size();

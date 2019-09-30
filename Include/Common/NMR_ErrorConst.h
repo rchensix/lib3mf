@@ -377,6 +377,13 @@ NMR_ErrorConst.h defines all error code constants.
 // Unexpected chunk data type
 #define NMR_ERROR_UNEXPECTEDCHUNKDATATYPE 0x106C
 
+// Duplicate value
+#define NMR_ERROR_DUPLICATEVALUE 0x106D
+
+// Invalid float value
+#define NMR_ERROR_INVALIDFLOATVALUE 0x106E
+
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/
@@ -1204,6 +1211,27 @@ Model error codes (0x8XXX)
 
 // Inconsistent binary stream count
 #define NMR_ERROR_INCONSISTENTBINARYSTREAMCOUNT 0x80EC
+
+// Missing Unit Factor
+#define NMR_ERROR_MISSINGUNITFACTOR 0x80ED
+
+// Missing Name
+#define NMR_ERROR_MISSINGNAME 0x80EF
+
+// Missing Laser Power
+#define NMR_ERROR_MISSINGLASERPOWER 0x80F0
+
+// Missing Laser Speed
+#define NMR_ERROR_MISSINGLASERSPEED 0x80F1
+
+// Missing Laser Focus
+#define NMR_ERROR_MISSINGLASERFOCUS 0x80F2
+
+// Missing Path
+#define NMR_ERROR_MISSINGPATH 0x80F3
+
+// Missing ZTop
+#define NMR_ERROR_MISSINGZTOP 0x80F4
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)

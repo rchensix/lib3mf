@@ -193,6 +193,11 @@ Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Vertex.cpp
 Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Vertices.cpp
 Source/Model/Reader/ZCompression1906/NMR_ModelReaderNode_ZCompression1906_Triangle.cpp
 Source/Model/Reader/ZCompression1906/NMR_ModelReaderNode_ZCompression1906_Vertex.cpp
+Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathLayer.cpp
+Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathLayers.cpp
+Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathProfile.cpp
+Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathProfiles.cpp
+Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathResource.cpp
 Source/Model/Writer/NMR_ModelWriter.cpp
 Source/Model/Writer/NMR_ModelWriterNode.cpp
 Source/Model/Writer/NMR_ModelWriter_3MF.cpp

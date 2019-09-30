@@ -109,12 +109,12 @@ namespace NMR {
 				outBuffer.data(), &outBufferSize, 
 				pInputBuffer, inputSize, 
 				outProps.data(), &outPropsSize,
-				9, /* 0 <= level <= 9, default = 5 */
-				384 * 1024 * 1024, /* use (1 << N) or (3 << N). 4 KB < dictSize <= 128 MB */
-				8, /* 0 <= lc <= 8, default = 3  */
-				4, /* 0 <= lp <= 4, default = 0  */
-				4, /* 0 <= pb <= 4, default = 2  */
-				256,  /* 5 <= fb <= 273, default = 32 */
+				3, /* 0 <= level <= 9, default = 5 */
+				8 * 1024 * 1024, /* use (1 << N) or (3 << N). 4 KB < dictSize <= 128 MB */
+				5, /* 0 <= lc <= 8, default = 3  */
+				2, /* 0 <= lp <= 4, default = 0  */
+				3, /* 0 <= pb <= 4, default = 2  */
+				64,  /* 5 <= fb <= 273, default = 32 */
 				1 /* 1 or 2, default = 2 */
 			);
 

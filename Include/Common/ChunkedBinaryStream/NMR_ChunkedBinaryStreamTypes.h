@@ -51,6 +51,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace NMR {
 
 #pragma pack (1)
+
 	typedef struct {
 		nfUint32 m_Sign;
 		nfUint32 m_Version;
@@ -58,6 +59,7 @@ namespace NMR {
 		nfUint64 m_ChunkTableStart;
 		nfUint32 m_Reserved[BINARYCHUNKFILEHEADERRESERVED];
 	} BINARYCHUNKFILEHEADER;
+
 
 	typedef struct {
 		nfUint32 m_EntryCount;

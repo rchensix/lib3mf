@@ -61,7 +61,7 @@ namespace NMR {
 
 		m_pXmlWriter = std::make_shared<NMR::CXmlWriter_Native>(m_pExportStream);
 		m_pXmlWriter->WriteStartDocument();
-		m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_LAYER, XML_3MF_NAMESPACE_TOOLPATHLAYER);
+		m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_LAYER, XML_3MF_NAMESPACE_TOOLPATHSPEC);
 		m_pXmlWriter->WriteAttributeString(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, nullptr, XML_3MF_NAMESPACE_ZCOMPRESSION);
 
 		m_bWritingHeader = true;

@@ -72,6 +72,8 @@ namespace NMR {
 		PModelToolpathLayer getLayer(nfUint32 nIndex);
 
 		PModelToolpathProfile addProfile(const std::string & sName, nfDouble dLaserPower, nfDouble dLaserSpeed, nfDouble dLaserFocus, nfUint32 nLaserIndex);
+		PModelToolpathProfile addExistingProfile(const std::string & sUUID, const std::string & sName, nfDouble dLaserPower, nfDouble dLaserSpeed, nfDouble dLaserFocus, nfUint32 nLaserIndex);
+
 		nfUint32 getProfileCount();
 		PModelToolpathProfile getProfile(nfUint32 nIndex);
 		PModelToolpathProfile getProfileByUUID(std::string sUUID);
