@@ -44,7 +44,7 @@ NMR_ModelReaderNode_Toolpath1905_ToolpathProfiles.h covers the official 3MF Tool
 namespace NMR {
 
 	CModelReaderNode_Toolpath1905_ToolpathProfiles::CModelReaderNode_Toolpath1905_ToolpathProfiles(_In_ CModel * pModel, _In_ CModelToolpath * pToolpath, _In_ PModelReaderWarnings pWarnings)
-		: CModelReaderNode(pWarnings), m_pToolpath (pToolpath)
+		: CModelReaderNode(pWarnings), m_pToolpath (pToolpath), m_pModel(pModel)
 	{
 		if (pToolpath == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);

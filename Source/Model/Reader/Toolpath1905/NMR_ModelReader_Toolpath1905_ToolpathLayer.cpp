@@ -46,7 +46,8 @@ namespace NMR {
 		: CModelReaderNode(pWarnings),
 		m_bHasPath (false),
 		m_bHasZTop (false),
-		m_nZTop (0)
+		m_nZTop (0),
+		m_pModel(pModel)
 
 	{
 	}
@@ -67,11 +68,6 @@ namespace NMR {
 
 	void CModelReaderNode_Toolpath1905_ToolpathLayer::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
-	}
-	
-	void CModelReaderNode_Toolpath1905_ToolpathLayer::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
-	{
-
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TOOLPATHLAYER_PATH) == 0) {
 			if (m_bHasPath)
 				throw CNMRException(NMR_ERROR_DUPLICATEVALUE);
@@ -89,6 +85,11 @@ namespace NMR {
 			m_nZTop = fnStringToUint32(pAttributeValue);
 			m_bHasZTop = true;
 		}
+
+	}
+	
+	void CModelReaderNode_Toolpath1905_ToolpathLayer::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
+	{
 
 
 	}

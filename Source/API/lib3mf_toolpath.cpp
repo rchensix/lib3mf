@@ -122,3 +122,27 @@ IToolpathLayerData * CToolpath::AddLayer(const Lib3MF_uint32 nZMax, const std::s
 }
 
 
+IAttachment * CToolpath::GetLayerAttachment(const Lib3MF_uint32 nIndex)
+{
+	auto pLayer = m_pToolpath->getLayer(nIndex);
+	auto pModel = m_pToolpath->getModel();
+	auto pAttachment = pModel->findModelAttachment(pLayer->getLayerDataPath());
+	if (pAttachment.get() == nullptr)
+		throw ELib3MFInterfaceException(NMR_ERROR_INVALIDMODELATTACHMENT);
+
+	return new CAttachment(pAttachment);
+
+}
+
+std::string CToolpath::GetLayerPath(const Lib3MF_uint32 nIndex)
+{
+	auto pLayer = m_pToolpath->getLayer(nIndex);
+	return pLayer->getLayerDataPath();
+}
+
+Lib3MF_uint32 CToolpath::GetLayerZMax(const Lib3MF_uint32 nIndex)
+{
+	auto pLayer = m_pToolpath->getLayer(nIndex);
+	return pLayer->getMaxZ();
+}
+

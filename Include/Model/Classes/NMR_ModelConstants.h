@@ -77,8 +77,8 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACE_PRODUCTIONSPEC "http://schemas.microsoft.com/3dmanufacturing/production/2015/06"
 #define XML_3MF_NAMESPACE_BEAMLATTICESPEC "http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02"
 #define XML_3MF_NAMESPACE_SLICESPEC "http://schemas.microsoft.com/3dmanufacturing/slice/2015/07"
-#define XML_3MF_NAMESPACE_TOOLPATHSPEC "http://schemas.microsoft.com/3dmanufacturing/toolpathlayer/2019/05/"
-#define XML_3MF_NAMESPACE_ZCOMPRESSION "http://schemas.microsoft.com/3dmanufacturing/zcompression/2019/05/"
+#define XML_3MF_NAMESPACE_TOOLPATHSPEC "http://schemas.microsoft.com/3dmanufacturing/toolpath/2019/05"
+#define XML_3MF_NAMESPACE_ZCOMPRESSION "http://schemas.microsoft.com/3dmanufacturing/zcompression/2019/05"
 
 #define XML_3MF_NAMESPACEPREFIX_MATERIAL "m"
 #define XML_3MF_NAMESPACEPREFIX_PRODUCTION "p"

@@ -184,6 +184,15 @@ namespace NMR {
 			}
 		}
 
+		if (m_bWriteToolpaths) {
+			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_TOOLPATH, XML_3MF_NAMESPACE_TOOLPATHSPEC);
+			if (m_pModel->RequireExtension(XML_3MF_NAMESPACE_TOOLPATHSPEC)) {
+				if (sRequiredExtensions.size() > 0)
+					sRequiredExtensions = sRequiredExtensions + " ";
+				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_TOOLPATH;
+			}
+		}
+
 		if (m_bWriteLZMAExtension) {
 			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, XML_3MF_NAMESPACE_ZCOMPRESSION);
 			if (sRequiredExtensions.size() > 0)
@@ -929,6 +938,7 @@ namespace NMR {
 
 				writeFullEndElement();
 
+				writeFullEndElement();
 
 
 			}

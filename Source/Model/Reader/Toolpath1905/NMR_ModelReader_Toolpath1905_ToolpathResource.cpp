@@ -45,7 +45,7 @@ NMR_ModelReaderNode_Toolpath1905_ToolpathResource.h covers the official 3MF Tool
 namespace NMR {
 
 	CModelReaderNode_Toolpath1905_ToolpathResource::CModelReaderNode_Toolpath1905_ToolpathResource (_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
-		: CModelReaderNode(pWarnings), m_nID (0), m_bHasID (false), m_dUnitFactor(1.0), m_bHasUnitFactor (false)
+		: CModelReaderNode(pWarnings), m_nID (0), m_bHasID (false), m_dUnitFactor(1.0), m_bHasUnitFactor (false), m_pModel (pModel)
 	{
 	}
 	

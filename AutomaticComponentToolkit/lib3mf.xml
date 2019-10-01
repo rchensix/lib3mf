@@ -1188,7 +1188,22 @@
 			<param name="LayerData" type="handle" class="ToolpathLayerData" pass="return" description="Returns the layerdata object to write the layer content into." />
 		</method>
 
-		<method name="GetLayerZ" description = "Return the z value of a layer in units.">
+    <method name="GetLayerAttachment" description = "Retrieves the Attachment of a layer">
+      <param name="Index" type="uint32" pass="in" description="Layer Index" />
+      <param name="Attachment" type="class" class="Attachment" pass="return" description="ZMax value" />
+    </method>
+
+    <method name="GetLayerPath" description = "Retrieves the Path of a layer">
+      <param name="Index" type="uint32" pass="in" description="Layer Index" />
+      <param name="Path" type="string" pass="return" description="Package Path" />
+    </method>
+
+    <method name="GetLayerZMax" description = "Retrieves the ZMax of a layer">
+      <param name="Index" type="uint32" pass="in" description="Layer Index" />
+      <param name="ZMax" type="uint32" pass="return" description="ZMax value" />
+    </method>
+
+    <method name="GetLayerZ" description = "Return the z value of a layer in units.">
 			<param name="LayerIndex" type="uint32" pass="in" description="Layer Index." />
 			<param name="ZValue" type="uint32" pass="return" description="Z Value in Units." />
 		</method>

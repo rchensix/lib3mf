@@ -866,14 +866,14 @@ namespace NMR {
 		if (pCopiedStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		std::string sLowerPath = sPath;
+		std::string sLowerPath = fnRemoveLeadingPathDelimiter (sPath);
 		//std::transform(sLowerPath.begin(), sLowerPath.end(), sLowerPath.begin(), towupper);
 
 		auto iIterator = m_AttachmentURIMap.find(sLowerPath);
 		if (iIterator != m_AttachmentURIMap.end())
 			throw CNMRException(NMR_ERROR_DUPLICATEATTACHMENTPATH);
 
-		PModelAttachment pAttachment = std::make_shared<CModelAttachment>(this, sPath, sRelationShipType, pCopiedStream);
+		PModelAttachment pAttachment = std::make_shared<CModelAttachment>(this, fnRemoveLeadingPathDelimiter (sPath), sRelationShipType, pCopiedStream);
 		m_Attachments.push_back(pAttachment);
 		m_AttachmentURIMap.insert(std::make_pair(sLowerPath, pAttachment));
 
@@ -902,12 +902,12 @@ namespace NMR {
 
 		PModelAttachment pAttachment = m_Attachments[nIndex];
 
-		return pAttachment->getPathURI();
+		return fnRemoveLeadingPathDelimiter (pAttachment->getPathURI());
 	}
 
 	PModelAttachment CModel::findModelAttachment(_In_ std::string sPath)
 	{
-		auto iIterator = m_AttachmentURIMap.find(sPath);
+		auto iIterator = m_AttachmentURIMap.find(fnRemoveLeadingPathDelimiter (sPath));
 		if (iIterator != m_AttachmentURIMap.end()) {
 			return iIterator->second;
 		}
@@ -917,7 +917,7 @@ namespace NMR {
 
 	void CModel::removeAttachment(_In_ const std::string sPath)
 	{
-		auto iIterator = m_AttachmentURIMap.find(sPath);
+		auto iIterator = m_AttachmentURIMap.find(fnRemoveLeadingPathDelimiter (sPath));
 		if (iIterator != m_AttachmentURIMap.end()) {
 			auto iVectorIterator = m_Attachments.begin();
 			while (iVectorIterator != m_Attachments.end()) {

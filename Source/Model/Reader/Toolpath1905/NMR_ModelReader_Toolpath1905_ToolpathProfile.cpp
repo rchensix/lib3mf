@@ -53,7 +53,8 @@ namespace NMR {
 		m_bHasLaserFocus (false),
 		m_dLaserFocus (0.0),
 		m_bHasLaserIndex (false),
-		m_nLaserIndex (0)
+		m_nLaserIndex (0),
+		m_pModel(pModel)
 
 	{
 	}
