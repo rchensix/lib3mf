@@ -42,9 +42,11 @@ A model writer exports the in memory represenation into a model file.
 
 namespace NMR {
 
-	CModelWriter::CModelWriter(_In_ PModel pModel, _In_ nfBool bAllowBinaryStreams)
-		: m_bAllowBinaryStreams(bAllowBinaryStreams)
-	{
+	const int MIN_DECIMAL_PRECISION = 1;
+	const int MAX_DECIMAL_PRECISION = 16;
+
+	CModelWriter::CModelWriter(_In_ PModel pModel, _In_ nfBool bAllowBinaryStreams):
+		m_nDecimalPrecision(6), m_bAllowBinaryStreams(bAllowBinaryStreams)	{
 		if (!pModel.get())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
@@ -62,6 +64,17 @@ namespace NMR {
 		m_pProgressMonitor->SetProgressCallback(callback, userData);
 	}
 
+	void CModelWriter::SetDecimalPrecision(nfUint32 nDecimalPrecision)
+	{
+		if ((nDecimalPrecision < MIN_DECIMAL_PRECISION) || (nDecimalPrecision > MAX_DECIMAL_PRECISION))
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		m_nDecimalPrecision = nDecimalPrecision;
+	}
+
+	nfUint32 CModelWriter::GetDecimalPrecision()
+	{
+		return m_nDecimalPrecision;
+	}
 	CModel * CModelWriter::getModel()
 	{
 		return m_pModel.get();
@@ -120,6 +133,5 @@ namespace NMR {
 
 		return nullptr;
 	}
-
 }
 

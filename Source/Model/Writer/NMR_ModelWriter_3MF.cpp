@@ -85,7 +85,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		pXMLWriter->WriteStartDocument();
-		CModelWriterNode100_Model ModelNode(m_pModel.get(), pXMLWriter, m_pProgressMonitor, false);
+		CModelWriterNode100_Model ModelNode(m_pModel.get(), pXMLWriter, m_pProgressMonitor, GetDecimalPrecision(), false);
 		ModelNode.setWriteLZMAExtension(m_bAllowBinaryStreams);
 
 		for (auto iAssignmentIter : m_BinaryWriterAssignmentMap) {
@@ -109,7 +109,7 @@ namespace NMR {
 
 		pXMLWriter->WriteStartDocument();
 
-		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, m_pProgressMonitor);
+		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, m_pProgressMonitor, GetDecimalPrecision());
 		ModelNode.setWriteLZMAExtension(m_bAllowBinaryStreams);
 
 		for (auto iAssignmentIter : m_BinaryWriterAssignmentMap) {

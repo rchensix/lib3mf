@@ -51,7 +51,7 @@ namespace Impl {
 class CBase : public virtual IBase {
 private:
 
-	std::unique_ptr<std::string> m_pLastError;
+	std::unique_ptr<std::list<std::string>> m_pErrors;
 	Lib3MF_uint32 m_nReferenceCount = 1;
 
 	/**

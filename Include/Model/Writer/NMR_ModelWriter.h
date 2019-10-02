@@ -44,7 +44,7 @@ namespace NMR {
 
 	class CModelWriter {
 	private:
-			
+		nfUint32 m_nDecimalPrecision;
 	protected:
 		PModel m_pModel;
 		PProgressMonitor m_pProgressMonitor;
@@ -64,6 +64,9 @@ namespace NMR {
 
 		void SetProgressCallback(Lib3MFProgressCallback callback, void* userData);
 
+		void SetDecimalPrecision(nfUint32);
+		nfUint32 GetDecimalPrecision();
+
 		CModel * getModel ();
 
 		void registerBinaryStream (const std::string &sPath, const std::string & sUUID, PChunkedBinaryStreamWriter pStreamWriter);
@@ -71,7 +74,6 @@ namespace NMR {
 
 		void assignBinaryStream (const std::string &InstanceUUID, const std::string & sBinaryStreamUUID);
 		CChunkedBinaryStreamWriter * findBinaryStream(const std::string &InstanceUUID, std::string & Path);
-
 	};
 
 	typedef std::shared_ptr <CModelWriter> PModelWriter;
