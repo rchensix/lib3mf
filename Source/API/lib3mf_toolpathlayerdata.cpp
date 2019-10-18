@@ -33,6 +33,8 @@ Abstract: This is a stub class definition of CToolpathLayerData
 #include "lib3mf_binarystream.hpp"
 #include "lib3mf_toolpathprofile.hpp"
 #include "lib3mf_object.hpp"
+#include "lib3mf_toolpathlayerreader.hpp"
+
 
 // Include custom headers here.
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
@@ -49,11 +51,12 @@ using namespace Lib3MF::Impl;
 #define LIB3MF_MAXTOOLPATHHATCHCOUNT 1024*1024*1024
 #define LIB3MF_MAXTOOLPATHPOINTCOUNT 1024*1024*1024
 
-CToolpathLayerData::CToolpathLayerData(NMR::PModelToolpathLayerData pLayerData)
+CToolpathLayerData::CToolpathLayerData(NMR::PModelToolpathLayerWriteData pLayerData)
 	: m_pLayerData(pLayerData)
 {
 	if (pLayerData.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
 
 }
 

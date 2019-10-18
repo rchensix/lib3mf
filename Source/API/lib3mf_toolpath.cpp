@@ -35,10 +35,13 @@ Abstract: This is a stub class definition of CToolpath
 #include "lib3mf_interfaceexception.hpp"
 #include "lib3mf_binarystream.hpp"
 #include "lib3mf_writer.hpp"
+#include "lib3mf_toolpathlayerreader.hpp"
 
 // Include custom headers here.
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
 #include "Model/Classes/NMR_ModelConstants.h"
+
+#include "Model/ToolpathReader/NMR_ToolpathReader.h"
 
 using namespace Lib3MF::Impl;
 
@@ -113,7 +116,7 @@ IToolpathLayerData * CToolpath::AddLayer(const Lib3MF_uint32 nZMax, const std::s
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 
 
-	std::unique_ptr<CToolpathLayerData> pToolpathData (new CToolpathLayerData(std::make_shared<NMR::CModelToolpathLayerData>(m_pToolpath.get(), pNMRModelWriter3MFInstance, sPath)));
+	std::unique_ptr<CToolpathLayerData> pToolpathData (new CToolpathLayerData(std::make_shared<NMR::CModelToolpathLayerWriteData>(m_pToolpath.get(), pNMRModelWriter3MFInstance, sPath)));
 
 	m_pToolpath->addLayer(sPath, nZMax);
 
@@ -146,3 +149,20 @@ Lib3MF_uint32 CToolpath::GetLayerZMax(const Lib3MF_uint32 nIndex)
 	return pLayer->getMaxZ();
 }
 
+
+IToolpathLayerReader * CToolpath::ReadLayerData(const Lib3MF_uint32 nIndex)
+{
+	auto pLayer = m_pToolpath->getLayer(nIndex);
+
+	auto pModel = m_pToolpath->getModel();
+	auto pAttachment = pModel->findModelAttachment(pLayer->getLayerDataPath());
+	if (pAttachment.get() == nullptr)
+		throw ELib3MFInterfaceException(NMR_ERROR_INVALIDMODELATTACHMENT);
+
+	
+	auto pReader = std::make_unique<NMR::CToolpathReader> ( m_pToolpath, true);
+	pReader->readStream(pAttachment->getStream());
+
+	return new CToolpathLayerReader(pReader->getReadData ());
+
+}

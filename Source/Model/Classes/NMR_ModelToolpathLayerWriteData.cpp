@@ -30,7 +30,7 @@ NMR_ModelToolpathLayer.cpp defines the Model Toolpath Layer.
 
 --*/
 
-#include "Model/Classes/NMR_ModelToolpathLayerData.h"
+#include "Model/Classes/NMR_ModelToolpathLayerWriteData.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelObject.h"
 
@@ -46,7 +46,7 @@ NMR_ModelToolpathLayer.cpp defines the Model Toolpath Layer.
 
 namespace NMR {
 
-	CModelToolpathLayerData::CModelToolpathLayerData(_In_ CModelToolpath * pModelToolpath, _In_ NMR::PModelWriter_3MF pModelWriter, const std::string & sPackagePath)
+	CModelToolpathLayerWriteData::CModelToolpathLayerWriteData(_In_ CModelToolpath * pModelToolpath, _In_ NMR::PModelWriter_3MF pModelWriter, const std::string & sPackagePath)
 		: m_pModelToolpath (pModelToolpath), m_pModelWriter (pModelWriter), m_sPackagePath (sPackagePath)
 	{
 		if (pModelToolpath == nullptr)
@@ -72,13 +72,13 @@ namespace NMR {
 
 	}
 
-	CModelToolpathLayerData::~CModelToolpathLayerData()
+	CModelToolpathLayerWriteData::~CModelToolpathLayerWriteData()
 	{
 		if (!m_bWritingFinished)
 			finishWriting ();
 	}
 
-	nfUint32 CModelToolpathLayerData::RegisterProfile(_In_ PModelToolpathProfile pProfile)
+	nfUint32 CModelToolpathLayerWriteData::RegisterProfile(_In_ PModelToolpathProfile pProfile)
 	{
 		if (!m_bWritingHeader)
 			throw CNMRException(NMR_ERROR_TOOLPATH_NOTWRITINGHEADER);
@@ -91,7 +91,7 @@ namespace NMR {
 		return nNewID;
 	}
 
-	nfUint32 CModelToolpathLayerData::RegisterPart(_In_ PModelObject pObject)
+	nfUint32 CModelToolpathLayerWriteData::RegisterPart(_In_ PModelObject pObject)
 	{
 		if (!m_bWritingHeader)
 			throw CNMRException(NMR_ERROR_TOOLPATH_NOTWRITINGHEADER);
@@ -104,7 +104,7 @@ namespace NMR {
 		return nNewID;
 	}
 
-	void CModelToolpathLayerData::WriteHatchData(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nHatchCount, const nfInt32 * pX1Buffer, const nfInt32 * pY1Buffer, const nfInt32 * pX2Buffer, const nfInt32 * pY2Buffer)
+	void CModelToolpathLayerWriteData::WriteHatchData(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nHatchCount, const nfInt32 * pX1Buffer, const nfInt32 * pY1Buffer, const nfInt32 * pX2Buffer, const nfInt32 * pY2Buffer)
 	{
 		std::string sPath;
 		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
@@ -176,7 +176,7 @@ namespace NMR {
 
 	}
 
-	void CModelToolpathLayerData::WriteLoop(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32 * pXBuffer, const nfInt32 * pYBuffer)
+	void CModelToolpathLayerWriteData::WriteLoop(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32 * pXBuffer, const nfInt32 * pYBuffer)
 	{
 		if (pXBuffer == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -232,7 +232,7 @@ namespace NMR {
 
 	}
 
-	void CModelToolpathLayerData::WritePolyline(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32 * pXBuffer, const nfInt32 * pYBuffer)
+	void CModelToolpathLayerWriteData::WritePolyline(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32 * pXBuffer, const nfInt32 * pYBuffer)
 	{
 		std::string sPath;
 
@@ -289,7 +289,7 @@ namespace NMR {
 
 	}
 
-	void CModelToolpathLayerData::finishHeader()
+	void CModelToolpathLayerWriteData::finishHeader()
 	{
 		std::string sPath;
 
@@ -339,7 +339,7 @@ namespace NMR {
 	}
 
 
-	NMR::PImportStream CModelToolpathLayerData::createStream()
+	NMR::PImportStream CModelToolpathLayerWriteData::createStream()
 	{
 		if (m_bWritingHeader)
 			finishHeader();
@@ -364,24 +364,24 @@ namespace NMR {
 
 	}
 
-	NMR::CChunkedBinaryStreamWriter * CModelToolpathLayerData::getStreamWriter(std::string & sPath)
+	NMR::CChunkedBinaryStreamWriter * CModelToolpathLayerWriteData::getStreamWriter(std::string & sPath)
 	{
 	
 		return m_pModelWriter->findBinaryStream (m_sUUID, sPath);
 
 	}
 
-	double CModelToolpathLayerData::getUnits()
+	double CModelToolpathLayerWriteData::getUnits()
 	{
 		return m_pModelToolpath->getUnitFactor();
 	}
 
-	std::string CModelToolpathLayerData::getUUID()
+	std::string CModelToolpathLayerWriteData::getUUID()
 	{
 		return m_sUUID;
 	}
 
-	void CModelToolpathLayerData::finishWriting()
+	void CModelToolpathLayerWriteData::finishWriting()
 	{
 		if (!m_bWritingFinished) {
 			PImportStream pImportStream = createStream();

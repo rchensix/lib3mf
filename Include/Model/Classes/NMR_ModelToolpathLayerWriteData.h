@@ -30,8 +30,8 @@ NMR_ModelToolpath.h defines the Model Toolpath Layer Data.
 
 --*/
 
-#ifndef __NMR_MODELTOOLPATHLAYERDATA
-#define __NMR_MODELTOOLPATHLAYERDATA
+#ifndef __NMR_MODELTOOLPATHLAYERWRITEDATA
+#define __NMR_MODELTOOLPATHLAYERWRITEDATA
 
 #include "Common/NMR_Types.h" 
 
@@ -51,11 +51,10 @@ NMR_ModelToolpath.h defines the Model Toolpath Layer Data.
 
 namespace NMR {
 
-
 	class CModelToolpath;
 	typedef std::shared_ptr <CModelToolpath> PModelToolpath;
 
-	class CModelToolpathLayerData {
+	class CModelToolpathLayerWriteData {
 	private:
 		std::string m_sUUID;
 		std::string m_sPackagePath;
@@ -82,10 +81,10 @@ namespace NMR {
 		NMR::PImportStream createStream();
 
 	public:
-		CModelToolpathLayerData() = delete;
-		CModelToolpathLayerData(_In_ CModelToolpath * pModelToolpath, _In_ NMR::PModelWriter_3MF pModelWriter, _In_ const std::string & sPackagePath);
+		CModelToolpathLayerWriteData() = delete;
+		CModelToolpathLayerWriteData(_In_ CModelToolpath * pModelToolpath, _In_ NMR::PModelWriter_3MF pModelWriter, _In_ const std::string & sPackagePath);
 
-		~CModelToolpathLayerData ();
+		~CModelToolpathLayerWriteData();
 
 		nfUint32 RegisterProfile(_In_ PModelToolpathProfile pProfile);
 
@@ -101,15 +100,15 @@ namespace NMR {
 
 		double getUnits();
 
-		std::string getUUID ();
+		std::string getUUID();
 
 		void finishWriting();
 
 	};
 
-	typedef std::shared_ptr <CModelToolpathLayerData> PModelToolpathLayerData;
+	typedef std::shared_ptr <CModelToolpathLayerWriteData> PModelToolpathLayerWriteData;
 
 }
 
-#endif // __NMR_MODELTOOLPATHLAYERDATA
+#endif // __NMR_MODELTOOLPATHLAYERWRITEDATA
 

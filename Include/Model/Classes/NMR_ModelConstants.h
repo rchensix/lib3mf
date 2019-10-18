@@ -395,6 +395,8 @@ These are given by the 3MF Standard
 #define XML_3MF_BEAMLATTICE_CAPMODE_ROUND           "round"
 
 
+#define XML_3MF_ELEMENT_LAYER						"layer"
+
 #define XML_3MF_PRODUCTION_PATH                     "path"
 #define XML_3MF_PRODUCTION_UUID                     "UUID"
 

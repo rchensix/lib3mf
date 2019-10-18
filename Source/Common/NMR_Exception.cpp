@@ -436,7 +436,12 @@ namespace NMR {
 		case NMR_ERROR_MISSINGLASERFOCUS: return "Missing Laser Focus";
 		case NMR_ERROR_MISSINGPATH: return "Missing Path";
 		case NMR_ERROR_MISSINGZTOP: return "Missing ZTop";
-
+		case NMR_ERROR_DUPLICATEID: return "Duplicate ID";
+		case NMR_ERROR_MISSINGID: return "Missing ID";
+		case NMR_ERROR_DUPLICATETYPEATTRIBUTE: return "Duplicate Type Attribute";
+		case NMR_ERROR_INVALIDTYPEATTRIBUTE: return "Invalid Type Attribute";
+		case NMR_ERROR_MISSINGTYPEATTRIBUTE: return "Missing Type Attribute";
+		case NMR_ERROR_MISSINGCOORDINATE: return "Missing Coordinate";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";
@@ -478,6 +483,8 @@ namespace NMR {
 		case NMR_ERROR_TOOLPATH_NOTWRITINGDATA: return "Not in toolpath data writing mode";
 		case NMR_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "Toolpath has already been written out";
 		case NMR_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
+		case NMR_ERROR_LAYERSEGMENTNOTOPEN: return "Layer segment is not open";
+		case NMR_ERROR_LAYERSEGMENTALREADYOPEN: return "Layer segment is already open";
 
 		default:
 			return "unknown error";

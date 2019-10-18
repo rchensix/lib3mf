@@ -24,67 +24,66 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CToolpathLayerData
+Abstract: This is the class declaration of CToolpathLayerReader
 
 */
 
 
-#ifndef __LIB3MF_TOOLPATHLAYERDATA
-#define __LIB3MF_TOOLPATHLAYERDATA
+#ifndef __LIB3MF_TOOLPATHLAYERREADER
+#define __LIB3MF_TOOLPATHLAYERREADER
 
 #include "lib3mf_interfaces.hpp"
 
-#include "Common/Platform/NMR_ExportStream.h"
-#include "Common/Platform/NMR_XmlWriter.h"
-#include "Common/Platform/NMR_ExportStream_Memory.h"
-#include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamWriter.h" 
-
 // Parent classes
 #include "lib3mf_base.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelAttachment.h"
-#include "Model/Classes/NMR_ModelToolpathLayerWriteData.h"
-
+#include "Model/Classes/NMR_ModelToolpathLayerReadData.h"
 
 namespace Lib3MF {
 namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CToolpathLayerData 
+ Class declaration of CToolpathLayerReader 
 **************************************************************************************************************************/
 
-class CToolpathLayerData : public virtual IToolpathLayerData, public virtual CBase {
+class CToolpathLayerReader : public virtual IToolpathLayerReader, public virtual CBase {
 private:
 
+	NMR::PModelToolpathLayerReadData m_pReadData;
+
 protected:
-	NMR::PModelToolpathLayerWriteData m_pLayerData;
 
 public:
-
-	CToolpathLayerData(NMR::PModelToolpathLayerWriteData pLayerData);
-
-	Lib3MF_uint32 RegisterProfile(IToolpathProfile* pProfile);
-
-	Lib3MF_uint32 RegisterPart(IObject* pPart);
-
-	void WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
-
-	void WriteLoop(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
-
-	void WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
+	CToolpathLayerReader (NMR::PModelToolpathLayerReadData pReadData);
 
 	std::string GetLayerDataUUID();
 
-	void Finish();
+	Lib3MF_uint32 GetSegmentCount();
+
+	void GetSegmentInfo(const Lib3MF_uint32 nIndex, Lib3MF::eToolpathSegmentType & eType, Lib3MF_uint32 & nPointCount);
+
+	IToolpathProfile * GetSegmentProfile(const Lib3MF_uint32 nIndex);
+
+	std::string GetSegmentProfileUUID(const Lib3MF_uint32 nIndex);
+
+	IToolpathProfile * GetSegmentPart(const Lib3MF_uint32 nIndex);
+
+	std::string GetSegmentPartUUID(const Lib3MF_uint32 nIndex);
+
+	void GetSegmentPointData(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer);
 
 };
 
 } // namespace Impl
 } // namespace Lib3MF
 
-#pragma warning( pop )
-#endif // __LIB3MF_TOOLPATHLAYERDATA
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIB3MF_TOOLPATHLAYERREADER

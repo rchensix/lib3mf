@@ -57,6 +57,7 @@ Source/API/lib3mf_slicestackiterator.cpp
 Source/API/lib3mf_toolpath.cpp
 Source/API/lib3mf_toolpathiterator.cpp
 Source/API/lib3mf_toolpathlayerdata.cpp
+Source/API/lib3mf_toolpathlayerreader.cpp
 Source/API/lib3mf_toolpathprofile.cpp
 Source/API/lib3mf_texture2d.cpp
 Source/API/lib3mf_texture2dgroup.cpp
@@ -141,7 +142,8 @@ Source/Model/Classes/NMR_ModelTexture2D.cpp
 Source/Model/Classes/NMR_ModelTexture2DGroup.cpp
 Source/Model/Classes/NMR_ModelToolpath.cpp
 Source/Model/Classes/NMR_ModelToolpathLayer.cpp
-Source/Model/Classes/NMR_ModelToolpathLayerData.cpp
+Source/Model/Classes/NMR_ModelToolpathLayerReadData.cpp
+Source/Model/Classes/NMR_ModelToolpathLayerWriteData.cpp
 Source/Model/Classes/NMR_ModelToolpathProfile.cpp
 Source/Model/Classes/NMR_ModelSlice.cpp
 Source/Model/Classes/NMR_ModelSliceStack.cpp
@@ -215,6 +217,16 @@ Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathLayers.cpp
 Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathProfile.cpp
 Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathProfiles.cpp
 Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathResource.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReader.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Hatch.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Layer.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Part.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Parts.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Point.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Profile.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Profiles.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Segment.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Segments.cpp
 Source/Model/Writer/NMR_ModelWriter.cpp
 Source/Model/Writer/NMR_ModelWriterNode.cpp
 Source/Model/Writer/NMR_ModelWriter_3MF.cpp

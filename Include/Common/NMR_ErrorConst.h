@@ -1233,6 +1233,25 @@ Model error codes (0x8XXX)
 // Missing ZTop
 #define NMR_ERROR_MISSINGZTOP 0x80F4
 
+// Duplicate ID
+#define NMR_ERROR_DUPLICATEID 0x80F5
+
+// Missing ID
+#define NMR_ERROR_MISSINGID 0x80F6
+
+// Duplicate Type Attribute
+#define NMR_ERROR_DUPLICATETYPEATTRIBUTE 0x80F7
+
+// Invalid Type Attribute
+#define NMR_ERROR_INVALIDTYPEATTRIBUTE 0x80F8
+
+// Missing Type Attribute
+#define NMR_ERROR_MISSINGTYPEATTRIBUTE 0x80F9
+
+// Missing Coordinate
+#define NMR_ERROR_MISSINGCOORDINATE 0x80FA
+
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/
@@ -1350,5 +1369,11 @@ Toolpath errors (0xBXXX)
 
 // Toolpath has an invalid number of points
 #define NMR_ERROR_TOOLPATH_INVALIDPOINTCOUNT 0xB004
+
+// Layer segment is not open
+#define NMR_ERROR_LAYERSEGMENTNOTOPEN 0xB005
+
+// Layer segment is already open
+#define NMR_ERROR_LAYERSEGMENTALREADYOPEN 0xB006
 
 #endif // __NMR_ERRORCONST

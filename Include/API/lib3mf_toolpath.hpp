@@ -79,6 +79,8 @@ public:
 
 	IAttachment * GetLayerAttachment(const Lib3MF_uint32 nIndex);
 
+	IToolpathLayerReader * ReadLayerData(const Lib3MF_uint32 nIndex);
+
 	std::string GetLayerPath(const Lib3MF_uint32 nIndex);
 
 	Lib3MF_uint32 GetLayerZMax(const Lib3MF_uint32 nIndex);
