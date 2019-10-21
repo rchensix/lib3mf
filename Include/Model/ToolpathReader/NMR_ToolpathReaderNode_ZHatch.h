@@ -24,48 +24,48 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 --*/
 
-#ifndef __NMR_TOOLPATHREADERNODE_SEGMENT
-#define __NMR_TOOLPATHREADERNODE_SEGMENT
+#ifndef __NMR_TOOLPATHREADERNODE_ZHATCH
+#define __NMR_TOOLPATHREADERNODE_ZHATCH
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Reader/NMR_ModelReaderWarnings.h"
 #include "Model/Classes/NMR_ModelToolpathLayerReadData.h"
 
-
 namespace NMR {
 
-	class CToolpathReaderNode_Segment : public CModelReaderNode {
+	class CToolpathReaderNode_ZHatch : public CModelReaderNode {
 	protected:
 
+		nfInt32 m_nX1Id;
+		nfInt32 m_nY1Id;
+		nfInt32 m_nX2Id;
+		nfInt32 m_nY2Id;
+
+		nfBool m_bHasX1;
+		nfBool m_bHasY1;
+		nfBool m_bHasX2;
+		nfBool m_bHasY2;
+
 		CModelToolpathLayerReadData * m_pReadData;
-		nfUint32 m_nProfileID;
-		nfUint32 m_nPartID;
-		eModelToolpathSegmentType m_eSegmentType;
-		nfBool m_bHasSegmentType;
-		std::string m_sBinaryStreamPath;
 
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
+
 	public:
-		CToolpathReaderNode_Segment() = delete;
-		CToolpathReaderNode_Segment(_In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, _In_ CModelToolpathLayerReadData * pReadData, _In_ std::string sBinaryStreamPath);
+		CToolpathReaderNode_ZHatch() = delete;
+		CToolpathReaderNode_ZHatch(_In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, CModelToolpathLayerReadData * pReadData);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
-		nfUint32 getProfileID();
-		bool hasProfileID();
-
-		nfUint32 getPartID();
-		bool hasPartID();
-
+		void getBinaryIDs (nfInt32 & nX1Id, nfInt32 & nY1Id, nfInt32 & nX2Id, nfInt32 & nY2Id);
 	};
 
-	typedef std::shared_ptr <CToolpathReaderNode_Segment> PToolpathReaderNode_Segment;
+	typedef std::shared_ptr <CToolpathReaderNode_ZHatch> PToolpathReaderNode_ZHatch;
 
 }
 
-#endif // __NMR_TOOLPATHREADERNODE_SEGMENT
+#endif // __NMR_TOOLPATHREADERNODE_ZHATCH
+

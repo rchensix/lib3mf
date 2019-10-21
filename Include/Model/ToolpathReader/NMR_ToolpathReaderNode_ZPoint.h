@@ -27,8 +27,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --*/
 
-#ifndef __NMR_TOOLPATHREADERNODE_SEGMENT
-#define __NMR_TOOLPATHREADERNODE_SEGMENT
+#ifndef __NMR_TOOLPATHREADERNODE_ZPOINT
+#define __NMR_TOOLPATHREADERNODE_ZPOINT
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Reader/NMR_ModelReaderWarnings.h"
@@ -37,35 +37,32 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace NMR {
 
-	class CToolpathReaderNode_Segment : public CModelReaderNode {
+	class CToolpathReaderNode_ZPoint : public CModelReaderNode {
 	protected:
 
+		nfInt32 m_nXId;
+		nfInt32 m_nYId;
+
+		nfBool m_bHasX;
+		nfBool m_bHasY;
+
 		CModelToolpathLayerReadData * m_pReadData;
-		nfUint32 m_nProfileID;
-		nfUint32 m_nPartID;
-		eModelToolpathSegmentType m_eSegmentType;
-		nfBool m_bHasSegmentType;
-		std::string m_sBinaryStreamPath;
 
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 	public:
-		CToolpathReaderNode_Segment() = delete;
-		CToolpathReaderNode_Segment(_In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, _In_ CModelToolpathLayerReadData * pReadData, _In_ std::string sBinaryStreamPath);
+		CToolpathReaderNode_ZPoint() = delete;
+		CToolpathReaderNode_ZPoint(_In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, CModelToolpathLayerReadData * pReadData);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
-		nfUint32 getProfileID();
-		bool hasProfileID();
-
-		nfUint32 getPartID();
-		bool hasPartID();
+		void getBinaryIDs(nfInt32 & nXId, nfInt32 & nYId);
 
 	};
 
-	typedef std::shared_ptr <CToolpathReaderNode_Segment> PToolpathReaderNode_Segment;
+	typedef std::shared_ptr <CToolpathReaderNode_ZPoint> PToolpathReaderNode_ZPoint;
 
 }
 
-#endif // __NMR_TOOLPATHREADERNODE_SEGMENT
+#endif // __NMR_TOOLPATHREADERNODE_ZPOINT

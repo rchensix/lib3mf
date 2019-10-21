@@ -227,6 +227,8 @@ Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Profile.cpp
 Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Profiles.cpp
 Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Segment.cpp
 Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Segments.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_ZHatch.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_ZPoint.cpp
 Source/Model/Writer/NMR_ModelWriter.cpp
 Source/Model/Writer/NMR_ModelWriterNode.cpp
 Source/Model/Writer/NMR_ModelWriter_3MF.cpp

@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --*/
 
-#include "Model/ToolpathReader/NMR_ToolpathReaderNode_Point.h" 
+#include "Model/ToolpathReader/NMR_ToolpathReaderNode_ZPoint.h" 
 
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Common/3MF_ProgressMonitor.h"
@@ -41,13 +41,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace NMR {
 
-	CToolpathReaderNode_Point::CToolpathReaderNode_Point(_In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, CModelToolpathLayerReadData * pReadData)
+	CToolpathReaderNode_ZPoint::CToolpathReaderNode_ZPoint(_In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, CModelToolpathLayerReadData * pReadData)
 		: CModelReaderNode(pWarnings, pProgressMonitor), 
 		m_pReadData(pReadData),
 		m_bHasX (false),
 		m_bHasY (false),
-		m_dX (0.0),
-		m_dY (0.0)
+		m_nXId (0),
+		m_nYId (0)
 	{
 		if (pReadData == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -55,7 +55,7 @@ namespace NMR {
 	}
 
 
-	void CToolpathReaderNode_Point::parseXML(_In_ CXmlReader * pXMLReader)
+	void CToolpathReaderNode_ZPoint::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
 		parseName(pXMLReader);
@@ -68,7 +68,7 @@ namespace NMR {
 
 	}
 
-	void CToolpathReaderNode_Point::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
+	void CToolpathReaderNode_ZPoint::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
@@ -78,22 +78,20 @@ namespace NMR {
 
 		if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_X) == 0) {
 			if (m_bHasX)
-				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
-			m_dX = strtod(pAttributeValue, nullptr);
-			if (std::isnan(m_dX))
-				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
-			if (fabs(m_dX) > XML_3MF_MAXIMUMCOORDINATEVALUE)
-				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
+				throw CNMRException(NMR_ERROR_INVALIDBINARYELEMENTID);
+			nfInt32 nValue = fnStringToInt32(pAttributeValue);
+			if ((nValue < 0) || (nValue > XML_3MF_MAXRESOURCEINDEX))
+				throw CNMRException(NMR_ERROR_INVALIDBINARYELEMENTID);
+			m_nXId = nValue;
 			m_bHasX = true;
 		}
 		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_Y) == 0) {
 			if (m_bHasY)
-				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
-			m_dY = strtod(pAttributeValue, nullptr);
-			if (std::isnan(m_dY))
-				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
-			if (fabs(m_dY) > XML_3MF_MAXIMUMCOORDINATEVALUE)
-				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
+				throw CNMRException(NMR_ERROR_INVALIDBINARYELEMENTID);
+			nfInt32 nValue = fnStringToInt32(pAttributeValue);
+			if ((nValue < 0) || (nValue > XML_3MF_MAXRESOURCEINDEX))
+				throw CNMRException(NMR_ERROR_INVALIDBINARYELEMENTID);
+			m_nYId = nValue;
 			m_bHasY = true;
 		}
 		else
@@ -101,27 +99,24 @@ namespace NMR {
 
 	}
 
-	void CToolpathReaderNode_Point::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
+	void CToolpathReaderNode_ZPoint::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
 	{
 
 	}
 
-	void CToolpathReaderNode_Point::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CToolpathReaderNode_ZPoint::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 	}
 
-	nfDouble CToolpathReaderNode_Point::getX()
+	void CToolpathReaderNode_ZPoint::getBinaryIDs(nfInt32 & nXId, nfInt32 & nYId)
 	{
 		if (!m_bHasX)
-			throw CNMRException(NMR_ERROR_MISSINGCOORDINATE);
-		return m_dX;
-	}
-
-	nfDouble CToolpathReaderNode_Point::getY()
-	{
+			throw CNMRException(NMR_ERROR_MISSINGID);
 		if (!m_bHasY)
-			throw CNMRException(NMR_ERROR_MISSINGCOORDINATE);
-		return m_dY;
+			throw CNMRException(NMR_ERROR_MISSINGID);
+
+		nXId = m_nXId;
+		nYId = m_nYId;
 	}
 
 }

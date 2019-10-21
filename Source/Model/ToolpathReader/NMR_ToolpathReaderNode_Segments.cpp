@@ -73,6 +73,14 @@ namespace NMR {
 
 	void CToolpathReaderNode_Segments::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
 	{
+		__NMRASSERT(pNameSpace);
+		__NMRASSERT(pAttributeName);
+
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_ZCOMPRESSION) == 0) {
+			if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_BINARY) == 0) {
+				m_sBinaryStreamPath = pAttributeValue;
+			}
+		}
 
 	}
 
@@ -80,7 +88,7 @@ namespace NMR {
 	{
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_TOOLPATHSPEC) == 0) {
 			if (strcmp(pChildName, XML_3MF_TOOLPATHELEMENT_SEGMENTS) == 0) {
-				PToolpathReaderNode_Segment pXMLNode = std::make_shared<CToolpathReaderNode_Segment>(m_pWarnings, m_pProgressMonitor, m_pReadData);
+				PToolpathReaderNode_Segment pXMLNode = std::make_shared<CToolpathReaderNode_Segment>(m_pWarnings, m_pProgressMonitor, m_pReadData, m_sBinaryStreamPath);
 				pXMLNode->parseXML(pXMLReader);
 			}
 			else
