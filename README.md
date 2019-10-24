@@ -1,4 +1,7 @@
 # lib3mf
+
+# This branch implements drafts of the lasertoolpath and binary-extensions of 3MF
+
 [![Build Status](https://travis-ci.org/3MFConsortium/lib3mf.svg?branch=release%2F2.0.0)](https://travis-ci.org/3MFConsortium/lib3mf)
 [![Documentation Status](https://readthedocs.org/projects/lib3mf/badge/?version=master)](https://readthedocs.org/projects/lib3mf)
 [![Version 2.0.0](https://img.shields.io/static/v1.svg?label=lib3mf&message=v2.0.0&color=green)]()
