@@ -159,10 +159,8 @@ IToolpathLayerReader * CToolpath::ReadLayerData(const Lib3MF_uint32 nIndex)
 	if (pAttachment.get() == nullptr)
 		throw ELib3MFInterfaceException(NMR_ERROR_INVALIDMODELATTACHMENT);
 
-	
-	auto pReader = std::make_unique<NMR::CToolpathReader> ( m_pToolpath, true);
+	auto pReader = std::make_shared<NMR::CToolpathReader> ( m_pToolpath, true);
 	pReader->readStream(pAttachment->getStream());
 
 	return new CToolpathLayerReader(pReader->getReadData ());
-
 }
