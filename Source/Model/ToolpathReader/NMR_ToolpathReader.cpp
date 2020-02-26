@@ -50,7 +50,7 @@ namespace NMR {
 	CToolpathReader::CToolpathReader(PModelToolpath pModelToolpath, _In_ nfBool bAllowBinaryStreams)
 		: m_bAllowBinaryStreams (bAllowBinaryStreams)
 	{
-		if (pModelToolpath.get())
+		if (!pModelToolpath.get())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		m_pProgressMonitor = std::make_shared<CProgressMonitor>();
