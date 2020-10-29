@@ -72,6 +72,7 @@ namespace NMR {
 		nfUint32 m_nUnCompressedSize;
 		nfUint16 m_nFileNameLength;
 		nfUint16 m_nExtraFieldLength;
+#ifndef _WIN32
 		void swapByteOrder() {
 			m_nSignature = swapBytes(m_nSignature);
 			m_nVersion = swapBytes(m_nVersion);
@@ -85,17 +86,20 @@ namespace NMR {
 			m_nFileNameLength = swapBytes(m_nFileNameLength);
 			m_nExtraFieldLength = swapBytes(m_nExtraFieldLength);
 		}
+#endif // _WIN32
 	} ZIPLOCALFILEHEADER;
 
 	typedef struct {
 		nfUint32 m_nCRC32;
 		nfUint32 m_nCompressedSize;
 		nfUint32 m_nUnCompressedSize;
+#ifndef _WIN32
 		void swapByteOrder() {
 			m_nCRC32 = swapBytes(m_nCRC32);
 			m_nCompressedSize = swapBytes(m_nCompressedSize);
 			m_nUnCompressedSize = swapBytes(m_nUnCompressedSize);
 		}
+#endif // _WIN32
 	} ZIPLOCALFILEDESCRIPTOR;
 
 	typedef struct {
@@ -103,12 +107,14 @@ namespace NMR {
 		nfUint16 m_nFieldSize;
 		nfUint64 m_nUncompressedSize;
 		nfUint64 m_nCompressedSize;
+#ifndef _WIN32
 		void swapByteOrder() {
 			m_nTag = swapBytes(m_nTag);
 			m_nFieldSize = swapBytes(m_nFieldSize);
 			m_nUncompressedSize = swapBytes(m_nUncompressedSize);
 			m_nCompressedSize = swapBytes(m_nCompressedSize);
 		}
+#endif // _WIN32
 	} ZIP64EXTRAINFORMATIONFIELD;
 
 	typedef struct {
@@ -129,6 +135,7 @@ namespace NMR {
 		nfUint16 m_nInternalFileAttributes;
 		nfUint32 m_nExternalFileAttributes;
 		nfUint32 m_nRelativeOffsetOfLocalHeader;
+#ifndef _WIN32
 		void swapByteOrder() {
 			m_nSignature = swapBytes(m_nSignature);
 			m_nVersionMade = swapBytes(m_nVersionMade);
@@ -148,6 +155,7 @@ namespace NMR {
 			m_nExternalFileAttributes = swapBytes(m_nExternalFileAttributes);
 			m_nRelativeOffsetOfLocalHeader = swapBytes(m_nRelativeOffsetOfLocalHeader);
 		}
+#endif // _WIN32
 	} ZIPCENTRALDIRECTORYFILEHEADER;
 
 	typedef struct {
@@ -159,6 +167,7 @@ namespace NMR {
 		nfUint32 m_nSizeOfCentralDirectory;
 		nfUint32 m_nOffsetOfCentralDirectory;
 		nfUint16 m_nCommentLength;
+#ifndef _WIN32
 		void swapByteOrder() {
 			m_nSignature = swapBytes(m_nSignature);
 			m_nNumberOfDisk = swapBytes(m_nNumberOfDisk);
@@ -169,6 +178,7 @@ namespace NMR {
 			m_nOffsetOfCentralDirectory = swapBytes(m_nOffsetOfCentralDirectory);
 			m_nCommentLength = swapBytes(m_nCommentLength);
 		}
+#endif // _WIN32
 	} ZIPENDOFCENTRALDIRHEADER;
 
 	typedef struct {
@@ -183,6 +193,7 @@ namespace NMR {
 		nfUint64 m_nSizeOfCentralDirectory;
 		nfUint64 m_nOffsetOfCentralDirectoryWithRespectToDisk;
 		// zip64 extensible data sector, variable size; not used
+#ifndef _WIN32
 		void swapByteOrder() {
 			m_nSignature = swapBytes(m_nSignature);
 			m_nEndOfCentralDirHeaderRecord = swapBytes(m_nEndOfCentralDirHeaderRecord);
@@ -195,6 +206,7 @@ namespace NMR {
 			m_nSizeOfCentralDirectory = swapBytes(m_nSizeOfCentralDirectory);
 			m_nOffsetOfCentralDirectoryWithRespectToDisk = swapBytes(m_nOffsetOfCentralDirectoryWithRespectToDisk);
 		}
+#endif // _WIN32
 	} ZIP64ENDOFCENTRALDIRHEADER;
 
 	typedef struct {
@@ -202,12 +214,14 @@ namespace NMR {
 		nfUint32 m_nNumberOfDiskWithStartOfZIP64EOCentralDir;
 		nfUint64 m_nRelativeOffset;
 		nfUint32 m_nTotalNumberOfDisk;
+#ifndef _WIN32
 		void swapByteOrder() {
 			m_nSignature = swapBytes(m_nSignature);
 			m_nNumberOfDiskWithStartOfZIP64EOCentralDir = swapBytes(m_nNumberOfDiskWithStartOfZIP64EOCentralDir);
 			m_nRelativeOffset = swapBytes(m_nRelativeOffset);
 			m_nTotalNumberOfDisk = swapBytes(m_nTotalNumberOfDisk);
 		}
+#endif // _WIN32
 	} ZIP64ENDOFCENTRALDIRLOCATOR;
 
 #pragma pack()

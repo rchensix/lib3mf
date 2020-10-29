@@ -155,9 +155,11 @@ namespace NMR {
 
 		for (nfUint32 nIdx = 0; nIdx < nFaceCount; nIdx++) {
 			pStream->readBuffer((nfByte*)&Facet, sizeof(Facet), true);
+#ifndef _WIN32
 			if (isBigEndian()) {
 				Facet.swapByteOrder();
 			}
+#endif // _WIN32
 
 			// Check, if Coordinates are in Valid Space
 			bIsValid = true;

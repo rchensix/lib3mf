@@ -49,6 +49,7 @@ namespace NMR {
 		NVEC3 m_normal;
 		NVEC3 m_vertices[3];
 		nfUint16 m_attribute;
+#ifndef _WIN32
 		void swapByteOrder() {
 			m_attribute = swapBytes(m_attribute);
 			for (nfUint32 i = 0; i < 3; i++) {
@@ -58,6 +59,7 @@ namespace NMR {
 				}
 			}
 		}
+#endif //_WIN32
 	} MESHFORMAT_STL_FACET;
 #pragma pack()
 

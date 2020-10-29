@@ -107,7 +107,9 @@ namespace NMR {
 			MESHFORMAT_STL_FACET tmpFacet;
 			for (iter = facetdata.begin(); iter != facetdata.end(); iter++) {
 				tmpFacet = *iter;
+#ifndef _WIN32
 				tmpFacet.swapByteOrder();
+#endif //_WIN32
 				pStream->writeBuffer(&tmpFacet, sizeof(MESHFORMAT_STL_FACET));
 			}
 		}
