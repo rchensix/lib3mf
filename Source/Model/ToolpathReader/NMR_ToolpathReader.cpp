@@ -65,7 +65,9 @@ namespace NMR {
 		__NMRASSERT(pStream != nullptr);
 
 		nfBool bHasModel = false;
-				
+
+		pStream->seekPosition(0, true);
+						
 		// Create XML Reader
 		PXmlReader pXMLReader = fnCreateXMLReaderInstance(pStream, m_pProgressMonitor);
 
