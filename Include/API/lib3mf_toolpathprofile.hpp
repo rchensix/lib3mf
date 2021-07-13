@@ -85,23 +85,15 @@ public:
 
 	std::string GetName();
 
-	Lib3MF_double GetLaserPower();
+	bool HasParameterValue(const std::string& sNameSpaceName, const std::string& sValueName)  override;
 
-	Lib3MF_double GetLaserSpeed();
+	Lib3MF_double GetParameterDoubleValue(const std::string& sNameSpaceName, const std::string& sValueName)  override;
 
-	Lib3MF_double GetLaserFocus();
+	Lib3MF_double GetParameterDoubleValueDef(const std::string& sNameSpaceName, const std::string& sValueName, const Lib3MF_double dDefaultValue) override;
 
-	Lib3MF_uint32 GetLaserIndex();
+	void SetName(const std::string& sName) override;
 
-	void SetName(const std::string & sName);
-
-	void SetLaserPower(const Lib3MF_double dLaserPower);
-
-	void SetLaserSpeed(const Lib3MF_double dLaserSpeed);
-
-	void SetLaserFocus(const Lib3MF_double dLaserFocus);
-
-	void SetLaserIndex(const Lib3MF_uint32 nLaserIndex);
+	void SetParameterDoubleValue(const std::string& sNameSpaceName, const std::string& sValueName, const Lib3MF_double dValue) override;
 
 	NMR::PModelToolpathProfile getProfileInstance();
 

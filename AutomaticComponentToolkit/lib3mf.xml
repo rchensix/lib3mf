@@ -1078,40 +1078,33 @@
 			<param name="Name" type="string" pass="return" description="Returns the name." />
 		</method>
 
-		<method name="GetLaserPower" description="Retrieves the profile's laser power">
-			<param name="LaserPower" type="double" pass="return" description="Returns the laser power." />
+		<method name="HasParameterValue" description="Checks if a parameter value exists.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="ValueExists" type="bool" pass="return" description="Returns if a value exists." />
 		</method>
 
-		<method name="GetLaserSpeed" description="Retrieves the profile's laser speed">
-			<param name="LaserSpeed" type="double" pass="return" description="Returns the laser speed." />
+		<method name="GetParameterDoubleValue" description="Retrieves a profile's parameter value. Fails if value does not exist.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="Value" type="double" pass="return" description="Returns the value of the field." />
 		</method>
 
-		<method name="GetLaserFocus" description="Retrieves the profile's laser focus">
-			<param name="LaserFocus" type="double" pass="return" description="Returns the laser focus." />
-		</method>
-
-		<method name="GetLaserIndex" description="Retrieves the profile's laser index">
-			<param name="LaserIndex" type="uint32" pass="return" description="Returns the laser index." />
+		<method name="GetParameterDoubleValueDef" description="Retrieves a profile's parameter value">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="DefaultValue" type="double" pass="in" description="Default value if value does not exist." />
+			<param name="Value" type="double" pass="return" description="Returns the value of the field." />
 		</method>
 
 		<method name="SetName" description="Sets the profile's name">
 			<param name="Name" type="string" pass="in" description="Returns the name." />
 		</method>
 
-		<method name="SetLaserPower" description="Sets the profile's laser power">
-			<param name="LaserPower" type="double" pass="in" description="Returns the laser power." />
-		</method>
-
-		<method name="SetLaserSpeed" description="Sets the profile's laser speed">
-			<param name="LaserSpeed" type="double" pass="in" description="Returns the laser speed." />
-		</method>
-
-		<method name="SetLaserFocus" description="Sets the profile's laser focus">
-			<param name="LaserFocus" type="double" pass="in" description="Returns the laser focus." />
-		</method>
-
-		<method name="SetLaserIndex" description="Sets the profile's laser index">
-			<param name="LaserIndex" type="uint32" pass="in" description="Returns the laser index." />
+		<method name="SetParameterDoubleValue" description="Sets a profile's parameter value.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="Value" type="double" pass="in" description="Double value of the parameter." />
 		</method>
 
 	</class>
@@ -1251,10 +1244,6 @@
 
 		<method name="AddProfile" description="Adds a new profile to the toolpath.">
 			<param name="Name" type="string" pass="in" description="the name." />
-			<param name="LaserPower" type="double" pass="in" description="the laser power." />
-			<param name="LaserSpeed" type="double" pass="in" description="the laser speed." />
-			<param name="LaserFocus" type="double" pass="in" description="the laser focus." />
-			<param name="LaserIndex" type="uint32" pass="in" description="the laser index." />
 			<param name="Profile" type="handle" class="ToolpathProfile" pass="return" description="Returns the profile." />
 		</method>
 

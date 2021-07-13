@@ -52,17 +52,7 @@ namespace NMR {
 		nfBool m_bHasName;
 		std::string m_sName;
 
-		nfBool m_bHasLaserPower;
-		nfFloat m_dLaserPower;
-
-		nfBool m_bHasLaserSpeed;
-		nfFloat m_dLaserSpeed;
-
-		nfBool m_bHasLaserFocus;
-		nfFloat m_dLaserFocus;
-
-		nfBool m_bHasLaserIndex;
-		nfInt32 m_nLaserIndex;
+		std::map <std::pair <std::string, std::string>, std::string> m_Parameters;
 
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);

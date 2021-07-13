@@ -172,8 +172,13 @@ namespace Lib3MF
 		auto pBinaryStream = Writer::writer3MFz->CreateBinaryStream("Toolpath/layers.dat");
 
 		auto pToolpath = pModel->AddToolpath(0.001);
-		auto pProfile1 = pToolpath->AddProfile("profile1", 100.0, 200.0, 3.0, 1);
-		auto pProfile2 = pToolpath->AddProfile("profile2", 120.0, 220.0, 3.2, 2);
+		auto pProfile1 = pToolpath->AddProfile("profile1");
+		pProfile1->SetParameterDoubleValue("", "laserpower", 100.0);
+		pProfile1->SetParameterDoubleValue("", "laserspeed", 200.0);
+
+		auto pProfile2 = pToolpath->AddProfile("profile2");
+		pProfile1->SetParameterDoubleValue("", "laserpower", 120.0);
+		pProfile1->SetParameterDoubleValue("", "laserspeed", 220.0);
 
 		auto pLayer1 = pToolpath->AddLayer(100, "/Toolpath/layer1.xml", Writer::writer3MFz.get());
 		Writer::writer3MFz->AssignBinaryStream(pLayer1.get(), pBinaryStream.get() );
@@ -219,8 +224,6 @@ namespace Lib3MF
 
 	TEST_F(Writer, BinaryMeshTestPart)
 	{
-
-
 		auto pModel = wrapper->CreateModel();
 		auto pReader = pModel->QueryReader("3mf");
 		pReader->ReadFromFile(sTestFilesPath + "Writer/" + "Part4.3mf");

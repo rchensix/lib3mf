@@ -76,12 +76,12 @@ namespace NMR {
 		return m_dUnitFactor;
 	}
 
-	PModelToolpathProfile CModelToolpath::addProfile(const std::string & sName, nfDouble dLaserPower, nfDouble dLaserSpeed, nfDouble dLaserFocus, nfUint32 nLaserIndex)
+	PModelToolpathProfile CModelToolpath::addProfile(const std::string & sName)
 	{
 		CUUID newUUID;
 		std::string sUUID = newUUID.toString();
 
-		auto pProfile = std::make_shared<CModelToolpathProfile>(sUUID, sName, dLaserPower, dLaserSpeed, dLaserFocus, nLaserIndex);
+		auto pProfile = std::make_shared<CModelToolpathProfile>(sUUID, sName);
 		m_Profiles.push_back(pProfile);
 
 		m_ProfileMap.insert(std::make_pair (sUUID, pProfile));
@@ -91,11 +91,11 @@ namespace NMR {
 	}
 
 
-	PModelToolpathProfile CModelToolpath::addExistingProfile(const std::string & sUUID, const std::string & sName, nfDouble dLaserPower, nfDouble dLaserSpeed, nfDouble dLaserFocus, nfUint32 nLaserIndex)
+	PModelToolpathProfile CModelToolpath::addExistingProfile(const std::string & sUUID, const std::string & sName)
 	{
 		CUUID checkUUID (sUUID.c_str());
 
-		auto pProfile = std::make_shared<CModelToolpathProfile>(checkUUID.toString (), sName, dLaserPower, dLaserSpeed, dLaserFocus, nLaserIndex);
+		auto pProfile = std::make_shared<CModelToolpathProfile>(checkUUID.toString (), sName);
 		m_Profiles.push_back(pProfile);
 
 		m_ProfileMap.insert(std::make_pair(sUUID, pProfile));

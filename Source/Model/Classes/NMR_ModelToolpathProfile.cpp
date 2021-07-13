@@ -38,8 +38,8 @@ NMR_ModelToolpathProfile.cpp defines the Model Toolpath Profile.
 
 namespace NMR {
 
-	CModelToolpathProfile::CModelToolpathProfile(std::string sUUID, std::string sName, nfDouble dLaserPower, nfDouble dLaserSpeed, nfDouble dLaserFocus, nfUint32 nLaserIndex)
-		: m_sUUID (sUUID), m_sName (sName), m_dLaserPower (dLaserPower), m_dLaserSpeed (dLaserSpeed), m_dLaserFocus (dLaserFocus), m_nLaserIndex (nLaserIndex)
+	CModelToolpathProfile::CModelToolpathProfile(std::string sUUID, std::string sName)
+		: m_sUUID (sUUID), m_sName (sName)
 	{
 		
 	}
@@ -54,49 +54,41 @@ namespace NMR {
 		return m_sName;
 	}
 
-	nfDouble CModelToolpathProfile::getLaserPower()
-	{
-		return m_dLaserPower;
-	}
-
-	nfDouble CModelToolpathProfile::getLaserSpeed()
-	{
-		return m_dLaserSpeed;
-	}
-
-	nfDouble CModelToolpathProfile::getLaserFocus()
-	{
-		return m_dLaserFocus;
-	}
-
-	nfUint32 CModelToolpathProfile::getLaserIndex()
-	{
-		return m_nLaserIndex;
-	}
-
-	void CModelToolpathProfile::setName(std::string sName)
+	void CModelToolpathProfile::setName(const std::string & sName)
 	{
 		m_sName = sName;
 	}
 
-	void CModelToolpathProfile::setLaserPower(nfDouble dLaserPower)
+	bool CModelToolpathProfile::hasValue(const std::string& sNameSpace, const std::string& sValueName)
 	{
-		m_dLaserPower = dLaserPower;
+		auto iter = m_Values.find(std::make_pair (sNameSpace, sValueName));
+		return iter != m_Values.end();
 	}
 
-	void CModelToolpathProfile::setLaserSpeed(nfDouble dLaserSpeed)
+	std::string CModelToolpathProfile::getValue(const std::string& sNameSpace, const std::string& sValueName)
 	{
-		m_dLaserSpeed = dLaserSpeed;
+		auto iter = m_Values.find(std::make_pair(sNameSpace, sValueName));
+		if (iter == m_Values.end())
+			throw CNMRException(NMR_ERROR_PROFILEVALUENOTFOUND);
+
+		return iter->second;
 	}
 
-	void CModelToolpathProfile::setLaserFocus(nfDouble dLaserFocus)
+	void CModelToolpathProfile::addValue(const std::string& sNameSpace, const std::string& sValueName, const std::string& sValue)
 	{
-		m_dLaserFocus = dLaserFocus;
+		m_Values.insert(std::make_pair (std::make_pair (sNameSpace, sValueName), sValue));
 	}
 
-	void CModelToolpathProfile::setLaserIndex(nfUint32 nLaserIndex)
+	std::list<sModelToolpathProfileValue> CModelToolpathProfile::listValues()
 	{
-		m_nLaserIndex = nLaserIndex;
+		std::list<sModelToolpathProfileValue> profileValueList;
+		for (auto profileValue : m_Values) {
+			profileValueList.push_back(sModelToolpathProfileValue { profileValue.first.first, profileValue.first.second, profileValue.second });
+		}
+
+		return profileValueList;
+
 	}
+
 
 }

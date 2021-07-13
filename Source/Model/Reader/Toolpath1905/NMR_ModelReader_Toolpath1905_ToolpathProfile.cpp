@@ -46,14 +46,6 @@ namespace NMR {
 		: CModelReaderNode(pWarnings), 
 		m_bHasUUID (false),
 		m_bHasName (false),
-		m_bHasLaserPower (false),
-		m_dLaserPower (0.0),
-		m_bHasLaserSpeed (false),
-		m_dLaserSpeed (0.0),
-		m_bHasLaserFocus (false),
-		m_dLaserFocus (0.0),
-		m_bHasLaserIndex (false),
-		m_nLaserIndex (0),
 		m_pModel(pModel)
 
 	{
@@ -97,58 +89,18 @@ namespace NMR {
 			m_sName = pAttributeValue;
 			m_bHasName = true;
 		}
-
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERPOWER) == 0) {
-			if (m_bHasLaserPower)
-				throw CNMRException(NMR_ERROR_DUPLICATEVALUE);
-
-			m_dLaserPower = strtof(pAttributeValue, nullptr);
-			if (std::isnan(m_dLaserPower))
-				throw CNMRException(NMR_ERROR_INVALIDFLOATVALUE);
-			if (fabs(m_dLaserPower) > XML_3MF_MAXIMUMCOORDINATEVALUE)
-				throw CNMRException(NMR_ERROR_INVALIDFLOATVALUE);
-			m_bHasLaserPower = true;
+		else {
+			m_Parameters.insert(std::make_pair (std::make_pair ("", pAttributeName), pAttributeValue));
 		}
-
-
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERSPEED) == 0) {
-			if (m_bHasLaserSpeed)
-				throw CNMRException(NMR_ERROR_DUPLICATEVALUE);
-
-			m_dLaserSpeed = strtof(pAttributeValue, nullptr);
-			if (std::isnan(m_dLaserSpeed))
-				throw CNMRException(NMR_ERROR_INVALIDFLOATVALUE);
-			if (fabs(m_dLaserSpeed) > XML_3MF_MAXIMUMCOORDINATEVALUE)
-				throw CNMRException(NMR_ERROR_INVALIDFLOATVALUE);
-			m_bHasLaserSpeed = true;
-		}
-
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERFOCUS) == 0) {
-			if (m_bHasLaserFocus)
-				throw CNMRException(NMR_ERROR_DUPLICATEVALUE);
-
-			m_dLaserFocus = strtof(pAttributeValue, nullptr);
-			if (std::isnan(m_dLaserFocus))
-				throw CNMRException(NMR_ERROR_INVALIDFLOATVALUE);
-			if (fabs(m_dLaserFocus) > XML_3MF_MAXIMUMCOORDINATEVALUE)
-				throw CNMRException(NMR_ERROR_INVALIDFLOATVALUE);
-			m_bHasLaserFocus = true;
-		}
-
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERINDEX) == 0) {
-			if (m_bHasLaserIndex)
-				throw CNMRException(NMR_ERROR_DUPLICATEVALUE);
-
-			// Convert to integer and make a input and range check!
-			m_nLaserIndex = fnStringToUint32(pAttributeValue);
-			m_bHasLaserIndex = true;			
-		}
-
 
 	}
 	
 	void CModelReaderNode_Toolpath1905_ToolpathProfile::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
 	{
+		__NMRASSERT(pNameSpace);
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+		m_Parameters.insert(std::make_pair(std::make_pair(pNameSpace, pAttributeName), pAttributeValue));
 	}
 	
 	void CModelReaderNode_Toolpath1905_ToolpathProfile::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
@@ -163,15 +115,13 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_MISSINGUUID);
 		if (!m_bHasName)
 			throw CNMRException(NMR_ERROR_MISSINGNAME);
-		if (!m_bHasLaserPower)
-			throw CNMRException(NMR_ERROR_MISSINGLASERPOWER);
-		if (!m_bHasLaserSpeed)
-			throw CNMRException(NMR_ERROR_MISSINGLASERSPEED);
-		if (!m_bHasLaserFocus)
-			throw CNMRException(NMR_ERROR_MISSINGLASERFOCUS);
 
-		// Laserindex is optional
-		pToolpath->addExistingProfile(m_sUUID, m_sName, m_dLaserPower, m_dLaserSpeed, m_dLaserFocus, m_nLaserIndex);
+		auto pProfile = pToolpath->addExistingProfile(m_sUUID, m_sName);
+
+		for (auto iter : m_Parameters) {
+			pProfile->addValue(iter.first.first, iter.first.second, iter.second);
+		}
+
 	}
 
 }

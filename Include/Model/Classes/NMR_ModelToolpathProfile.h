@@ -40,33 +40,35 @@ NMR_ModelToolpathProfile.h defines the Model Toolpath Profile.
 #include <memory>
 #include <map>
 #include <string>
+#include <list>
 
 namespace NMR {
+
+	struct sModelToolpathProfileValue {
+		std::string m_sNameSpace;
+		std::string m_sValueName;
+		std::string m_sValue;
+	};
 
 	class CModelToolpathProfile {
 	private:
 		std::string m_sUUID;
 		std::string m_sName;
-		nfDouble m_dLaserPower;
-		nfDouble m_dLaserSpeed;
-		nfDouble m_dLaserFocus;
-		nfUint32 m_nLaserIndex;
+
+		std::map<std::pair<std::string, std::string>, std::string> m_Values;
 	public:
 		CModelToolpathProfile() = delete;
-		CModelToolpathProfile(std::string sUUID, std::string sName, nfDouble dLaserPower, nfDouble dLaserSpeed, nfDouble dLaserFocus, nfUint32 nLaserIndex);
+		CModelToolpathProfile(std::string sUUID, std::string sName);
 
 		std::string getUUID();
 		std::string getName();
-		nfDouble getLaserPower();
-		nfDouble getLaserSpeed();
-		nfDouble getLaserFocus();
-		nfUint32 getLaserIndex();
+		void setName (const std::string & sName);
 
-		void setName (std::string sName);
-		void setLaserPower (nfDouble dLaserPower);
-		void setLaserSpeed (nfDouble dLaserSpeed);
-		void setLaserFocus (nfDouble dLaserFocus);
-		void setLaserIndex (nfUint32 nLaserIndex);
+		bool hasValue (const std::string & sNameSpace, const std::string & sValueName);
+		std::string getValue(const std::string& sNameSpace, const std::string& sValueName);
+		void addValue(const std::string& sNameSpace, const std::string& sValueName, const std::string & sValue);
+
+		std::list<sModelToolpathProfileValue> listValues();
 
 	};
 

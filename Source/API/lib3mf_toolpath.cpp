@@ -77,9 +77,9 @@ Lib3MF_uint32 CToolpath::GetLayerZ(const Lib3MF_uint32 nLayerIndex)
 	return pLayer->getMaxZ();
 }
 
-IToolpathProfile * CToolpath::AddProfile(const std::string & sName, const Lib3MF_double dLaserPower, const Lib3MF_double dLaserSpeed, const Lib3MF_double dLaserFocus, const Lib3MF_uint32 nLaserIndex)
+IToolpathProfile * CToolpath::AddProfile(const std::string & sName)
 {
-	auto pProfile = m_pToolpath->addProfile(sName, dLaserPower, dLaserSpeed, dLaserFocus, nLaserIndex);
+	auto pProfile = m_pToolpath->addProfile(sName);
 
 	return new CToolpathProfile(pProfile);
 }

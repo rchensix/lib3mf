@@ -1376,4 +1376,7 @@ Toolpath errors (0xBXXX)
 // Layer segment is already open
 #define NMR_ERROR_LAYERSEGMENTALREADYOPEN 0xB006
 
+// Profile value not found
+#define NMR_ERROR_PROFILEVALUENOTFOUND 0xB007
+
 #endif // __NMR_ERRORCONST

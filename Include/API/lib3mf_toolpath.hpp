@@ -71,7 +71,7 @@ public:
 
 	Lib3MF_uint32 GetLayerZ(const Lib3MF_uint32 nLayerIndex);
 
-	IToolpathProfile * AddProfile(const std::string & sName, const Lib3MF_double dLaserPower, const Lib3MF_double dLaserSpeed, const Lib3MF_double dLaserFocus, const Lib3MF_uint32 nLaserIndex);
+	IToolpathProfile * AddProfile(const std::string & sName);
 
 	IToolpathProfile * GetProfile(const Lib3MF_uint32 nProfileIndex);
 

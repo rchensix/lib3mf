@@ -58,53 +58,39 @@ std::string CToolpathProfile::GetName()
 	return m_pToolpathProfile->getName();
 }
 
-Lib3MF_double CToolpathProfile::GetLaserPower()
-{
-	return m_pToolpathProfile->getLaserPower();
-}
-
-Lib3MF_double CToolpathProfile::GetLaserSpeed()
-{
-	return m_pToolpathProfile->getLaserSpeed();
-}
-
-Lib3MF_double CToolpathProfile::GetLaserFocus()
-{
-	return m_pToolpathProfile->getLaserFocus();
-}
-
-Lib3MF_uint32 CToolpathProfile::GetLaserIndex()
-{
-	return m_pToolpathProfile->getLaserIndex();
-}
-
 void CToolpathProfile::SetName(const std::string & sName)
 {
 	m_pToolpathProfile->setName(sName);
 }
 
-void CToolpathProfile::SetLaserPower(const Lib3MF_double dLaserPower)
-{
-	m_pToolpathProfile->setLaserPower(dLaserPower);
-}
-
-void CToolpathProfile::SetLaserSpeed(const Lib3MF_double dLaserSpeed)
-{
-	m_pToolpathProfile->setLaserSpeed(dLaserSpeed);
-}
-
-void CToolpathProfile::SetLaserFocus(const Lib3MF_double dLaserFocus)
-{
-	m_pToolpathProfile->setLaserFocus(dLaserFocus);
-}
-
-void CToolpathProfile::SetLaserIndex(const Lib3MF_uint32 nLaserIndex)
-{
-	m_pToolpathProfile->setLaserIndex(nLaserIndex);
-}
 
 NMR::PModelToolpathProfile CToolpathProfile::getProfileInstance()
 {
 	return m_pToolpathProfile;
 }
 
+bool CToolpathProfile::HasParameterValue(const std::string& sNameSpaceName, const std::string& sValueName)
+{
+	return m_pToolpathProfile->hasValue(sNameSpaceName, sValueName);
+}
+
+Lib3MF_double CToolpathProfile::GetParameterDoubleValue(const std::string& sNameSpaceName, const std::string& sValueName)
+{
+	std::string sValue = m_pToolpathProfile->getValue(sNameSpaceName, sValueName);
+	return std::stod(sValue);
+}
+
+Lib3MF_double CToolpathProfile::GetParameterDoubleValueDef(const std::string& sNameSpaceName, const std::string& sValueName, const Lib3MF_double dDefaultValue)
+{
+	if (!m_pToolpathProfile->hasValue(sNameSpaceName, sValueName))
+		return dDefaultValue;
+	
+	std::string sValue = m_pToolpathProfile->getValue(sNameSpaceName, sValueName);
+	return std::stod(sValue);
+}
+
+
+void CToolpathProfile::SetParameterDoubleValue(const std::string& sNameSpaceName, const std::string& sValueName, const Lib3MF_double dValue)
+{
+	m_pToolpathProfile->addValue(sNameSpaceName, sValueName, std::to_string(dValue));
+}

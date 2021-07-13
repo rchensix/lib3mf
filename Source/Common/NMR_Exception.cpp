@@ -485,7 +485,8 @@ namespace NMR {
 		case NMR_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
 		case NMR_ERROR_LAYERSEGMENTNOTOPEN: return "Layer segment is not open";
 		case NMR_ERROR_LAYERSEGMENTALREADYOPEN: return "Layer segment is already open";
-
+		case NMR_ERROR_PROFILEVALUENOTFOUND: return "Profile value not found";
+			
 		default:
 			return "unknown error";
 		}

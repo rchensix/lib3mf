@@ -938,10 +938,20 @@ namespace NMR {
 					writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHPROFILE, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
 					writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_UUID, pProfile->getUUID());
 					writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_NAME, pProfile->getName());
-					writeFloatAttribute(XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERPOWER, (nfFloat)pProfile->getLaserPower());
-					writeFloatAttribute(XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERSPEED, (nfFloat)pProfile->getLaserSpeed());
-					writeFloatAttribute(XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERFOCUS, (nfFloat)pProfile->getLaserFocus());
-					writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERINDEX, pProfile->getLaserIndex());
+					
+					auto profileValues = pProfile->listValues();
+					for (auto profileValue : profileValues) {
+						if (profileValue.m_sNameSpace.empty()) {
+							writeStringAttribute(profileValue.m_sValueName.c_str(), profileValue.m_sValue);
+						}
+						else {
+							std::string sPrefix;
+							if (m_pXMLWriter->GetNamespacePrefix(profileValue.m_sNameSpace, sPrefix)) {
+								writePrefixedStringAttribute(sPrefix.c_str(), profileValue.m_sValueName.c_str(), profileValue.m_sValue);
+							}
+						}
+					}
+
 					writeEndElement();
 
 				}
