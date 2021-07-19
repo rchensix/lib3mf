@@ -69,7 +69,7 @@ public:
 
 	Lib3MF_uint32 RegisterProfile(IToolpathProfile* pProfile);
 
-	Lib3MF_uint32 RegisterPart(IObject* pPart);
+	Lib3MF_uint32 RegisterBuildItem(IBuildItem* pBuildItem);
 
 	void WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
 

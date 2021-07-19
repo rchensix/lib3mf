@@ -1166,8 +1166,8 @@
       <param name="ProfileID" type="uint32" pass="return" description="returns the local profile ID for the layer." />
     </method>
 
-    <method name="RegisterPart" description="Registers a Model Object">
-      <param name="Part" class="Object" type="handle" pass="in" description="The model object to use." />
+    <method name="RegisterBuildItem" description="Registers a Model Build Item">
+      <param name="BuildItem" class="BuildItem" type="handle" pass="in" description="The model build item to use." />
       <param name="PartID" type="uint32" pass="return" description="returns the local part ID for the layer." />
     </method>
 

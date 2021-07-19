@@ -34,6 +34,7 @@ Abstract: This is a stub class definition of CToolpathLayerData
 #include "lib3mf_toolpathprofile.hpp"
 #include "lib3mf_object.hpp"
 #include "lib3mf_toolpathlayerreader.hpp"
+#include "lib3mf_builditem.hpp"
 
 
 // Include custom headers here.
@@ -73,16 +74,16 @@ Lib3MF_uint32 CToolpathLayerData::RegisterProfile(IToolpathProfile* pProfile)
 	return m_pLayerData->RegisterProfile(pProfileClass->getProfileInstance());
 }
 
-Lib3MF_uint32 CToolpathLayerData::RegisterPart(IObject* pPart)
+Lib3MF_uint32 CToolpathLayerData::RegisterBuildItem(IBuildItem* pBuildItem)
 {
-	if (pPart == nullptr)
+	if (pBuildItem == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
-	CObject * pObjectClass = dynamic_cast<CObject *> (pPart);
-	if (pObjectClass == nullptr)
+	CBuildItem * pBuildItemClass = dynamic_cast<CBuildItem*> (pBuildItem);
+	if (pBuildItemClass == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 
-	return m_pLayerData->RegisterPart (pObjectClass->getObjectInstance ());
+	return m_pLayerData->RegisterPart (pBuildItemClass->getBuildItemInstance ());
 }
 
 

@@ -169,6 +169,8 @@ namespace Lib3MF
 		auto pObject = pModel->AddMeshObject();
 		pObject->SetName("TestObject");
 
+		auto pBuildItem = pModel->AddBuildItem(pObject.get(), Writer::wrapper->GetIdentityTransform ());
+
 		auto pBinaryStream = Writer::writer3MFz->CreateBinaryStream("Toolpath/layers.dat");
 
 		auto pToolpath = pModel->AddToolpath(0.001);
@@ -183,7 +185,7 @@ namespace Lib3MF
 		auto pLayer1 = pToolpath->AddLayer(100, "/Toolpath/layer1.xml", Writer::writer3MFz.get());
 		Writer::writer3MFz->AssignBinaryStream(pLayer1.get(), pBinaryStream.get() );
 		auto nProfileID1 = pLayer1->RegisterProfile(pProfile1.get());
-		auto nPartID1 = pLayer1->RegisterPart(pObject.get());
+		auto nPartID1 = pLayer1->RegisterBuildItem(pBuildItem.get());
 		pLayer1 = nullptr;
 
 /*		std::vector<Lib3MF::sPosition2D> PointsA;

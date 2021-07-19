@@ -33,6 +33,7 @@ NMR_ModelToolpathLayer.cpp defines the Model Toolpath Layer.
 #include "Model/Classes/NMR_ModelToolpathLayerWriteData.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelBuildItem.h"
 
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_StringUtils.h"
@@ -91,7 +92,7 @@ namespace NMR {
 		return nNewID;
 	}
 
-	nfUint32 CModelToolpathLayerWriteData::RegisterPart(_In_ PModelObject pObject)
+	nfUint32 CModelToolpathLayerWriteData::RegisterPart(_In_ PModelBuildItem pBuildItem)
 	{
 		if (!m_bWritingHeader)
 			throw CNMRException(NMR_ERROR_TOOLPATH_NOTWRITINGHEADER);
@@ -99,7 +100,7 @@ namespace NMR {
 		unsigned int nNewID = m_nIDCounter;
 		m_nIDCounter++;
 
-		m_Parts.insert(std::make_pair(nNewID, pObject));
+		m_Parts.insert(std::make_pair(nNewID, pBuildItem));
 
 		return nNewID;
 	}

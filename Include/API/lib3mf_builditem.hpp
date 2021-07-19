@@ -100,6 +100,8 @@ public:
 	IMetaDataGroup * GetMetaDataGroup ();
 
 	Lib3MF::sBox GetOutbox();
+
+	NMR::PModelBuildItem getBuildItemInstance ();
 };
 
 }

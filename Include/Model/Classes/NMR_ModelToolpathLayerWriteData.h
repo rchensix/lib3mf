@@ -67,7 +67,7 @@ namespace NMR {
 		NMR::PExportStreamMemory m_pExportStream;
 
 		std::map <unsigned int, PModelToolpathProfile> m_Profiles;
-		std::map <unsigned int, PModelObject> m_Parts;
+		std::map <unsigned int, PModelBuildItem> m_Parts;
 
 		bool m_bWritingHeader;
 		bool m_bWritingData;
@@ -88,7 +88,7 @@ namespace NMR {
 
 		nfUint32 RegisterProfile(_In_ PModelToolpathProfile pProfile);
 
-		nfUint32 RegisterPart(_In_ PModelObject pObject);
+		nfUint32 RegisterPart(_In_ PModelBuildItem pBuildItem);
 
 		void WriteHatchData(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nHatchCount, const nfInt32 * pX1Buffer, const nfInt32 * pY1Buffer, const nfInt32 * pX2Buffer, const nfInt32 * pY2Buffer);
 
