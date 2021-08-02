@@ -72,7 +72,7 @@ public:
 
 	std::string GetSegmentProfileUUID(const Lib3MF_uint32 nIndex);
 
-	IToolpathProfile * GetSegmentPart(const Lib3MF_uint32 nIndex);
+	IBuildItem * GetSegmentPart(const Lib3MF_uint32 nIndex);
 
 	std::string GetSegmentPartUUID(const Lib3MF_uint32 nIndex);
 

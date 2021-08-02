@@ -87,7 +87,7 @@ std::string CToolpathLayerReader::GetSegmentProfileUUID(const Lib3MF_uint32 nInd
 	return m_pReadData->mapIDtoUUID (nProfileID);
 }
 
-IToolpathProfile * CToolpathLayerReader::GetSegmentPart(const Lib3MF_uint32 nIndex)
+IBuildItem* CToolpathLayerReader::GetSegmentPart(const Lib3MF_uint32 nIndex)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }

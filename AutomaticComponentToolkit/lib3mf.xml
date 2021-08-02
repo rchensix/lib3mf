@@ -75,6 +75,8 @@
 		<error name="INVALIDATTACHMENTSTREAM" code="131" description="An attachment stream is invalid"/>
 		<error name="INVALIDPROPERTYCOUNT" code="132" description="Invalid property count."/>
 		<error name="UNKOWNPROGRESSIDENTIFIER" code="140" description="A progress identifier is unknown"/>
+		<error name="METADATANOTFOUND" code="141" description="Metadata has not been found."/>
+		
 		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices"/>		
 		<error name="TOOLPATH_NOTWRITINGHEADER" code="3000" description="Not in toolpath header writing mode" />
 		<error name="TOOLPATH_NOTWRITINGDATA" code="3001" description="Not in toolpath data writing mode" />
@@ -479,6 +481,11 @@
 		<method name="GetMetaData" description="returns a metadata value within this metadatagroup">
 			<param name="Index" type="uint32" pass="in" description="Index of the Metadata."/>
 			<param name="MetaData" type="handle" class="MetaData" pass="return" description="an instance of the metadata"/>
+		</method>
+		<method name="HasMetaData" description="returns if a metadata value exists within this metadatagroup">
+			<param name="NameSpace" type="string" pass="in" description="the namespace of the metadata"/>
+			<param name="Name" type="string" pass="in" description="the name of the Metadata"/>
+			<param name="MetaDataExists" type="bool" pass="return" description="returns true if metadata exists"/>
 		</method>
 		<method name="GetMetaDataByKey" description="returns a metadata value within this metadatagroup">
 			<param name="NameSpace" type="string" pass="in" description="the namespace of the metadata"/>
@@ -1138,7 +1145,7 @@
 
 	<method name="GetSegmentPart" description="Retrieves the assigned segment profile.">
 		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
-		<param name="Profile" type="class" class="ToolpathProfile" pass="return" description="Segment Profile" />
+		<param name="BuildItem" type="class" class="BuildItem" pass="return" description="Segment Build Item" />
 	</method>
 	
 	<method name="GetSegmentPartUUID" description="Retrieves the assigned segment part uuid.">

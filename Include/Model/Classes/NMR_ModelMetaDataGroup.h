@@ -58,6 +58,7 @@ namespace NMR {
 		void removeMetaData(_In_ nfUint32 nIndex);
 		nfBool hasMetaData(_In_ std::string sKey);
 		void mergeMetaData(_In_ CModelMetaDataGroup * pSourceMetaDataGroup);
+		PModelMetaData findMetaData(_In_ std::string sNameSpace, _In_ std::string sName);
 	};
 
 	typedef std::shared_ptr <CModelMetaDataGroup> PModelMetaDataGroup;

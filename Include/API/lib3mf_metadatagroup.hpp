@@ -89,6 +89,8 @@ public:
 
 	IMetaData * AddMetaData(const std::string & sNameSpace, const std::string & sName, const std::string & sValue, const std::string & sType, const bool bMustPreserve);
 
+	bool HasMetaData(const std::string& sNameSpace, const std::string& sName);
+
 
 };
 

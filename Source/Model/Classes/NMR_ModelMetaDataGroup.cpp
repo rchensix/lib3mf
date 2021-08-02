@@ -101,6 +101,23 @@ namespace NMR {
 		return iIterator != m_MetaDataMap.end();
 	}
 
+	PModelMetaData CModelMetaDataGroup::findMetaData(_In_ std::string sNameSpace, _In_ std::string sName)
+	{
+		std::string sKey;
+		if (sNameSpace.empty())
+			sKey = sName;
+		else
+			sKey = sNameSpace + ":" + sName;
+
+		std::map<std::string, PModelMetaData>::iterator iIterator = m_MetaDataMap.find(sKey);
+		if (iIterator != m_MetaDataMap.end())
+			return iIterator->second;
+
+		return nullptr;
+
+	}
+
+
 	void CModelMetaDataGroup::mergeMetaData(_In_ CModelMetaDataGroup * pSourceMetaDataGroup)
 	{
 		if (pSourceMetaDataGroup == nullptr)

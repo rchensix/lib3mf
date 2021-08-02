@@ -59,20 +59,11 @@ IMetaData * CMetaDataGroup::GetMetaData (const Lib3MF_uint32 nIndex)
 
 IMetaData * CMetaDataGroup::GetMetaDataByKey (const std::string & sNameSpace, const std::string & sName)
 {
-	for (NMR::nfUint32 i = 0; i < m_pModelMetaDataGroup->getMetaDataCount(); i++) {
-		NMR::PModelMetaData pMetaData = m_pModelMetaDataGroup->getMetaData(i);
-		if (sNameSpace.empty()) {
-			if (pMetaData->getName() == sName) {
-				return new CMetaData(pMetaData);
-			}
-		}
-		else {
-			if (pMetaData->getKey() == sNameSpace + ":" + sName) {
-				return new CMetaData(pMetaData);
-			}
-		}
-	}
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	auto pMetaData = m_pModelMetaDataGroup->findMetaData(sNameSpace, sName);
+	if (pMetaData.get () == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_METADATANOTFOUND);
+
+	return new CMetaData(pMetaData);
 }
 
 void CMetaDataGroup::RemoveMetaDataByIndex (const Lib3MF_uint32 nIndex)
@@ -98,3 +89,9 @@ IMetaData * CMetaDataGroup::AddMetaData(const std::string & sNameSpace, const st
 	return new CMetaData(pModelMetaData);
 }
 
+
+bool CMetaDataGroup::HasMetaData(const std::string& sNameSpace, const std::string& sName)
+{
+	auto pMetaData = m_pModelMetaDataGroup->findMetaData(sNameSpace, sName);
+	return (pMetaData.get() != nullptr);
+}
