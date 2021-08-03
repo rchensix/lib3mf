@@ -39,7 +39,7 @@ Abstract: This is a stub class definition of CMeshObject
 using namespace Lib3MF::Impl;
 
 CTriangleSet::CTriangleSet(NMR::PModelTriangleSet pTriangleSet, NMR::PModelMeshObject pMeshObject)
-	: CBase (), m_pTriangleSet (pTriangleSet), m_pMeshObject (pMeshObject)
+	: m_pTriangleSet (pTriangleSet), m_pMeshObject (pMeshObject)
 {
 	if (pTriangleSet.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
@@ -96,6 +96,24 @@ void CTriangleSet::SetTriangleList(const Lib3MF_uint64 nTriangleIndicesBufferSiz
 		for (uint64_t nIndex = 0; nIndex < nTriangleIndicesBufferSize; nIndex++) {
 			m_pTriangleSet->addTriangle(*pPtr);
 			pPtr++;
+		}
+	}
+}
+
+void CTriangleSet::GetTriangleList(Lib3MF_uint64 nTriangleIndicesBufferSize, Lib3MF_uint64 * pTriangleIndicesNeededCount, Lib3MF_uint32 * pTriangleIndicesBuffer)
+{
+	auto triangleIndicesSet = m_pTriangleSet->getTriangles();
+	Lib3MF_uint32 count = (Lib3MF_uint32)triangleIndicesSet.size();
+	if (pTriangleIndicesNeededCount)
+		*pTriangleIndicesNeededCount = count;
+
+	if (nTriangleIndicesBufferSize >= count && pTriangleIndicesBuffer)
+	{
+		Lib3MF_uint32* pIndex = pTriangleIndicesBuffer;
+		for (auto index : triangleIndicesSet)
+		{
+			*pIndex = index;
+			pIndex++;
 		}
 	}
 }
