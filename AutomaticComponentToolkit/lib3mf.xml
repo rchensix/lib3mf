@@ -1544,7 +1544,7 @@
 			<param name="LastErrorString" type="string" pass="out" description="Last Error String"/>
 			<param name="HasLastError" type="bool" pass="return" description="Returns if the instance has a last error."/>
 		</method>
-		<method name="RetrieveProgressMessage" description="Return an English text for a progress identifier.|Note: this is the only function you can call from your callback function.">
+		<method name="RetrieveProgressMessage" description="Return an English text for a progress identifier.|Note: this is the only function you can call from your callback function." disablestringoutcache="1" >
 			<param name="TheProgressIdentifier" type="enum" class="ProgressIdentifier" pass="in" description="the progress identifier that is passed to the callback function"/>
 			<param name="ProgressMessage" type="string" pass="out" description="English text for the progress identifier"/>
 		</method>
