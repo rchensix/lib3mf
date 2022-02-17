@@ -268,7 +268,7 @@
 	<class name="Base">
 	</class>
 
-  <class name="BinaryStream">
+  <class name="BinaryStream" parent="Base">
   
 	<method name="GetPath" description = "Retrieves an binary streams package path.">
 		<param name="Path" type="string" pass="return" description="binary streams package path." />
@@ -280,7 +280,7 @@
 
   </class>
 		
-	<class name="Writer">
+	<class name="Writer" parent="Base">
 		<method name="WriteToFile" description="Writes out the model as file. The file type is specified by the Model Writer class.">
 			<param name="Filename" type="string" pass="in" description="Filename to write into"/>
 		</method>
@@ -315,7 +315,7 @@
 		</method>
 	</class>
 
-	<class name="Reader">
+	<class name="Reader" parent="Base">
 		<method name="ReadFromFile" description="Reads a model from a file. The file type is specified by the Model Reader class">
 			<param name="Filename" type="string" pass="in" description="Filename to read from"/>				
 		</method>
@@ -354,13 +354,13 @@
 		</method>
 	</class>
 
-	<class name="Resource">
+	<class name="Resource" parent="Base">
 		<method name="GetResourceID" description="Retrieves the resource id of the resource instance.">
 			<param name="Id" type="uint32" pass="return" description="Retrieves the ID of a Model Resource Instance."/>
 		</method>
 	</class>
 
-	<class name="ResourceIterator">
+	<class name="ResourceIterator" parent="Base">
 		<method name="MoveNext" description="Iterates to the next resource in the list.">
 			<param name="HasNext" type="bool" pass="return" description="Iterates to the next resource in the list."/>
 		</method>
@@ -438,7 +438,7 @@
 		</method>
 	</class>
 
-	<class name="MetaData">
+	<class name="MetaData" parent="Base">
 		<method name="GetNameSpace" description="returns the namespace URL of the metadata">
 			<param name="NameSpace" type="string" pass="return" description="the namespace URL of the metadata"/>
 		</method>
@@ -474,7 +474,7 @@
 		</method>
 	</class>
 
-	<class name="MetaDataGroup">
+	<class name="MetaDataGroup" parent="Base">
 		<method name="GetMetaDataCount" description="returns the number of metadata in this metadatagroup">
 			<param name="Count" type="uint32" pass="return" description="returns the number metadata"/>
 		</method>
@@ -652,7 +652,7 @@
 				
 	</class>
 
-	<class name="BeamLattice">
+	<class name="BeamLattice" parent="Base">
 		<method name="GetMinLength" description="Returns the minimal length of beams for the beamlattice.">
 			<param name="MinLength" type="double" pass="return" description="minimal length of beams for the beamlattice"/>
 		</method>
@@ -708,7 +708,7 @@
 				
 	</class>
 
-	<class name="Component">
+	<class name="Component" parent="Base">
 		<method name="GetObjectResource" description="Returns the Resource Instance of the component..">
 			<param name="ObjectResource" type="handle" class="Object" pass="return" description="filled with the Resource Instance."/>
 		</method>
@@ -748,7 +748,7 @@
 		</method>
 	</class>
 
-	<class name="BeamSet">
+	<class name="BeamSet" parent="Base">
 		<method name="SetName" description="Sets a beamset's name string">
 			<param name="Name" type="string" pass="in" description="new name of the beamset."/>
 		</method>
@@ -913,7 +913,7 @@
 		</method>
 	</class>
 
-	<class name="Attachment">
+	<class name="Attachment" parent="Base">
 		<method name="GetPath" description="Retrieves an attachment's package path.">
 			<param name="Path" type="string" pass="return" description="returns the attachment's package path string"/>
 		</method>
@@ -984,7 +984,7 @@
 	</class>
 
 
-	<class name="BuildItem">
+	<class name="BuildItem" parent="Base">
 		<method name="GetObjectResource" description="Retrieves the object resource associated to a build item">
 			<param name="ObjectResource" type="handle" class="Object" pass="return" description="returns the associated resource instance"/>
 		</method>
@@ -1022,7 +1022,7 @@
 	</class>
 
 
-	<class name="BuildItemIterator">
+	<class name="BuildItemIterator" parent="Base">
 		<method name="MoveNext" description="Iterates to the next build item in the list.">
 			<param name="HasNext" type="bool" pass="return" description="Iterates to the next build item in the list."/>
 		</method>
@@ -1040,7 +1040,7 @@
 		</method>
 	</class>
 
-	<class name="Slice">
+	<class name="Slice" parent="Base">
 		<method name="SetVertices" description="Set all vertices of a slice. All polygons will be cleared.">
 			<param name="Vertices" type="structarray" class="Position2D" pass="in" description="contains the positions."/>
 		</method>
@@ -1075,7 +1075,7 @@
 	</class>
 	
 	
- <class name="ToolpathProfile">
+ <class name="ToolpathProfile" parent="Base">
 
 		<method name="GetUUID" description="Retrieves the profile's uuid">
 			<param name="UUID" type="string" pass="return" description="Returns the uuid value." />
@@ -1117,7 +1117,7 @@
 	</class>
 
 
-  <class name="ToolpathLayerReader">
+  <class name="ToolpathLayerReader" parent="Base">
   
 	<method name="GetLayerDataUUID" description="Retrieves the layerdata's uuid">
 		<param name="UUID" type="string" pass="return" description="Returns the uuid value." />
@@ -1162,7 +1162,7 @@
   
 	
 	
-  <class name="ToolpathLayerData">
+  <class name="ToolpathLayerData" parent="Base">
 
 	<method name="GetLayerDataUUID" description="Retrieves the layerdata's uuid">
 		<param name="UUID" type="string" pass="return" description="Returns the uuid value." />
@@ -1307,7 +1307,7 @@
 		</method>
 	</class>
 
-	<class name="Model">
+	<class name="Model" parent="Base">
 		<method name="SetUnit" description="sets the units of a model.">
 			<param name="Unit" type="enum" class="ModelUnit" pass="in" description="Unit enum value for the model unit"/>
 		</method>
@@ -1506,7 +1506,7 @@
 		</method>
 	</class>
 
-	<global baseclassname="Base" releasemethod="Release" acquiremethod="Acquire" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError" prereleasemethod="GetPrereleaseInformation" buildinfomethod="GetBuildInformation">
+	<global baseclassname="Base" stringoutclassname="Base" releasemethod="Release" acquiremethod="Acquire" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError" prereleasemethod="GetPrereleaseInformation" buildinfomethod="GetBuildInformation">
 		<method name="GetLibraryVersion" description="retrieves the binary version of this library.">
 			<param name="Major" type="uint32" pass="out" description="returns the major version of this library"/>
 			<param name="Minor" type="uint32" pass="out" description="returns the minor version of this library"/>
