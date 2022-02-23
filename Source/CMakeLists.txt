@@ -114,13 +114,6 @@ Source/Common/Platform/NMR_XmlWriter_Native.cpp
 Source/Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamWriter.cpp
 Source/Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamReader.cpp
 Source/Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamCollection.cpp
-Source/Libraries/lzma/Alloc.c
-Source/Libraries/lzma/LzFind.c
-Source/Libraries/lzma/LzFindMt.c
-Source/Libraries/lzma/LzmaDec.c
-Source/Libraries/lzma/LzmaEnc.c
-Source/Libraries/lzma/LzmaLib.c
-Source/Libraries/lzma/Threads.c
 Source/Model/Classes/NMR_PackageResourceID.cpp
 Source/Model/Classes/NMR_Model.cpp
 Source/Model/Classes/NMR_ModelAttachment.cpp

@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamReader.h" 
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h" 
 #include "Common/NMR_Exception.h" 
-#include "Libraries/lzma/LzmaLib.h"
+//#include "Libraries/lzma/LzmaLib.h"
 
 #include <vector>
 
@@ -110,9 +110,9 @@ namespace NMR {
 			size_t srcLen = CompressedData.size();
 			size_t propsLen = PropsData.size();
 
-			int error;
-			error = LzmaUncompress(m_Data.data(), &destLen, CompressedData.data(), &srcLen, PropsData.data(), propsLen);
-			if (error != SZ_OK)
+			//int error;
+			//error = LzmaUncompress(m_Data.data(), &destLen, CompressedData.data(), &srcLen, PropsData.data(), propsLen);
+			//if (error != SZ_OK)
 				throw CNMRException(NMR_ERROR_COULDNOTUNCOMPRESSDATA);
 		}
 

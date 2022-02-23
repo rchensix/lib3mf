@@ -30,7 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h" 
 #include "Common/NMR_Exception.h" 
 
-#include "Libraries/lzma/LzmaLib.h"
+//#include "Libraries/lzma/LzmaLib.h"
 
 #include <vector>
 
@@ -104,21 +104,21 @@ namespace NMR {
 			size_t outBufferSize = outBuffer.size ();
 			size_t outPropsSize = outProps.size ();
 
-			int error;
-			error = LzmaCompress (
-				outBuffer.data(), &outBufferSize, 
-				pInputBuffer, inputSize, 
-				outProps.data(), &outPropsSize,
-				3, /* 0 <= level <= 9, default = 5 */
-				8 * 1024 * 1024, /* use (1 << N) or (3 << N). 4 KB < dictSize <= 128 MB */
-				5, /* 0 <= lc <= 8, default = 3  */
-				2, /* 0 <= lp <= 4, default = 0  */
-				3, /* 0 <= pb <= 4, default = 2  */
-				64,  /* 5 <= fb <= 273, default = 32 */
-				1 /* 1 or 2, default = 2 */
-			);
+			//int error;
+			//error = LzmaCompress (
+//				outBuffer.data(), &outBufferSize, 
+				//pInputBuffer, inputSize, 
+				//outProps.data(), &outPropsSize,
+				//3, /* 0 <= level <= 9, default = 5 */
+				//8 * 1024 * 1024, /* use (1 << N) or (3 << N). 4 KB < dictSize <= 128 MB */
+				//5, /* 0 <= lc <= 8, default = 3  */
+				//2, /* 0 <= lp <= 4, default = 0  */
+				//3, /* 0 <= pb <= 4, default = 2  */
+				//64,  /* 5 <= fb <= 273, default = 32 */
+				//1 /* 1 or 2, default = 2 */
+			//);
 
-			if (error != SZ_OK)
+			//if (error != SZ_OK)
 				throw CNMRException(NMR_ERROR_COULDNOTCOMPRESSDATA);
 
 			m_CurrentChunk->m_CompressedDataSize = (nfUint32) outBufferSize;
