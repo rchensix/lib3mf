@@ -406,7 +406,9 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	
 	#ifdef _WIN32
 	// Convert filename to UTF16-string
-	int nLength = static_cast<int>(strnlen_s(pLibraryFileName, MAX_PATH));
+	int nLength = 0;
+	while ((pLibraryFileName[nLength] != 0) && (nLength < MAX_PATH))
+		nLength++;
 	int nBufferSize = nLength * 2 + 2;
 	wchar_t* wsLibraryFileName = (wchar_t*)malloc(nBufferSize*sizeof(wchar_t));
 	memset(wsLibraryFileName, 0, nBufferSize*sizeof(wchar_t));
