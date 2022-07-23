@@ -45,7 +45,7 @@ namespace NMR {
 	public:
 		CModelTextureAttachment() = delete;
 		CModelTextureAttachment(_In_ CModel * pModel, _In_ const std::wstring sPathURI, _In_ const std::wstring sRelationShipType, _In_ PImportStream pStream) = delete;
-		CModelTextureAttachment(_In_ CModel * pModel, _In_ const std::wstring sPathURI, _In_ PImportStream pStream);
+		CModelTextureAttachment(_In_ CModel * pModel, _In_ const std::string sPathURI, _In_ PImportStream pStream);
 		~CModelTextureAttachment();
 
 		void setRelationShipType(_In_ const std::wstring sRelationShipType) = delete;
