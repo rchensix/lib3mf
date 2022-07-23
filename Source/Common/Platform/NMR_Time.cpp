@@ -33,9 +33,7 @@ NMR_Time.cpp implements platform dependent time functions
 #include "Common/Platform/NMR_Time.h"
 #include "Common/NMR_Exception.h"
 
-#ifdef _WIN32
-#include <time.h>
-#endif // _WIN32
+#include <ctime>
 
 namespace NMR {
 
