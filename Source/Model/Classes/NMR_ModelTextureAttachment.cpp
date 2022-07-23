@@ -36,7 +36,7 @@ NMR_ModelTextureAttachment.cpp implements the Model Texture Attachment Class.
 
 namespace NMR {
 
-	CModelTextureAttachment::CModelTextureAttachment(_In_ CModel * pModel, _In_ const std::wstring sPathURI, _In_ PImportStream pStream)
+	CModelTextureAttachment::CModelTextureAttachment(_In_ CModel * pModel, _In_ const std::string sPathURI, _In_ PImportStream pStream)
 		: CModelAttachment(pModel, sPathURI, PACKAGE_TEXTURE_RELATIONSHIP_TYPE, pStream)
 	{
 
